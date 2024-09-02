@@ -1,9 +1,9 @@
 import { Request, Response, Router } from 'express';
+import { LoginDto } from '../../common/dto/auth/login.dto';
 import { UserController } from '../../controllers/user/user.controller';
 import { validationMiddleware } from '../../middleware/validation.middleware';
-import { CreateUserDto } from '../../common/dto/auth/CreateUser.dto';
 
-export default class userRouter {
+export default class AuthRoute {
   router: Router;
   private userController: UserController;
   constructor() {
@@ -15,7 +15,6 @@ export default class userRouter {
   serve() {
     this.router
       .route('/')
-      .get((req: Request, res: Response) => this.userController.read(req, res))
-      .post(validationMiddleware(CreateUserDto), (req: Request, res: Response) => this.userController.create(req, res));
+      .post(validationMiddleware(LoginDto), (req: Request, res: Response) => this.userController.signIn(req, res));
   }
 }

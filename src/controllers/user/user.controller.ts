@@ -41,4 +41,20 @@ export class UserController {
       ProcessError(err, res);
     }
   }
+
+  async signIn(req: Request, res: Response<IResponse<any>>) {
+    try {
+      const result = await this.userServices.signIn(req.body);
+      // Ensure that a response is sent back to the client
+      res.status(200).json({
+        message: messages.SUCCESS,
+        statusCode: HttpStatusCode.Ok,
+        data: {
+          access_token: result,
+        },
+      });
+    } catch (err) {
+      ProcessError(err, res);
+    }
+  }
 }

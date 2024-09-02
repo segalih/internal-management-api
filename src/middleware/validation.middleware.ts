@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { validate, ValidationError } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
-export function validationMiddleware<T>(type: new () => T) {
+export function validationMiddleware<T extends object>(type: new () => T) {
   return async (req: Request, res: Response, next: NextFunction) => {
     const dto = plainToInstance(type, req.body);
     const errors: ValidationError[] = await validate(dto);
