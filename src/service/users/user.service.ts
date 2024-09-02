@@ -1,13 +1,16 @@
 import bcrypt from 'bcrypt';
+import { LoginDto } from '../../common/dto/auth/login.dto';
 import Users from '../../database/models/user.model';
 import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
-import { CreateUserDto } from '../../common/dto/auth/CreateUser.dto';
-import { LoginDto } from '../../common/dto/auth/login.dto';
 
-import * as jwt from 'jsonwebtoken';
-import configConstants from '../../config/constants';
+import { CreateUserDto } from '../../common/dto/user/CreateUser.dto';
+import JWTService from '../jwt/jwt.service';
 
 export default class UserService {
+  private jwtService: JWTService;
+  constructor() {
+    this.jwtService = new JWTService();
+  }
   async getById(id: number) {
     const user = await Users.findByPk(id);
     if (!user) throw new NotFoundException('Users not found', {});
@@ -37,9 +40,7 @@ export default class UserService {
       email: user.email,
     };
 
-    const token = jwt.sign(payload, configConstants.JWT_SECRET_ACCESS_TOKEN, {
-      expiresIn: configConstants.JWT_EXPIRES_IN,
-    });
+    const token = await this.jwtService;
 
     return token;
   }

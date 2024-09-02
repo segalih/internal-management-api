@@ -19,9 +19,7 @@ export class Routes {
 
     // Register main routes
     this.expressInstance.use('/', mainRouter);
-    // Apply authentication middleware
     // this.expressInstance.use(this.authMiddleware.checkAuth);
-    // Register user routes under /api/users
     this.expressInstance.use('/api/users', userRouterInstance);
     this.expressInstance.use('/api/auth', authRouterInstance);
   }
