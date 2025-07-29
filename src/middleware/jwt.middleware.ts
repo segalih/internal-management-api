@@ -18,7 +18,7 @@ export function jwtMiddleware() {
       if (buffer[0] != 'Bearer' && !token) {
         throw new Error();
       }
-      jwt.verify(token, configConstants.JWT_PRIVATE_KEY);
+      jwt.verify(token, configConstants.JWT_SECRET_ACCESS_TOKEN);
       req.user = jwt.decode(token) as any;
       next();
     } catch (error) {

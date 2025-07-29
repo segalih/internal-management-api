@@ -4,14 +4,14 @@ import { ForbiddenException } from '../../helper/Error/Forbidden/ForbiddenExcept
 
 export default class JWTService {
   async generateToken(userPayload: any) {
-    return jwt.sign(userPayload, configConstants.JWT_PRIVATE_KEY, {
+    return jwt.sign(userPayload, configConstants.JWT_SECRET_ACCESS_TOKEN, {
       expiresIn: configConstants.JWT_EXPIRES_IN,
     });
   }
 
   async verifyToken(token: string) {
     try {
-      return jwt.verify(token, configConstants.JWT_PRIVATE_KEY);
+      return jwt.verify(token, configConstants.JWT_SECRET_ACCESS_TOKEN);
     } catch (error) {
       throw new ForbiddenException('Invalid token', {});
     }
