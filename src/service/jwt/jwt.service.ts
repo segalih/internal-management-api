@@ -4,7 +4,9 @@ import { ForbiddenException } from '../../helper/Error/Forbidden/ForbiddenExcept
 
 export default class JWTService {
   async generateToken(userPayload: any) {
-    return jwt.sign(userPayload, configConstants.JWT_PRIVATE_KEY);
+    return jwt.sign(userPayload, configConstants.JWT_PRIVATE_KEY, {
+      expiresIn: configConstants.JWT_EXPIRES_IN,
+    });
   }
 
   async verifyToken(token: string) {
