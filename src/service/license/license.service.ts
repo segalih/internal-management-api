@@ -36,4 +36,13 @@ export default class LicenseService {
     await license.destroy();
     return null;
   }
+
+  async updateById(id: number, data: Partial<CreateLisenceDto>): Promise<LicenseAttributes> {
+    const license = await License.findByPk(id);
+    if (!license) {
+      throw new NotFoundException('License not found');
+    }
+    await license.update(data);
+    return license.toJSON();
+  }
 }

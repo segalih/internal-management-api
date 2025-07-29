@@ -19,6 +19,7 @@ export default class LicenseRoute {
     this.router
       .route('/:id')
       .get((req, res) => this.licenseController.show(req, res))
-      .delete((req, res) => this.licenseController.destroy(req, res));
+      .delete((req, res) => this.licenseController.destroy(req, res))
+      .put(validationMiddleware(CreateLisenceDto), (req, res) => this.licenseController.update(req, res));
   }
 }

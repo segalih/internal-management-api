@@ -53,4 +53,18 @@ export class LicenseController {
       ProcessError(err, res);
     }
   }
+
+  async update(req: Request, res: Response<ResponseApi<LicenseAttributes>>) {
+    try {
+      const id = parseInt(req.params.id, 10);
+      const updatedLicense = await this.licenseService.updateById(id, req.body);
+      res.status(HttpStatusCode.Ok).json({
+        message: 'License updated successfully',
+        statusCode: HttpStatusCode.Ok,
+        data: updatedLicense,
+      });
+    } catch (err) {
+      ProcessError(err, res);
+    }
+  }
 }

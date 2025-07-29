@@ -22,7 +22,7 @@ export interface sortOptions {
 }
 
 interface IPaginate {
-  page: number;
+  offset: number;
   limit: number;
   searchConditions: SearchCondition[];
   sortOptions?: sortOptions;
@@ -47,7 +47,7 @@ class BaseModel<
     totalPages: number;
     currentPage: number;
   }> {
-    const offset = (input.page - 1) * input.limit;
+    const offset = (input.offset - 1) * input.limit;
 
     let whereConditions: WhereOptions = {};
 
@@ -81,7 +81,7 @@ class BaseModel<
       totalCount: results.count,
       pageSize: input.limit,
       totalPages: Math.ceil(results.count / input.limit),
-      currentPage: input.page,
+      currentPage: input.offset,
     };
   }
 
