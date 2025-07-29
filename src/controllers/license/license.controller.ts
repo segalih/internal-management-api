@@ -1,10 +1,12 @@
 /// <reference path="../custom.d.ts" />
-import { Request, Response } from 'express';
-import { ProcessError } from '../../helper/Error/errorHandler';
-import LicenseService from '../../service/license/license.service';
-import { ResponseApi } from '../../helper/interface/response.interface';
-import License, { LicenseAttributes } from '../../database/models/license.model';
 import { HttpStatusCode } from 'axios';
+import { Request, Response } from 'express';
+import { Op } from 'sequelize';
+import { PaginationResult } from '../../database/models/base.model';
+import { LicenseAttributes } from '../../database/models/license.model';
+import { ProcessError } from '../../helper/Error/errorHandler';
+import { ResponseApi } from '../../helper/interface/response.interface';
+import LicenseService from '../../service/license/license.service';
 
 export class LicenseController {
   private licenseService: LicenseService; // Replace with actual service type
@@ -66,5 +68,28 @@ export class LicenseController {
     } catch (err) {
       ProcessError(err, res);
     }
+  }
+
+  async index(req: Request, res: Response<ResponseApi<PaginationResult<LicenseAttributes>>>) {
+    const { offset, limit, bast } = req.query;
+
+    const licenses = await this.licenseService.getAll({
+      limit: parseInt((limit as string) ?? '10', 10),
+      offset: parseInt((offset as string) ?? '1', 10),
+      searchConditions: [
+        {
+          keyValue: bast,
+          operator: Op.eq,
+          keyColumn: 'bast',
+          keySearch: 'bast',
+        },
+      ],
+    });
+
+    res.status(HttpStatusCode.Ok).json({
+      message: 'OK',
+      statusCode: HttpStatusCode.Ok,
+      data: licenses,
+    });
   }
 }

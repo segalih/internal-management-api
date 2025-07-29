@@ -1,6 +1,8 @@
+import { Op } from 'sequelize';
 import { CreateLisenceDto } from '../../common/dto/lisence/CreateLisenceDto';
 import License, { LicenseAttributes } from '../../database/models/license.model';
 import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
+import { PaginationResult, SearchCondition } from '../../database/models/base.model';
 
 export default class LicenseService {
   constructor() {}
@@ -44,5 +46,21 @@ export default class LicenseService {
     }
     await license.update(data);
     return license.toJSON();
+  }
+
+  async getAll(input: {
+    limit: number;
+    offset: number;
+    searchConditions?: SearchCondition[];
+    sortOptions?: any;
+  }): Promise<PaginationResult<LicenseAttributes>> {
+    const results = await License.paginate<LicenseAttributes>({
+      offset: input.offset,
+      limit: input.limit,
+      searchConditions: input.searchConditions || [],
+      sortOptions: input.sortOptions,
+    });
+
+    return results;
   }
 }

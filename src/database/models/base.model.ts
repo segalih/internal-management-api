@@ -3,7 +3,7 @@ import Database from '../../config/db';
 
 const databaseInstance = Database.database;
 
-interface SearchCondition {
+export interface SearchCondition {
   keyValue: any;
   operator: symbol;
   keySearch: string | number;
@@ -31,6 +31,14 @@ interface IPaginate {
   symbolCondition?: WhereOptions;
 }
 
+export interface PaginationResult<T> {
+  data: T[];
+  totalCount: number;
+  pageSize: number;
+  totalPages: number;
+  currentPage: number;
+}
+
 class BaseModel<
   TAttributes extends BaseModelAttributes,
   TCreationAttributes extends Optional<TAttributes, 'id'>
@@ -40,13 +48,7 @@ class BaseModel<
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date | null;
 
-  static async paginate(input: IPaginate): Promise<{
-    data: any[];
-    totalCount: number;
-    pageSize: number;
-    totalPages: number;
-    currentPage: number;
-  }> {
+  static async paginate<T>(input: IPaginate): Promise<PaginationResult<T>> {
     const offset = (input.offset - 1) * input.limit;
 
     let whereConditions: WhereOptions = {};
@@ -77,7 +79,7 @@ class BaseModel<
     });
 
     return {
-      data: results.rows,
+      data: results.rows as T[],
       totalCount: results.count,
       pageSize: input.limit,
       totalPages: Math.ceil(results.count / input.limit),
