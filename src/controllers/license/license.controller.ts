@@ -24,4 +24,18 @@ export class LicenseController {
       ProcessError(err, res);
     }
   }
+
+  async show(req: Request, res: Response<ResponseApi<LicenseAttributes>>) {
+    try {
+      const id = parseInt(req.params.id, 10);
+      const license = await this.licenseService.getById(id);
+      res.status(200).json({
+        message: 'License retrieved successfully',
+        statusCode: 200,
+        data: license,
+      });
+    } catch (err) {
+      ProcessError(err, res);
+    }
+  }
 }

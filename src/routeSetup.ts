@@ -1,10 +1,9 @@
-import express, { Router } from 'express';
-import AuthMiddleware from './middleware/auth.middleware';
-import userRouter from './routes/user/user.route';
+import express from 'express';
+import { jwtMiddleware } from './middleware/jwt.middleware';
 import MainRouter from './routes';
 import AuthRoute from './routes/auth/auth.route';
-import LicenseRoute from './routes/lisence/lisence.route';
-import { jwtMiddleware } from './middleware/jwt.middleware';
+import LicenseRoute from './routes/license/license.route';
+import userRouter from './routes/user/user.route';
 
 export class Routes {
   constructor(private expressInstance: express.Express) {

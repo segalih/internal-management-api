@@ -16,5 +16,6 @@ export default class LicenseRoute {
     this.router
       .route('/')
       .post(validationMiddleware(CreateLisenceDto), (req, res) => this.licenseController.create(req, res));
+    this.router.route('/:id').get((req, res) => this.licenseController.show(req, res));
   }
 }
