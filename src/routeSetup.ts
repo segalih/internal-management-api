@@ -3,24 +3,19 @@ import AuthMiddleware from './middleware/auth.middleware';
 import userRouter from './routes/user/user.route';
 import MainRouter from './routes';
 import AuthRoute from './routes/auth/auth.route';
+import LicenseRoute from './routes/lisence/lisence.route';
+import { jwtMiddleware } from './middleware/jwt.middleware';
 
 export class Routes {
-  private authMiddleware: AuthMiddleware;
-
   constructor(private expressInstance: express.Express) {
-    this.authMiddleware = new AuthMiddleware();
     this.initializeRoutes();
   }
 
   private initializeRoutes(): void {
-    const mainRouter = new MainRouter().router;
-    const userRouterInstance = new userRouter().router;
-    const authRouterInstance = new AuthRoute().router;
-
     // Register main routes
-    this.expressInstance.use('/', mainRouter);
-    // this.expressInstance.use(this.authMiddleware.checkAuth);
-    this.expressInstance.use('/api/users', userRouterInstance);
-    this.expressInstance.use('/api/auth', authRouterInstance);
+    this.expressInstance.use('/', new MainRouter().router);
+    this.expressInstance.use('/api/users', new userRouter().router);
+    this.expressInstance.use('/api/auth', new AuthRoute().router);
+    this.expressInstance.use('/api/licenses', jwtMiddleware(), new LicenseRoute().router);
   }
 }

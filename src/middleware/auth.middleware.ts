@@ -10,7 +10,6 @@ interface ISpecifiedRoute {
 }
 export default class AuthMiddleware {
   public async checkAuth(req: Request, res: Response, next: NextFunction): Promise<void> {
-    console.log('aa', req.path);
     try {
       const bypasAuth = ['/api/common', '/api/auth', '/api/store'];
       for (const whitelist of bypasAuth) {
@@ -19,48 +18,6 @@ export default class AuthMiddleware {
         }
       }
       if (req.path === '/' || req.path === '/api' || req.path === '/favicon.ico') {
-        console.log('kocak');
-        return next();
-      }
-      const specifiedRoutes: ISpecifiedRoute[] = [
-        {
-          method: 'GET',
-          route: /^\/api\/users(?:\?.*)?$/,
-        },
-        {
-          method: 'POST',
-          route: /^\/api\/users(?:\?.*)?$/,
-        },
-        {
-          method: 'GET',
-          route: /^\/api\/document\/[a-f0-9-]+$/i,
-        },
-        {
-          method: 'GET',
-          route: /^\/api\/branches\?latitude=-?\d+(\.\d+)?&longitude=-?\d+(\.\d+)?$/,
-        },
-        {
-          method: 'GET',
-          route: /^\/api\/category\?limit=\d+&branchId=\d+$/,
-        },
-        {
-          method: 'GET',
-          route: /^\/api\/product\/landing-page/,
-        },
-        {
-          method: 'PUT',
-          route: /^\/api\/users\/[a-f0-9-]+$/i,
-        },
-      ];
-
-      const isSpecifiedRoute = specifiedRoutes.some(
-        (route) =>
-          route.method.toUpperCase() === req.method.toUpperCase() &&
-          route.method === req.method &&
-          route.route.test(req.originalUrl)
-      );
-
-      if (isSpecifiedRoute) {
         return next();
       }
 
