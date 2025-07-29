@@ -11,4 +11,7 @@ export class CreateUserDto {
   @IsString()
   @Length(6, 100)
   password!: string;
+
+  @IsString()
+  role!: string;
 }

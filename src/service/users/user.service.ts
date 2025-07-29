@@ -5,6 +5,7 @@ import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException
 
 import { CreateUserDto } from '../../common/dto/user/CreateUser.dto';
 import JWTService from '../jwt/jwt.service';
+import { BadRequestException } from '../../helper/Error/BadRequestException/BadRequestException';
 
 export default class UserService {
   private jwtService: JWTService;
@@ -24,6 +25,8 @@ export default class UserService {
 
   async create(data: CreateUserDto) {
     const hashPassword = await bcrypt.hash(data.password, 10);
+    const isExist = await Users.findOne({ where: { email: data.email } });
+    if (isExist) throw new BadRequestException('Email already exists', {});
     const user = await Users.create({ ...data, password: hashPassword });
     return user;
   }
@@ -39,9 +42,17 @@ export default class UserService {
       name: user.name,
       email: user.email,
     };
+    const token = await this.jwtService.generateToken(payload);
+    const result = {
+      access_token: token,
+      payload: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    };
 
-    const token = await this.jwtService;
-
-    return token;
+    return result;
   }
 }

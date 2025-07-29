@@ -49,9 +49,7 @@ export class UserController {
       res.status(200).json({
         message: messages.SUCCESS,
         statusCode: HttpStatusCode.Ok,
-        data: {
-          access_token: result,
-        },
+        data: result,
       });
     } catch (err) {
       ProcessError(err, res);

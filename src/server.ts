@@ -7,9 +7,7 @@ import path from 'path';
 import express, { NextFunction, Response } from 'express';
 import expressListEndpoints from 'express-list-endpoints';
 import helmet from 'helmet';
-import { messages } from './config/message';
 import { Routes } from './routeSetup';
-import { CronJob } from './cronjob/cronjob';
 
 const Reset = '\x1b[0m';
 const FgGreen = '\x1b[32m';
@@ -25,7 +23,6 @@ export default class Server {
     this.routes = new Routes(this.expressInstance);
     this.printRegisteredRoutes();
     this.initializeClient();
-    new CronJob();
   }
 
   private initializeClient() {

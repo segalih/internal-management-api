@@ -19,6 +19,10 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
       },
+      role: {
+        type: Sequelize.ENUM('superadmin', 'officer', 'staff'),
+        allowNull: false,
+      },
       email: {
         type: Sequelize.STRING,
       },
