@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import sequelize, { Sequelize } from 'sequelize';
+import sequelize, { Dialect, Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 import configConstants from './constants';
 import path from 'path';
@@ -20,6 +20,7 @@ class Database {
   port: number;
   maxPool: number;
   minPool: number;
+  dialect: Dialect;
   database: sequelize.Sequelize;
   private static instance: Database | null = null; // Singleton instance
 
@@ -31,9 +32,11 @@ class Database {
     this.port = config.port;
     this.maxPool = configConstants.DB_MAX_POOL;
     this.minPool = configConstants.DB_MIN_POOL;
+    this.dialect = config.dialect || 'mysql'; // Default to 'mysql' if not specified
+
     this.database = new Sequelize(this.db, this.user, this.password, {
       host: this.host,
-      dialect: 'mysql',
+      dialect: this.dialect,
       port: this.port,
       logging: false,
       pool: {
