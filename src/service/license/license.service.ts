@@ -1,19 +1,19 @@
 import { CreateLisenceDto } from '../../common/dto/lisence/CreateLisenceDto';
-import License from '../../database/models/license.model';
+import License, { LicenseAttributes } from '../../database/models/license.model';
 import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
 
 export default class LicenseService {
   constructor() {}
 
-  async getById(id: number) {
+  async getById(id: number): Promise<LicenseAttributes> {
     const license = await License.findByPk(id);
     if (!license) {
       throw new NotFoundException('License not found');
     }
-    return license;
+    return license.toJSON();
   }
 
-  async create(data: CreateLisenceDto) {
+  async create(data: CreateLisenceDto): Promise<LicenseAttributes> {
     const license = await License.create({
       pks: data.pks,
       bast: data.bast,
@@ -26,5 +26,14 @@ export default class LicenseService {
       throw new NotFoundException('License not created');
     }
     return license.toJSON();
+  }
+
+  async deleteById(id: number): Promise<null> {
+    const license = await License.findByPk(id);
+    if (!license) {
+      throw new NotFoundException('License not found');
+    }
+    await license.destroy();
+    return null;
   }
 }
