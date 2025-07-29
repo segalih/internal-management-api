@@ -25,6 +25,6 @@ export default class LicenseService {
     if (!license) {
       throw new NotFoundException('License not created');
     }
-    return license;
+    return license.toJSON();
   }
 }
