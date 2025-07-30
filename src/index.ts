@@ -65,6 +65,10 @@ function onError(error: NodeJS.ErrnoException): void {
       console.error(`${bind} is already in use`);
       process.exit(1);
       break;
+    case 'ENOENT':
+      console.error(`${bind} does not exist`);
+      process.exit(1);
+      break;
     default:
       throw error;
   }

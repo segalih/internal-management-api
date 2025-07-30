@@ -191,4 +191,19 @@ export class MsaController {
       ProcessError(err, res);
     }
   }
+
+  async destroy(req: Request, res: Response<ResponseApi<void>>) {
+    try {
+      const id = req.params.id;
+
+      if (!isStringNumber(id)) {
+        throw new BadRequestException('Invalid MSA ID');
+      }
+
+      await this.msaService.deleteById(parseInt(id, 10));
+      res.status(HttpStatusCode.NoContent).json(void 0);
+    } catch (err) {
+      ProcessError(err, res);
+    }
+  }
 }
