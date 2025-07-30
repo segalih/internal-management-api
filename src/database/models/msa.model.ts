@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from './base.model';
-import MsaDetail from './msa_detail.model';
+import MsaDetail, { MsaDetailAttributes } from './msa_detail.model';
 
 export interface MsaAttributes extends BaseModelAttributes {
   pks: string;
@@ -21,12 +21,7 @@ class Msa extends BaseModel<MsaAttributes, MsaCreationAttributes> implements Msa
   public budgetQuota!: number;
   public peopleQuota!: number;
 
-  static associate(models: any) {
-    Msa.hasMany(models.MsaDetail, {
-      foreignKey: 'msa_id',
-      as: 'details',
-    });
-  }
+  public details?: MsaDetail[];
 }
 
 Msa.init(
@@ -62,9 +57,5 @@ Msa.init(
     tableName: 'msa',
   }
 );
-// Msa.hasMany(MsaDetail, {
-//   foreignKey: 'msa_id',
-//   as: 'details',
-// });
 
 export default Msa;

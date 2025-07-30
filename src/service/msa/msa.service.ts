@@ -6,7 +6,6 @@ export default class MsaService {
   constructor() {}
 
   async createMsa(data: CreateMsaDto, file: Express.Multer.File): Promise<MsaAttributes> {
-    console.log('Creating MSA with data:', data, 'and file:', file);
     const filename = file.filename;
     const msa = await Msa.create({
       pks: data.pks,

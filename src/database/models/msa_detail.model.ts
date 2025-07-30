@@ -3,23 +3,23 @@ import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from '
 import Msa from './msa.model';
 
 export interface MsaDetailAttributes extends BaseModelAttributes {
-  msa_id: number;
+  msaId: number;
   name: string;
   rate: number;
   role: string;
   project: string;
-  group_position: string;
+  groupPosition: string;
 }
 
 export interface MsaDetailCreationAttributes extends Omit<MsaDetailAttributes, 'id'> {}
 
 class MsaDetail extends BaseModel<MsaDetailAttributes, MsaDetailCreationAttributes> implements MsaDetailAttributes {
-  public msa_id!: number;
+  public msaId!: number;
   public name!: string;
   public rate!: number;
   public role!: string;
   public project!: string;
-  public group_position!: string;
+  public groupPosition!: string;
 
   static associate(models: any) {
     MsaDetail.belongsTo(models.Msa, {
@@ -32,7 +32,7 @@ class MsaDetail extends BaseModel<MsaDetailAttributes, MsaDetailCreationAttribut
 MsaDetail.init(
   {
     ...baseModelInit,
-    msa_id: {
+    msaId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -52,7 +52,7 @@ MsaDetail.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    group_position: {
+    groupPosition: {
       type: DataTypes.STRING,
       allowNull: true,
     },
@@ -63,9 +63,13 @@ MsaDetail.init(
   }
 );
 
-// MsaDetail.belongsTo(Msa, {
-//   foreignKey: 'msa_id',
-//   as: 'msa',
-// });
+MsaDetail.belongsTo(Msa, {
+  foreignKey: 'msaId',
+  as: 'msa',
+});
+Msa.hasMany(MsaDetail, {
+  foreignKey: 'msaId',
+  as: 'details',
+});
 
 export default MsaDetail;

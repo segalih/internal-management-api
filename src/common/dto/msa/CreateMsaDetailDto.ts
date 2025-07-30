@@ -1,12 +1,11 @@
-import { IsDecimal, IsString } from 'class-validator';
+import { IsNumber, IsPositive, IsString } from 'class-validator';
 
 export default class CreateMsaDetailDto {
   @IsString()
   name!: string;
 
-  @IsDecimal({
-    decimal_digits: '12,2',
-  })
+  @IsNumber()
+  @IsPositive()
   rate!: number;
 
   @IsString()
