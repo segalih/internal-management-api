@@ -206,4 +206,23 @@ export class MsaController {
       ProcessError(err, res);
     }
   }
+
+  async show(req: Request, res: Response<ResponseApi<MsaAttributes>>) {
+    try {
+      const id = req.params.id;
+
+      if (!isStringNumber(id)) {
+        throw new BadRequestException('Invalid MSA ID');
+      }
+
+      const result = await this.msaService.getById(parseInt(id, 10));
+      res.status(HttpStatusCode.Ok).json({
+        statusCode: HttpStatusCode.Ok,
+        message: 'MSA retrieved successfully',
+        data: result,
+      });
+    } catch (err) {
+      ProcessError(err, res);
+    }
+  }
 }

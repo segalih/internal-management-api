@@ -5,9 +5,11 @@ import { ForbiddenException } from './Forbidden/ForbiddenException';
 import { UnauthorizedException } from './UnauthorizedException/UnauthorizedException';
 import { UnprocessableEntityException } from './UnprocessableEntity/UnprocessableEntityException';
 import { NotFoundException } from './NotFound/NotFoundException';
+import logger from '../../logger';
 
 export function ProcessError(err: any, res: Response) {
   console.log(err);
+  logger.error(err);
   if (err instanceof BadRequestException) {
     res.status(HttpStatusCode.BadRequest).json({
       statusCode: HttpStatusCode.BadRequest,

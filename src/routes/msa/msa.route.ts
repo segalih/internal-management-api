@@ -33,7 +33,7 @@ export default class MsaRoute {
 
     this.router
       .route('/:id')
-      //   .get((req, res) => this.msaController.show(req, res))
+      .get((req, res) => this.msaController.show(req, res))
       .delete((req, res) => this.msaController.destroy(req, res))
       .put(multerMiddleware, validationMiddleware(CreateMsaDto), (req, res) => this.msaController.update(req, res));
   }

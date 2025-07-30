@@ -8,6 +8,7 @@ import express, { NextFunction, Response } from 'express';
 import expressListEndpoints from 'express-list-endpoints';
 import helmet from 'helmet';
 import { Routes } from './routeSetup';
+import logger from './logger';
 
 const Reset = '\x1b[0m';
 const FgGreen = '\x1b[32m';
@@ -28,9 +29,6 @@ export default class Server {
   private initializeClient() {
     const clientPath = '../../client/build';
     this.expressInstance.use(express.static(path.join(__dirname, clientPath)));
-    this.expressInstance.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, clientPath, 'index.html'));
-    });
   }
 
   private middlewareSetup() {
@@ -50,6 +48,7 @@ export default class Server {
 
     function printLog(method: string, path: string) {
       console.info(`${FgYellow}Registered route: ${FgGreen}${method} ${path}` + Reset);
+      logger.info(`Registered route: ${method} ${path}`);
     }
 
     const routes = expressListEndpoints(this.expressInstance);

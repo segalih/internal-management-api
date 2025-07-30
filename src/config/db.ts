@@ -3,6 +3,7 @@ import sequelize, { Dialect, Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 import configConstants from './constants';
 import path from 'path';
+import logger from '../logger';
 
 dotenv.config({
   path: path.resolve(__dirname, '../../.env'),
@@ -51,9 +52,12 @@ class Database {
       .authenticate()
       .then(() => {
         console.info('Connection database has been established successfully.');
+        logger.info('Connection database has been established successfully.');
       })
       .catch((err) => {
         console.error('Unable to connect to the database:', err);
+        logger.error('Unable to connect to the database:', err);
+        process.exit(1);
       });
 
     this.database.sync({
