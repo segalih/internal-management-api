@@ -50,15 +50,15 @@ export function multerMiddleware(req: Request, res: Response, next: NextFunction
       });
     }
 
-    if (!req.file) {
-      const errorResponse: ResponseApi<null> = {
-        statusCode: HttpStatusCode.BadRequest,
-        message: messages.FAILED_UPLOAD,
-        data: null,
-        errors: 'File is required',
-      };
-      return res.status(HttpStatusCode.BadRequest).json(errorResponse);
-    }
+    // if (!req.file) {
+    //   const errorResponse: ResponseApi<null> = {
+    //     statusCode: HttpStatusCode.BadRequest,
+    //     message: messages.FAILED_UPLOAD,
+    //     data: null,
+    //     errors: 'File is required',
+    //   };
+    //   return res.status(HttpStatusCode.BadRequest).json(errorResponse);
+    // }
     next();
   });
 }

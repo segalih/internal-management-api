@@ -70,15 +70,19 @@ export default class MsaDetailService {
     return updatedMsaDetail.toJSON();
   }
 
-  totalPeople = (msaDetails: MsaDetailAttributes[]): number => {
+  public totalPeople = (msaDetails: MsaDetailAttributes[]): number => {
     return msaDetails.length;
   };
 
-  totalBudgetUsed = (msaDetails: MsaDetailAttributes[]): number => {
+  public totalBudgetUsed = (msaDetails: MsaDetailAttributes[]): number => {
     return msaDetails.reduce((sum, detail) => sum + parseFloat(detail.rate.toString()), 0);
   };
 
-  checkQuotaLimits = (msa: Msa, newMsaDetail: CreateMsaDetailDto | MsaDetail, isUpdate: boolean = false): void => {
+  public checkQuotaLimits = (
+    msa: Msa,
+    newMsaDetail: CreateMsaDetailDto | MsaDetail,
+    isUpdate: boolean = false
+  ): void => {
     if (!msa.details) msa.details = [];
     let updatedMsaDetail: MsaDetail | null = null;
     if (isUpdate) {

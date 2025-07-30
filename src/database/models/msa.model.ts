@@ -9,6 +9,7 @@ export interface MsaAttributes extends BaseModelAttributes {
   dateEnded: Date;
   peopleQuota: number;
   budgetQuota: number;
+  fileUrl?: string;
 }
 
 export interface MsaCreationAttributes extends Omit<MsaAttributes, 'id'> {}

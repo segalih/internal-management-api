@@ -1,8 +1,12 @@
-import { IsDateString, IsNumber, IsPositive, IsString, Matches } from 'class-validator';
+import { IsDateString, IsNumber, IsOptional, IsPositive, IsString, Matches } from 'class-validator';
 
 export default class CreateMsaDto {
   @IsString()
   pks!: string;
+
+  @IsString()
+  @IsOptional()
+  bast?: string;
 
   @IsDateString()
   date_started!: Date;
