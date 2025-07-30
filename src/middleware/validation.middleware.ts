@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { validate, ValidationError } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
+import { HttpStatusCode } from 'axios';
+import { ResponseApi } from '../helper/interface/response.interface';
+import { messages } from '../config/message';
 
 export function validationMiddleware<T extends object>(type: new () => T) {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -8,12 +11,18 @@ export function validationMiddleware<T extends object>(type: new () => T) {
     const errors: ValidationError[] = await validate(dto);
 
     if (errors.length > 0) {
-      return res.status(400).json({
-        success: false,
+      const errorResponse: ResponseApi<any> = {
+        statusCode: HttpStatusCode.BadRequest,
+        message: messages.VALIDATION_ERROR,
+        data: {},
         errors: errors.map((error) => ({
           property: error.property,
           constraints: error.constraints,
         })),
+      };
+
+      return res.status(HttpStatusCode.BadRequest).json({
+        ...errorResponse,
       });
     }
 

@@ -4,4 +4,5 @@ export enum messages {
   NOT_FOUND = 'Not Found',
   API_NOT_FOUND = 'API Not Found',
   UNAUTHORIZED = 'Unauthorized',
+  VALIDATION_ERROR = 'Validation Error',
 }
