@@ -18,11 +18,11 @@ export default class CreateMsaDto {
   @Matches(/^\d+(\.\d+)?$/, {
     message: 'people_quota must be a string containing a positive number',
   })
-  people_quota!: number;
+  people_quota!: string;
 
   @IsString()
   @Matches(/^\d+(\.\d+)?$/, {
     message: 'people_quota must be a string containing a positive number',
   })
-  budget_quota!: number;
+  budget_quota!: string;
 }

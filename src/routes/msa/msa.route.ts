@@ -24,7 +24,6 @@ export default class MsaRoute {
       .post(multerMiddleware, validationMiddleware(CreateMsaDto), (req, res) => this.msaController.create(req, res));
     //   .get((req, res) => this.msaController.index(req, res));
     this.router.route('/file/:id').get((req, res) => this.msaController.getFile(req, res));
-
     this.router
       .route('/:id/detail')
       .post(validationMiddleware(CreateMsaDetailDto), (req, res) => this.msaDetailController.create(req, res));
@@ -32,10 +31,10 @@ export default class MsaRoute {
       .route('/:id/detail/:msaDetailId')
       .put(validationMiddleware(CreateMsaDetailDto), (req, res) => this.msaDetailController.update(req, res));
 
-    // this.router
-    //   .route('/:id')
-    //   .get((req, res) => this.msaController.show(req, res))
-    //   .delete((req, res) => this.msaController.destroy(req, res))
-    //   .put(validationMiddleware(CreateMsaDto), (req, res) => this.msaController.update(req, res));
+    this.router
+      .route('/:id')
+      //   .get((req, res) => this.msaController.show(req, res))
+      //   .delete((req, res) => this.msaController.destroy(req, res))
+      .put(multerMiddleware, validationMiddleware(CreateMsaDto), (req, res) => this.msaController.update(req, res));
   }
 }

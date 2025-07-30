@@ -1,9 +1,11 @@
+import e from 'express';
 import CreateMsaDto from '../../common/dto/msa/CreateMsaDto';
 import Msa, { MsaAttributes } from '../../database/models/msa.model';
 import MsaDetail from '../../database/models/msa_detail.model';
 import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
 import { UnprocessableEntityException } from '../../helper/Error/UnprocessableEntity/UnprocessableEntityException';
 import MsaDetailService from './msaDetail.service';
+import { parse } from 'path';
 
 export default class MsaService {
   private msaDetailService: MsaDetailService;
@@ -18,8 +20,8 @@ export default class MsaService {
       bast: filename,
       dateStarted: data.date_started,
       dateEnded: data.date_ended,
-      peopleQuota: data.people_quota,
-      budgetQuota: data.budget_quota,
+      peopleQuota: parseInt(data.people_quota, 10),
+      budgetQuota: parseFloat(data.budget_quota.toString()),
     });
 
     if (!msa) {
@@ -47,14 +49,19 @@ export default class MsaService {
     if (file) {
       const filename = file.filename;
       data.bast = filename;
+    } else {
+      data.bast = msa.bast;
     }
 
     const totalPeople = this.msaDetailService.totalPeople(msa.details);
     const totalBudgetUsed = this.msaDetailService.totalBudgetUsed(msa.details);
     const newBudgetQuota = parseFloat(data.budget_quota.toString());
 
-    if (totalPeople > data.people_quota) {
-      throw new NotFoundException('Maximum number of people exceeded');
+    if (totalPeople > parseInt(data.people_quota, 10)) {
+      throw new UnprocessableEntityException('Maximum number of people exceeded', {
+        newPeopleQuota: parseInt(data.people_quota, 10),
+        totalPeopleUsed: totalPeople,
+      });
     }
 
     if (totalBudgetUsed > newBudgetQuota) {
@@ -69,8 +76,8 @@ export default class MsaService {
       bast: data.bast,
       dateStarted: data.date_started,
       dateEnded: data.date_ended,
-      peopleQuota: data.people_quota,
-      budgetQuota: data.budget_quota,
+      peopleQuota: parseInt(data.people_quota, 10),
+      budgetQuota: parseFloat(data.budget_quota.toString()),
     });
 
     if (!msa) {

@@ -7,11 +7,12 @@ import { ProcessError } from '../../helper/Error/errorHandler';
 import { isStringNumber } from '../../helper/function/common';
 import { BadRequestException } from '../../helper/Error/BadRequestException/BadRequestException';
 import * as fs from 'fs';
+
 export class MsaController {
-  private msaService: MsaService; // Replace with actual service type
+  private msaService: MsaService;
 
   constructor() {
-    this.msaService = new MsaService(); // Initialize with actual service instance
+    this.msaService = new MsaService();
   }
 
   async create(req: Request, res: Response<ResponseApi<MsaAttributes>>) {
