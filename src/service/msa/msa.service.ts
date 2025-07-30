@@ -21,4 +21,12 @@ export default class MsaService {
     }
     return msa.toJSON();
   }
+
+  async getById(id: number): Promise<MsaAttributes> {
+    const msa = await Msa.findByPk(id);
+    if (!msa) {
+      throw new NotFoundException('MSA not found');
+    }
+    return msa.toJSON();
+  }
 }
