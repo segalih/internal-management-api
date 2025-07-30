@@ -77,7 +77,7 @@ export class MsaController {
 
       const msa = await this.msaService.getById(parseInt(msaId, 10));
 
-      const filePath = `./uploads/${msa.bast}`;
+      const filePath = `./uploads/pks_msa/${msaId}/${msa.bast}`;
 
       if (!fs.existsSync(filePath)) {
         throw new Error('File not found');

@@ -5,7 +5,7 @@ import MsaDetail from '../../database/models/msa_detail.model';
 import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
 import { UnprocessableEntityException } from '../../helper/Error/UnprocessableEntity/UnprocessableEntityException';
 import MsaDetailService from './msaDetail.service';
-
+import * as fs from 'fs';
 export default class MsaService {
   private msaDetailService: MsaDetailService;
   constructor() {
@@ -26,6 +26,7 @@ export default class MsaService {
     if (!msa) {
       throw new NotFoundException('MSA not created');
     }
+    await this.moveBastFile(msa.id);
     return await this.getById(msa.id);
   }
 
@@ -69,7 +70,7 @@ export default class MsaService {
         totalBudgetUsed: totalBudgetUsed,
       });
     }
-
+    const oldBast = msa.bast;
     await msa.update({
       pks: data.pks,
       bast: data.bast,
@@ -78,6 +79,10 @@ export default class MsaService {
       peopleQuota: parseInt(data.people_quota, 10),
       budgetQuota: parseFloat(data.budget_quota.toString()),
     });
+
+    if (file && oldBast !== data.bast) {
+        await this.moveBastFile(msa.id);
+    }
 
     if (!msa) {
       throw new NotFoundException('MSA not updated');
@@ -117,5 +122,31 @@ export default class MsaService {
     });
 
     return results;
+  }
+
+  async moveBastFile(id: number): Promise<void> {
+    const msa = await Msa.findByPk(id);
+    if (!msa) {
+      throw new NotFoundException('MSA not found');
+    }
+
+    const oldPath = `./uploads/${msa.bast}`;
+    const newFilePath = `./uploads/pks_msa/${id}/${msa.bast}`;
+
+    if (!fs.existsSync(oldPath)) {
+      throw new NotFoundException('File not found');
+    }
+    if (!fs.existsSync(`./uploads/pks_msa/${id}`)) {
+      fs.mkdirSync(`./uploads/pks_msa/${id}`, { recursive: true });
+    }
+    if (oldPath === newFilePath) {
+      return; // No need to move if the paths are the same
+    }
+
+    try {
+      fs.renameSync(oldPath, newFilePath);
+    } catch (err) {
+      throw new Error('Gagal memindahkan file');
+    }
   }
 }
