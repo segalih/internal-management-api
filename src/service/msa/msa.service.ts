@@ -1,11 +1,10 @@
-import e from 'express';
 import CreateMsaDto from '../../common/dto/msa/CreateMsaDto';
+import { PaginationResult, SearchCondition, sortOptions } from '../../database/models/base.model';
 import Msa, { MsaAttributes } from '../../database/models/msa.model';
 import MsaDetail from '../../database/models/msa_detail.model';
 import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
 import { UnprocessableEntityException } from '../../helper/Error/UnprocessableEntity/UnprocessableEntityException';
 import MsaDetailService from './msaDetail.service';
-import { parse } from 'path';
 
 export default class MsaService {
   private msaDetailService: MsaDetailService;
@@ -94,5 +93,29 @@ export default class MsaService {
       throw new NotFoundException('MSA not found');
     }
     return { ...msa.toJSON(), fileUrl: `/api/msa/file/${msa.id}` };
+  }
+
+  async deleteById(id: number): Promise<void> {
+    const msa = await Msa.findByPk(id);
+    if (!msa) {
+      throw new NotFoundException('MSA not found');
+    }
+    await msa.destroy();
+  }
+
+  async getAll(input: {
+    limit: number;
+    offset: number;
+    searchConditions?: SearchCondition[];
+    sortOptions?: sortOptions;
+  }): Promise<PaginationResult<MsaAttributes>> {
+    const results = await Msa.paginate<MsaAttributes>({
+      offset: input.offset,
+      limit: input.limit,
+      searchConditions: input.searchConditions || [],
+      sortOptions: input.sortOptions,
+    });
+
+    return results;
   }
 }

@@ -51,16 +51,16 @@ class BaseModel<
   static async paginate<T>(input: IPaginate): Promise<PaginationResult<T>> {
     const offset = (input.offset - 1) * input.limit;
 
-    let whereConditions: WhereOptions = {};
+    let whereConditions: WhereOptions = this.buildWhereClause(input.searchConditions);
 
-    for (const condition of input.searchConditions) {
-      whereConditions[condition.keyColumn ?? condition.keySearch] = {
-        [condition.keyValue ? condition.operator : Op.substring]: condition.keyValue,
-      };
-    }
-    whereConditions['deletedAt'] = {
-      [Op.eq]: null,
-    };
+    // for (const condition of input.searchConditions) {
+    //   whereConditions[condition.keyColumn ?? condition.keySearch] = {
+    //     [condition.keyValue ? condition.operator : Op.substring]: condition.keyValue,
+    //   };
+    // }
+    // whereConditions['deletedAt'] = {
+    //   [Op.eq]: null,
+    // };
     if (input.symbolCondition) {
       whereConditions = { ...whereConditions, ...input.symbolCondition };
     }
@@ -85,6 +85,18 @@ class BaseModel<
       totalPages: Math.ceil(results.count / input.limit),
       currentPage: input.offset,
     };
+  }
+
+  static buildWhereClause(conditions: SearchCondition[]): WhereOptions {
+    const where: WhereOptions = {};
+    for (const cond of conditions) {
+      if (cond.keyValue !== undefined && cond.keyValue !== null && cond.keyValue !== '') {
+        const key = cond.keyColumn ?? cond.keySearch;
+        where[key] = { [cond.operator]: cond.keyValue };
+      }
+    }
+    where['deletedAt'] = { [Op.eq]: null };
+    return where;
   }
 
   static async updateById<T>(id: number, data: Partial<T>): Promise<T> {

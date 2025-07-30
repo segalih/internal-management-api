@@ -21,8 +21,8 @@ export default class MsaRoute {
   serve() {
     this.router
       .route('/')
-      .post(multerMiddleware, validationMiddleware(CreateMsaDto), (req, res) => this.msaController.create(req, res));
-    //   .get((req, res) => this.msaController.index(req, res));
+      .post(multerMiddleware, validationMiddleware(CreateMsaDto), (req, res) => this.msaController.create(req, res))
+      .get((req, res) => this.msaController.index(req, res));
     this.router.route('/file/:id').get((req, res) => this.msaController.getFile(req, res));
     this.router
       .route('/:id/detail')

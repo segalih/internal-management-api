@@ -17,6 +17,8 @@ module.exports = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: process.env.DB_DIALECT || 'mysql',
+    // @ts-ignore
+    logging: (...msg) => console.log('SQL Query:', msg[0]),
     dialectOptions: {
       bigNumberStrings: true,
     },
