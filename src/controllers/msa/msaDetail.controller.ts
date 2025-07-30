@@ -1,12 +1,11 @@
+import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
 import { MsaDetailAttributes } from '../../database/models/msa_detail.model';
-import { ResponseApi } from '../../helper/interface/response.interface';
 import { ProcessError } from '../../helper/Error/errorHandler';
-import { HttpStatusCode } from 'axios';
-import MsaDetailService from '../../service/msa/msaDetail.service';
-import _ from 'lodash';
-import { isStringNumber } from '../../helper/function/common';
 import { UnprocessableEntityException } from '../../helper/Error/UnprocessableEntity/UnprocessableEntityException';
+import { isStringNumber } from '../../helper/function/common';
+import { ResponseApi } from '../../helper/interface/response.interface';
+import MsaDetailService from '../../service/msa/msaDetail.service';
 
 export class MsaDetailController {
   private msaDetailService: MsaDetailService;
@@ -55,6 +54,27 @@ export class MsaDetailController {
         data: msaDetail,
       };
       res.status(HttpStatusCode.Ok).json(response);
+    } catch (error) {
+      ProcessError(error, res);
+    }
+  }
+
+  async destroy(req: Request, res: Response<ResponseApi<null>>): Promise<void> {
+    try {
+      const msaDetailId = req.params.msaDetailId;
+      const msaId = req.params.id;
+      if (!isStringNumber(msaDetailId) || !isStringNumber(msaId)) {
+        throw new UnprocessableEntityException('Invalid MSA or MSA detail ID format', {
+          msaDetailId,
+          msaId,
+        });
+      }
+      await this.msaDetailService.deleteMsaDetail(parseInt(msaDetailId, 10), parseInt(msaId, 10));
+      res.status(HttpStatusCode.NoContent).json({
+        statusCode: HttpStatusCode.NoContent,
+        message: 'MSA detail deleted successfully',
+        data: null,
+      });
     } catch (error) {
       ProcessError(error, res);
     }

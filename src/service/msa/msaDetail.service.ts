@@ -113,4 +113,22 @@ export default class MsaDetailService {
       });
     }
   };
+
+  async deleteById(id: number): Promise<void> {
+    const msaDetail = await MsaDetail.findByPk(id);
+    if (!msaDetail) {
+      throw new NotFoundException('MSA detail not found');
+    }
+    await msaDetail.destroy();
+  }
+
+  async deleteMsaDetail(msaId: number, msaDetailId: number): Promise<void> {
+    const msaDetail = await MsaDetail.findOne({
+      where: { id: msaDetailId, msaId },
+    });
+    if (!msaDetail) {
+      throw new NotFoundException('MSA detail not found');
+    }
+    await msaDetail.destroy();
+  }
 }
