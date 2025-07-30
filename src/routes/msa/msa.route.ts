@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { validationMiddleware } from '../../middleware/validation.middleware';
 import CreateMsaDto from '../../common/dto/msa/CreateMsaDto';
 import { MsaController } from '../../controllers/msa/msa.controller';
+import { multerMiddleware } from '../../middleware/image.multer.middleware';
 
 export default class MsaRoute {
   router: Router;
@@ -14,7 +15,9 @@ export default class MsaRoute {
   }
 
   serve() {
-    this.router.route('/').post(validationMiddleware(CreateMsaDto), (req, res) => this.msaController.create(req, res));
+    this.router
+      .route('/')
+      .post(multerMiddleware, validationMiddleware(CreateMsaDto), (req, res) => this.msaController.create(req, res));
     //   .get((req, res) => this.msaController.index(req, res));
     // this.router
     //   .route('/:id')

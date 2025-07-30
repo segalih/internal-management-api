@@ -5,10 +5,12 @@ import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException
 export default class MsaService {
   constructor() {}
 
-  async createMsa(data: CreateMsaDto): Promise<MsaAttributes> {
+  async createMsa(data: CreateMsaDto, file: Express.Multer.File): Promise<MsaAttributes> {
+    console.log('Creating MSA with data:', data, 'and file:', file);
+    const filename = file.filename;
     const msa = await Msa.create({
       pks: data.pks,
-      bast: data.bast,
+      bast: filename,
       dateStarted: data.date_started,
       dateEnded: data.date_ended,
       peopleQuota: data.people_quota,

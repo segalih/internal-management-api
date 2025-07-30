@@ -33,7 +33,6 @@ export default class UserService {
 
   async signIn(data: LoginDto) {
     const user = await Users.findOne({ where: { email: data.email } });
-    console.log('user', user);
     if (!user) throw new NotFoundException('Users not found', {});
     const isPasswordValid = await bcrypt.compare(data.password, user.password);
     if (!isPasswordValid) throw new NotFoundException('Users not found', {});

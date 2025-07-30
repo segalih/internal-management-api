@@ -21,6 +21,14 @@ export function validationMiddleware<T extends object>(type: new () => T) {
         })),
       };
 
+      if (req.file) {
+        const fs = require('fs');
+        const filePath = req.file.path;
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      }
+
       return res.status(HttpStatusCode.BadRequest).json({
         ...errorResponse,
       });

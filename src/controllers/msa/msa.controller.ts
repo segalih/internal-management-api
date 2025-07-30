@@ -14,13 +14,21 @@ export class MsaController {
 
   async create(req: Request, res: Response<ResponseApi<MsaAttributes>>) {
     try {
-      const result = await this.msaService.createMsa(req.body);
+        console.log('Creating MSA with data:', req.file);
+        const result = await this.msaService.createMsa(req.body, req.file! as Express.Multer.File);
       res.status(HttpStatusCode.Created).json({
         statusCode: HttpStatusCode.Created,
         message: 'MSA created successfully',
         data: result,
       });
     } catch (err) {
+        const fs = require('fs');
+        if (req.file) {
+          const filePath = req.file.path;
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+          }
+        }
       ProcessError(err, res);
     }
   }

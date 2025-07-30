@@ -5,4 +5,5 @@ export enum messages {
   API_NOT_FOUND = 'API Not Found',
   UNAUTHORIZED = 'Unauthorized',
   VALIDATION_ERROR = 'Validation Error',
+  FAILED_UPLOAD = 'Failed to upload file',
 }

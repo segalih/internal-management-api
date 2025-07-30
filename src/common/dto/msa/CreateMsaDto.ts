@@ -1,11 +1,8 @@
-import { IsDateString, IsNumber, IsPositive, IsString } from 'class-validator';
+import { IsDateString, IsNumber, IsPositive, IsString, Matches } from 'class-validator';
 
 export default class CreateMsaDto {
   @IsString()
   pks!: string;
-
-  @IsString()
-  bast!: string;
 
   @IsDateString()
   date_started!: Date;
@@ -13,11 +10,15 @@ export default class CreateMsaDto {
   @IsDateString()
   date_ended!: Date;
 
-  @IsPositive()
-  @IsNumber()
+  @IsString()
+  @Matches(/^\d+(\.\d+)?$/, {
+    message: 'people_quota must be a string containing a positive number',
+  })
   people_quota!: number;
 
-  @IsPositive()
-  @IsNumber()
+  @IsString()
+  @Matches(/^\d+(\.\d+)?$/, {
+    message: 'people_quota must be a string containing a positive number',
+  })
   budget_quota!: number;
 }
