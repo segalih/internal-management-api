@@ -21,12 +21,7 @@ class MsaDetail extends BaseModel<MsaDetailAttributes, MsaDetailCreationAttribut
   public project!: string;
   public groupPosition!: string;
 
-  static associate(models: any) {
-    MsaDetail.belongsTo(models.Msa, {
-      foreignKey: 'msa_id',
-      as: 'msa',
-    });
-  }
+  public msa?: Msa;
 }
 
 MsaDetail.init(

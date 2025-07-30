@@ -78,7 +78,7 @@ export class LicenseController {
       offset: parseInt((offset as string) ?? '1', 10),
       searchConditions: [
         {
-          keyValue: bast,
+          keyValue: bast ?? '',
           operator: Op.eq,
           keyColumn: 'bast',
           keySearch: 'bast',

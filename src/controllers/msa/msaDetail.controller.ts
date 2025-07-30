@@ -32,4 +32,31 @@ export class MsaDetailController {
       ProcessError(error, res);
     }
   }
+
+  async update(req: Request, res: Response<ResponseApi<MsaDetailAttributes>>): Promise<void> {
+    try {
+      const msaId = req.params.id;
+      const msaDetailId = req.params.msaDetailId;
+
+      if (!isStringNumber(msaId) || !isStringNumber(msaDetailId)) {
+        throw new UnprocessableEntityException('Invalid MSA or MSA detail ID format', {
+          msaId,
+          msaDetailId,
+        });
+      }
+      const msaDetail = await this.msaDetailService.updateById(
+        parseInt(msaId, 10),
+        parseInt(msaDetailId, 10),
+        req.body
+      );
+      const response: ResponseApi<typeof msaDetail> = {
+        statusCode: 200,
+        message: 'MSA detail updated successfully',
+        data: msaDetail,
+      };
+      res.status(HttpStatusCode.Ok).json(response);
+    } catch (error) {
+      ProcessError(error, res);
+    }
+  }
 }

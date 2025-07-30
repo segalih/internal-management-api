@@ -1,6 +1,10 @@
-import { IsNumber, IsPositive, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsPositive, IsString } from 'class-validator';
 
 export default class CreateMsaDetailDto {
+  @IsNumber()
+  @IsOptional()
+  id?: number;
+
   @IsString()
   name!: string;
 

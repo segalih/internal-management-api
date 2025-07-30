@@ -28,6 +28,9 @@ export default class MsaRoute {
     this.router
       .route('/:id/detail')
       .post(validationMiddleware(CreateMsaDetailDto), (req, res) => this.msaDetailController.create(req, res));
+    this.router
+      .route('/:id/detail/:msaDetailId')
+      .put(validationMiddleware(CreateMsaDetailDto), (req, res) => this.msaDetailController.update(req, res));
 
     // this.router
     //   .route('/:id')
