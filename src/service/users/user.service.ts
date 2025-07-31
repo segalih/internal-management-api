@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { LoginDto } from '../../common/dto/auth/login.dto';
 import Users from '../../database/models/user.model';
 import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
