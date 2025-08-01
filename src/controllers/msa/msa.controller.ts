@@ -12,15 +12,20 @@ import { ResponseApi } from '../../helper/interface/response.interface';
 import MsaService from '../../service/msa/msa.service';
 import MsaDetailService from '../../service/msa/msaDetail.service';
 import CreateMsaDto from '../../common/dto/msa/CreateMsaDto';
+import { UnprocessableEntityException } from '../../helper/Error/UnprocessableEntity/UnprocessableEntityException';
+import { DocumentService } from '../../service/document/document.service';
+import path from 'path';
 // import * as fs from 'fs';
 
 export class MsaController {
   private msaService: MsaService;
   private msaDetailService: MsaDetailService;
+  private documentService: DocumentService;
 
   constructor() {
     this.msaService = new MsaService();
     this.msaDetailService = new MsaDetailService();
+    this.documentService = new DocumentService();
   }
 
   async create(req: Request, res: Response<ResponseApi<MsaAttributes>>) {
@@ -55,17 +60,32 @@ export class MsaController {
       }
 
       const msa = await this.msaService.create(req.body, filePKS, fileBAST);
+      const pksFile = await this.documentService.saveDocument({
+        file_type: 'file_msa_pks',
+        filename: filePKS.filename,
+        path: '/uploads/pks_msa/' + msa.id + '/' + filePKS.filename,
+      });
+      const bastFile = await this.documentService.saveDocument({
+        file_type: 'file_msa_bast',
+        filename: fileBAST.filename,
+        path: '/uploads/pks_msa/' + msa.id + '/' + fileBAST.filename,
+      });
 
-      await this.msaService.movePksMsaFiles(msa.id);
+      await msa.update({
+        pksFileId: pksFile.id,
+        bastFileId: bastFile.id,
+      });
 
       if (req.body.details) {
         await this.msaDetailService.createMany(req.body.details, msa.id);
       }
 
+      const result = await this.msaService.getById(msa.id);
+
       res.status(HttpStatusCode.Created).json({
         statusCode: HttpStatusCode.Created,
         message: 'MSA created successfully',
-        data: msa,
+        data: this.msaService.MsaResponse(result),
       });
     } catch (err) {
       const files = req.files as { [fieldname: string]: Express.Multer.File[] };
@@ -83,7 +103,11 @@ export class MsaController {
     try {
       const id = req.params.id;
 
-      const bastFile = req.file ? req.file : undefined;
+      const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+      const payload = req.body as CreateMsaDto;
+
+      const filePKS = files['file_pks']?.[0];
+      const fileBAST = files['file_bast']?.[0];
 
       if (!isStringNumber(id)) {
         throw new BadRequestException('Invalid MSA ID');
@@ -91,7 +115,29 @@ export class MsaController {
 
       const msaId = parseInt(id, 10);
 
-      const result = await this.msaService.updateById(msaId, req.body, bastFile);
+      const msa = await this.msaService.getById(msaId);
+      const msaDetails = msa.details ?? [];
+
+      const totalPeople = this.msaDetailService.totalPeople(msaDetails);
+      const totalBudgetUsed = this.msaDetailService.totalBudgetUsed(msaDetails);
+
+      if (totalPeople > parseInt(req.body.people_quota, 10)) {
+        throw new BadRequestException(`Total people (${totalPeople}) exceeds the quota (${req.body.people_quota})`);
+      }
+
+      const dateStarted = DateTime.fromISO(payload.date_started);
+      const dateEnded = DateTime.fromISO(payload.date_ended);
+
+      const diffDate = dateEnded.diff(dateStarted, 'months');
+      const totalBudgetAllContract = Math.ceil(diffDate.months) * totalBudgetUsed;
+
+      if (totalBudgetAllContract > parseInt(req.body.budget_quota, 10)) {
+        throw new BadRequestException(
+          `Total budget used (${totalBudgetAllContract}) exceeds the quota (${req.body.budget_quota})`
+        );
+      }
+
+      const result = await this.msaService.updateById(msaId, req.body, filePKS, fileBAST);
       res.status(HttpStatusCode.Ok).json({
         statusCode: HttpStatusCode.Ok,
         message: 'MSA updated successfully',
@@ -120,6 +166,27 @@ export class MsaController {
   //       throw new Error('File not found');
   //     }
   //     res.download(filePath, msa.bast);
+  //   } catch (err) {
+  //     ProcessError(err, res);
+  //   }
+  // }
+
+  // async getBastFile(req: Request, res: Response) {
+  //   try {
+  //     const msaId = req.params.id;
+
+  //     if (!isStringNumber(msaId)) {
+  //       throw new BadRequestException('Invalid MSA ID');
+  //     }
+
+  //     const msa = await this.msaService.getById(parseInt(msaId, 10));
+
+  //     const filePath = `./uploads/pks_msa/${msaId}/${msa.file_bast}`;
+
+  //     if (!fs.existsSync(filePath)) {
+  //       throw new Error('File not found');
+  //     }
+  //     res.download(filePath, msa.file_bast);
   //   } catch (err) {
   //     ProcessError(err, res);
   //   }

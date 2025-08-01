@@ -6,7 +6,7 @@ import { ResponseApi } from '../helper/interface/response.interface';
 import { messages } from '../config/message';
 import path from 'path';
 
-const uploadFolderPath = './uploads/';
+const uploadFolderPath = './uploads/tmp';
 
 // Create uploads folder if not exist
 if (!fs.existsSync(uploadFolderPath)) {
@@ -23,7 +23,7 @@ const baseUpload = multer({
       cb(null, uploadFolderPath);
     },
     filename: function (req, file, cb) {
-      const fileName = Date.now() + '-';
+      const fileName = Date.now() + '-' + file.originalname.replace(/\s+/g, '-');
       const extName = path.extname(file.originalname);
       cb(null, fileName + extName);
     },

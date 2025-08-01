@@ -27,7 +27,7 @@ export default class MsaRoute {
         this.msaController.create(req, res)
       )
       .get((req, res) => this.msaController.index(req, res));
-    // this.router.route('/file/:id').get((req, res) => this.msaController.getFile(req, res));
+    // this.router.route('/download-bast/:id').get((req, res) => this.msaController.getBastFile(req, res));
     // this.router
     //   .route('/:id/detail')
     //   .post(validationMiddleware(CreateMsaDetailDto), (req, res) => this.msaDetailController.create(req, res));

@@ -83,11 +83,11 @@ export default class MsaDetailService {
     return updatedMsaDetail.toJSON();
   }
 
-  public totalPeople = (msaDetails: MsaDetailAttributes[]): number => {
+  public totalPeople = (msaDetails: MsaDetailAttributes[] | MsaDetail[]): number => {
     return msaDetails.length;
   };
 
-  public totalBudgetUsed = (msaDetails: MsaDetailAttributes[]): number => {
+  public totalBudgetUsed = (msaDetails: MsaDetailAttributes[] | MsaDetail[]): number => {
     return msaDetails.reduce((sum, detail) => sum + parseFloat(detail.rate.toString()), 0);
   };
 
