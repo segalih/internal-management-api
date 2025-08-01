@@ -10,18 +10,23 @@ import { ProcessError } from '../../helper/Error/errorHandler';
 import { isStringNumber } from '../../helper/function/common';
 import { ResponseApi } from '../../helper/interface/response.interface';
 import MsaService from '../../service/msa/msa.service';
+import MsaDetailService from '../../service/msa/msaDetail.service';
+import CreateMsaDto from '../../common/dto/msa/CreateMsaDto';
 // import * as fs from 'fs';
 
 export class MsaController {
   private msaService: MsaService;
+  private msaDetailService: MsaDetailService;
 
   constructor() {
     this.msaService = new MsaService();
+    this.msaDetailService = new MsaDetailService();
   }
 
   async create(req: Request, res: Response<ResponseApi<MsaAttributes>>) {
     try {
       const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+      const payload = req.body as CreateMsaDto;
 
       const filePKS = files['file_pks']?.[0];
       const fileBAST = files['file_bast']?.[0];
@@ -30,11 +35,37 @@ export class MsaController {
         throw new BadRequestException('Both file_pks and file_bast are required');
       }
 
-      const result = await this.msaService.create(req.body, filePKS, fileBAST);
+      const totalPeople = this.msaDetailService.totalPeople(req.body.details);
+      const totalBudgetUsed = this.msaDetailService.totalBudgetUsed(req.body.details);
+
+      if (totalPeople > parseInt(req.body.people_quota, 10)) {
+        throw new BadRequestException(`Total people (${totalPeople}) exceeds the quota (${req.body.people_quota})`);
+      }
+
+      const dateStarted = DateTime.fromISO(payload.date_started);
+      const dateEnded = DateTime.fromISO(payload.date_ended);
+
+      const diffDate = dateEnded.diff(dateStarted, 'months');
+      const totalBudgetAllContract = Math.ceil(diffDate.months) * totalBudgetUsed;
+
+      if (totalBudgetAllContract > parseInt(req.body.budget_quota, 10)) {
+        throw new BadRequestException(
+          `Total budget used (${totalBudgetAllContract}) exceeds the quota (${req.body.budget_quota})`
+        );
+      }
+
+      const msa = await this.msaService.create(req.body, filePKS, fileBAST);
+
+      await this.msaService.movePksMsaFiles(msa.id);
+
+      if (req.body.details) {
+        await this.msaDetailService.createMany(req.body.details, msa.id);
+      }
+
       res.status(HttpStatusCode.Created).json({
         statusCode: HttpStatusCode.Created,
         message: 'MSA created successfully',
-        data: result,
+        data: msa,
       });
     } catch (err) {
       const files = req.files as { [fieldname: string]: Express.Multer.File[] };
@@ -48,28 +79,28 @@ export class MsaController {
     }
   }
 
-  // async update(req: Request, res: Response<ResponseApi<MsaAttributes>>) {
-  //   try {
-  //     const id = req.params.id;
+  async update(req: Request, res: Response<ResponseApi<MsaAttributes>>) {
+    try {
+      const id = req.params.id;
 
-  //     const bastFile = req.file ? req.file : undefined;
+      const bastFile = req.file ? req.file : undefined;
 
-  //     if (!isStringNumber(id)) {
-  //       throw new BadRequestException('Invalid MSA ID');
-  //     }
+      if (!isStringNumber(id)) {
+        throw new BadRequestException('Invalid MSA ID');
+      }
 
-  //     const msaId = parseInt(id, 10);
+      const msaId = parseInt(id, 10);
 
-  //     const result = await this.msaService.updateById(msaId, req.body, bastFile);
-  //     res.status(HttpStatusCode.Ok).json({
-  //       statusCode: HttpStatusCode.Ok,
-  //       message: 'MSA updated successfully',
-  //       data: result,
-  //     });
-  //   } catch (err) {
-  //     ProcessError(err, res);
-  //   }
-  // }
+      const result = await this.msaService.updateById(msaId, req.body, bastFile);
+      res.status(HttpStatusCode.Ok).json({
+        statusCode: HttpStatusCode.Ok,
+        message: 'MSA updated successfully',
+        data: result,
+      });
+    } catch (err) {
+      ProcessError(err, res);
+    }
+  }
 
   // async getFile(req: Request, res: Response) {
   //   try {

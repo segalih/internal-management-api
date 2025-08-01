@@ -15,10 +15,10 @@ export default class CreateMsaDto {
   file_bast?: string;
 
   @IsDateString()
-  date_started!: Date;
+  date_started!: string;
 
   @IsDateString()
-  date_ended!: Date;
+  date_ended!: string;
 
   @IsString()
   @Matches(/^\d+(\.\d+)?$/, {
@@ -33,5 +33,6 @@ export default class CreateMsaDto {
   budget_quota!: string;
 
   @IsArray()
+  @IsOptional()
   details!: CreateMsaDetailDto[];
 }

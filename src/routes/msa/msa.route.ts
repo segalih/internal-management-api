@@ -36,12 +36,10 @@ export default class MsaRoute {
     //   .put(validationMiddleware(CreateMsaDetailDto), (req, res) => this.msaDetailController.update(req, res))
     //   .delete((req, res) => this.msaDetailController.destroy(req, res));
 
-    // this.router
-    //   .route('/:id')
-    //   .get((req, res) => this.msaController.show(req, res))
-    //   .delete((req, res) => this.msaController.destroy(req, res))
-    //   .put(pksMsaMulterMiddleware, bastMulterMiddleware, validationMiddleware(CreateMsaDto), (req, res) =>
-    //     this.msaController.update(req, res)
-    //   );
+    this.router
+      .route('/:id')
+      //   .get((req, res) => this.msaController.show(req, res))
+      //   .delete((req, res) => this.msaController.destroy(req, res))
+      .put(uploadForMSA, validationMiddleware(CreateMsaDto), (req, res) => this.msaController.update(req, res));
   }
 }

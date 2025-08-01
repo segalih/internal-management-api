@@ -6,6 +6,7 @@ import Msa, { MsaAttributes } from '../../database/models/msa.model';
 import MsaDetail from '../../database/models/msa_detail.model';
 import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
 import MsaDetailService from './msaDetail.service';
+import { UnprocessableEntityException } from '../../helper/Error/UnprocessableEntity/UnprocessableEntityException';
 export default class MsaService {
   private msaDetailService: MsaDetailService;
   constructor() {
@@ -30,77 +31,78 @@ export default class MsaService {
     if (!msa) {
       throw new NotFoundException('MSA not created');
     }
-    await this.movePksMsaFiles(msa.id);
-
-    if (data.details) {
-      await this.msaDetailService.createMany(data.details, msa.id);
-    }
 
     return await this.getById(msa.id);
   }
 
-  // async updateById(id: number, data: CreateMsaDto, file?: Express.Multer.File): Promise<MsaAttributes> {
-  //   const msa = await Msa.findByPk(id, {
-  //     include: [
-  //       {
-  //         model: MsaDetail,
-  //         as: 'details',
-  //       },
-  //     ],
-  //   });
-  //   if (!msa) {
-  //     throw new NotFoundException('MSA not found');
-  //   }
+  async updateById(
+    id: number,
+    data: CreateMsaDto,
+    file_pks?: Express.Multer.File,
+    file_bast?: Express.Multer.File
+  ): Promise<MsaAttributes> {
+    const msa = await Msa.findByPk(id, {
+      include: [
+        {
+          model: MsaDetail,
+          as: 'details',
+        },
+      ],
+    });
+    if (!msa) {
+      throw new NotFoundException('MSA not found');
+    }
 
-  //   if (!msa.details) {
-  //     msa.details = [];
-  //   }
-  //   if (file) {
-  //     const filename = file.filename;
-  //     data.bast = filename;
-  //   } else {
-  //     data.bast = msa.bast;
-  //   }
+    if (!msa.details) {
+      msa.details = [];
+    }
 
-  //   const totalPeople = this.msaDetailService.totalPeople(msa.details);
-  //   const totalBudgetUsed = this.msaDetailService.totalBudgetUsed(msa.details);
-  //   const newBudgetQuota = parseFloat(data.budget_quota.toString());
+    if (file_pks) {
+      data.file_pks = file_pks.filename;
+    }
+    if (file_bast) {
+      data.file_bast = file_bast.filename;
+    }
 
-  //   if (totalPeople > parseInt(data.people_quota, 10)) {
-  //     throw new UnprocessableEntityException('Maximum number of people exceeded', {
-  //       newPeopleQuota: parseInt(data.people_quota, 10),
-  //       totalPeopleUsed: totalPeople,
-  //     });
-  //   }
+    const totalPeople = this.msaDetailService.totalPeople(msa.details);
+    const totalBudgetUsed = this.msaDetailService.totalBudgetUsed(msa.details);
+    const newBudgetQuota = parseFloat(data.budget_quota.toString());
 
-  //   if (totalBudgetUsed > newBudgetQuota) {
-  //     throw new UnprocessableEntityException('Maximum budget exceeded', {
-  //       newBudgetQuota: newBudgetQuota,
-  //       totalBudgetUsed: totalBudgetUsed,
-  //     });
-  //   }
-  //   const oldBast = msa.file_bast;
-  //   const oldPks = msa.file_pks;
-  //   await msa.update({
-  //     pks: data.pks,
-  //     file_bast: data.file_bast,
-  //     file_pks: data.file_pks,
-  //     dateStarted: data.date_started,
-  //     dateEnded: data.date_ended,
-  //     peopleQuota: parseInt(data.people_quota, 10),
-  //     budgetQuota: parseFloat(data.budget_quota.toString()),
-  //   });
+    if (totalPeople > parseInt(data.people_quota, 10)) {
+      throw new UnprocessableEntityException('Maximum number of people exceeded', {
+        newPeopleQuota: parseInt(data.people_quota, 10),
+        totalPeopleUsed: totalPeople,
+      });
+    }
 
-  //   if (file && oldBast !== data.bast) {
-  //     await this.moveBastFile(msa.id);
-  //   }
+    if (totalBudgetUsed > newBudgetQuota) {
+      throw new UnprocessableEntityException('Maximum budget exceeded', {
+        newBudgetQuota: newBudgetQuota,
+        totalBudgetUsed: totalBudgetUsed,
+      });
+    }
+    const oldBast = msa.file_bast;
+    const oldPks = msa.file_pks;
+    await msa.update({
+      pks: data.pks,
+      file_bast: data.file_bast,
+      file_pks: data.file_pks,
+      dateStarted: data.date_started,
+      dateEnded: data.date_ended,
+      peopleQuota: parseInt(data.people_quota, 10),
+      budgetQuota: parseFloat(data.budget_quota.toString()),
+    });
 
-  //   if (!msa) {
-  //     throw new NotFoundException('MSA not updated');
-  //   }
+    // if (file && oldBast !== data.bast) {
+    //   await this.moveBastFile(msa.id);
+    // }
 
-  //   return await this.getById(msa.id);
-  // }
+    if (!msa) {
+      throw new NotFoundException('MSA not updated');
+    }
+
+    return await this.getById(msa.id);
+  }
 
   async getById(id: number): Promise<MsaAttributes> {
     const msa = await Msa.findByPk(id, {
@@ -166,21 +168,20 @@ export default class MsaService {
     ];
 
     oldPats.forEach((oldPath, index) => {
-      if (!fs.existsSync(oldPath)) {
-        throw new NotFoundException('File not found');
-      }
-      if (!fs.existsSync(`./uploads/pks_msa/${id}`)) {
-        fs.mkdirSync(`./uploads/pks_msa/${id}`, { recursive: true });
-      }
-      const newFilePath = newFilePaths[index];
-      if (oldPath === newFilePath) {
-        return;
-      }
+      if (fs.existsSync(oldPath)) {
+        if (!fs.existsSync(`./uploads/pks_msa/${id}`)) {
+          fs.mkdirSync(`./uploads/pks_msa/${id}`, { recursive: true });
+        }
+        const newFilePath = newFilePaths[index];
+        if (oldPath === newFilePath) {
+          return;
+        }
 
-      try {
-        fs.renameSync(oldPath, newFilePath);
-      } catch (err) {
-        throw new Error('Failed to move file');
+        try {
+          fs.renameSync(oldPath, newFilePath);
+        } catch (err) {
+          throw new Error('Failed to move file');
+        }
       }
     });
 
