@@ -14,7 +14,7 @@ export default class MsaService {
     this.msaDetailService = new MsaDetailService();
   }
 
-  async create(data: CreateMsaDto, file_pks: Express.Multer.File, file_bast: Express.Multer.File): Promise<Msa> {
+  async create(data: CreateMsaDto): Promise<Msa> {
     const msa = await Msa.create({
       pks: data.pks,
       dateStarted: data.date_started,
@@ -30,22 +30,9 @@ export default class MsaService {
     return await this.getById(msa.id);
   }
 
-  async updateById(
-    id: number,
-    data: CreateMsaDto,
-    file_pks?: Express.Multer.File,
-    file_bast?: Express.Multer.File
-  ): Promise<MsaAttributes> {
-    const msa = await Msa.findByPk(id, {
-      include: [
-        {
-          model: MsaDetail,
-          as: 'details',
-        },
-        { model: Document, as: 'pksFile' },
-        { model: Document, as: 'bastFile' },
-      ],
-    });
+  async updateById(id: number, data: CreateMsaDto, filePksId?: number, fileBastId?: number): Promise<MsaAttributes> {
+    const msa = await this.getById(id);
+
     if (!msa) {
       throw new NotFoundException('MSA not found');
     }
@@ -54,19 +41,14 @@ export default class MsaService {
       msa.details = [];
     }
 
-    if (file_pks) {
-      data.file_pks = file_pks.filename;
-    }
-    if (file_bast) {
-      data.file_bast = file_bast.filename;
-    }
-
     await msa.update({
       pks: data.pks,
       dateStarted: data.date_started,
       dateEnded: data.date_ended,
       peopleQuota: parseInt(data.people_quota, 10),
       budgetQuota: parseFloat(data.budget_quota.toString()),
+      pksFileId: filePksId ? filePksId : msa.pksFileId,
+      bastFileId: fileBastId ? fileBastId : msa.bastFileId,
     });
 
     if (!msa) {

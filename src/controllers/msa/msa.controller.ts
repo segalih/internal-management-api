@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import { DateTime } from 'luxon';
 import { Op } from 'sequelize';
 import { PaginationResult, SearchCondition } from '../../database/models/base.model';
-import { MsaAttributes } from '../../database/models/msa.model';
+import { MSA_CONSTANTS, MsaAttributes } from '../../database/models/msa.model';
 import { BadRequestException } from '../../helper/Error/BadRequestException/BadRequestException';
 import { ProcessError } from '../../helper/Error/errorHandler';
 import { isStringNumber } from '../../helper/function/common';
@@ -59,16 +59,16 @@ export class MsaController {
         );
       }
 
-      const msa = await this.msaService.create(req.body, filePKS, fileBAST);
+      const msa = await this.msaService.create(req.body);
       const pksFile = await this.documentService.saveDocument({
         file_type: 'file_msa_pks',
         filename: filePKS.filename,
-        path: '/uploads/pks_msa/' + msa.id + '/' + filePKS.filename,
+        path: MSA_CONSTANTS.BASE_PATH + msa.id + '/' + filePKS.filename,
       });
       const bastFile = await this.documentService.saveDocument({
         file_type: 'file_msa_bast',
         filename: fileBAST.filename,
-        path: '/uploads/pks_msa/' + msa.id + '/' + fileBAST.filename,
+        path: MSA_CONSTANTS.BASE_PATH + msa.id + '/' + fileBAST.filename,
       });
 
       await msa.update({
@@ -136,8 +136,27 @@ export class MsaController {
           `Total budget used (${totalBudgetAllContract}) exceeds the quota (${req.body.budget_quota})`
         );
       }
+      let filePksId: number | undefined;
+      let fileBastId: number | undefined;
+      if (filePKS) {
+        const pksFile = await this.documentService.saveDocument({
+          file_type: 'file_msa_pks',
+          filename: filePKS.filename,
+          path: MSA_CONSTANTS.BASE_PATH + msa.id + '/' + filePKS.filename,
+        });
+        filePksId = pksFile.id;
+      }
 
-      const result = await this.msaService.updateById(msaId, req.body, filePKS, fileBAST);
+      if (fileBAST) {
+        const bastFile = await this.documentService.saveDocument({
+          file_type: 'file_msa_bast',
+          filename: fileBAST.filename,
+          path: MSA_CONSTANTS.BASE_PATH + msa.id + '/' + fileBAST.filename,
+        });
+        fileBastId = bastFile.id;
+      }
+
+      const result = await this.msaService.updateById(msaId, req.body, filePksId, fileBastId);
       res.status(HttpStatusCode.Ok).json({
         statusCode: HttpStatusCode.Ok,
         message: 'MSA updated successfully',
@@ -147,50 +166,6 @@ export class MsaController {
       ProcessError(err, res);
     }
   }
-
-  // async getFile(req: Request, res: Response) {
-  //   try {
-  //     const msaId = req.params.id;
-
-  //     if (!isStringNumber(msaId)) {
-  //       throw new BadRequestException('Invalid MSA ID');
-  //     }
-
-  //     await this.msaService.getById(parseInt(msaId, 10));
-
-  //     const msa = await this.msaService.getById(parseInt(msaId, 10));
-
-  //     const filePath = `./uploads/pks_msa/${msaId}/${msa.bast}`;
-
-  //     if (!fs.existsSync(filePath)) {
-  //       throw new Error('File not found');
-  //     }
-  //     res.download(filePath, msa.bast);
-  //   } catch (err) {
-  //     ProcessError(err, res);
-  //   }
-  // }
-
-  // async getBastFile(req: Request, res: Response) {
-  //   try {
-  //     const msaId = req.params.id;
-
-  //     if (!isStringNumber(msaId)) {
-  //       throw new BadRequestException('Invalid MSA ID');
-  //     }
-
-  //     const msa = await this.msaService.getById(parseInt(msaId, 10));
-
-  //     const filePath = `./uploads/pks_msa/${msaId}/${msa.file_bast}`;
-
-  //     if (!fs.existsSync(filePath)) {
-  //       throw new Error('File not found');
-  //     }
-  //     res.download(filePath, msa.file_bast);
-  //   } catch (err) {
-  //     ProcessError(err, res);
-  //   }
-  // }
 
   async index(req: Request, res: Response<ResponseApi<PaginationResult<MsaAttributes>>>) {
     try {

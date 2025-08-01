@@ -3,6 +3,10 @@ import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from '
 import MsaDetail, { MsaDetailAttributes } from './msa_detail.model';
 import Document from './document.model';
 
+export const MSA_CONSTANTS = {
+  BASE_PATH: '/uploads/pks_msa/',
+};
+
 export interface MsaAttributes extends BaseModelAttributes {
   pks: string;
   dateStarted: string;
