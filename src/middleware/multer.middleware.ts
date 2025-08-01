@@ -25,7 +25,7 @@ const baseUpload = multer({
     filename: function (req, file, cb) {
       const fileName = Date.now() + '-' + file.originalname.replace(/\s+/g, '-');
       const extName = path.extname(file.originalname);
-      cb(null, fileName + extName);
+      cb(null, fileName);
     },
   }),
   fileFilter: function (req, file, cb) {
