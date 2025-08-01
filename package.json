@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prebuild": "rimraf dist",
-    "build": "npm run build-ts",
+    "prebuild": "rimraf dist || true",
+    "build": "npm run build-ts --noEmitOnError false",
     "start": "npm run build && node dist/index.js",
     "serve": " npx nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.spec.ts\" --exec \"ts-node -T src/index.ts\"",
     "build-ts": "tsc",
@@ -85,6 +85,7 @@
     "oracledb": "^6.9.0",
     "pg": "^8.16.3",
     "pino-pretty": "^10.2.0",
+    "reflect-metadata": "^0.2.2",
     "rimraf": "^5.0.1",
     "sequelize": "^6.35.1",
     "stream-to-buffer": "^0.1.0",

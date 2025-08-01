@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { AddressInfo } from 'net';
 import { Request, Response } from 'express';
 import logger from './logger';
+
 dotenv.config();
 
 // Normalize port number which will expose server
@@ -25,6 +26,7 @@ server.on('error', (error: NodeJS.ErrnoException, res: Response) => {
     throw error;
   }
   onError(error);
+  logger.error(`Server error: ${error.message} - ${JSON.stringify(error)}`);
   res.status(500).send('Internal Server Error');
 });
 server.on('listening', onListening);

@@ -3,12 +3,12 @@
 import bodyParser from 'body-parser';
 import compression from 'compression';
 import cors from 'cors';
-import path from 'path';
-import express, { NextFunction, Response } from 'express';
+import express from 'express';
 import expressListEndpoints from 'express-list-endpoints';
 import helmet from 'helmet';
+import path from 'path';
+import 'reflect-metadata'; // <= PENTING!
 import { Routes } from './routeSetup';
-import logger from './logger';
 
 const Reset = '\x1b[0m';
 const FgGreen = '\x1b[32m';
@@ -48,7 +48,6 @@ export default class Server {
 
     function printLog(method: string, path: string) {
       console.info(`${FgYellow}Registered route: ${FgGreen}${method} ${path}` + Reset);
-      logger.info(`Registered route: ${method} ${path}`);
     }
 
     const routes = expressListEndpoints(this.expressInstance);

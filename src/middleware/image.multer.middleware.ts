@@ -36,20 +36,23 @@ const upload = multer({
   },
 });
 
-export function multerMiddleware(req: Request, res: Response, next: NextFunction) {
-  upload.single('file')(req, res, function (error: any) {
-    if (error) {
-      const errorResponse: ResponseApi<null> = {
-        statusCode: HttpStatusCode.BadRequest,
-        message: messages.FAILED_UPLOAD,
-        data: null,
-        errors: error.message ?? 'An error occurred during file upload',
-      };
-      return res.status(HttpStatusCode.BadRequest).json({
-        ...errorResponse,
-      });
-    }
+  export function createMulterMiddleware(fieldName: string) {
+    return function (req: Request, res: Response, next: NextFunction) {
+      upload.single(fieldName)(req, res, function (error: any) {
+        if (error) {
+          const errorResponse: ResponseApi<null> = {
+            statusCode: HttpStatusCode.BadRequest,
+            message: messages.FAILED_UPLOAD,
+            data: null,
+            errors: error.message ?? 'An error occurred during file upload',
+          };
+          return res.status(HttpStatusCode.BadRequest).json(errorResponse);
+        }
 
-    next();
-  });
-}
+        next();
+      });
+    };
+  }
+
+  export const pksMsaMulterMiddleware = createMulterMiddleware('file_pks');
+  export const bastMulterMiddleware = createMulterMiddleware('file_bast');

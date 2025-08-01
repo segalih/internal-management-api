@@ -10,6 +10,7 @@ import { ProcessError } from '../../helper/Error/errorHandler';
 import { isStringNumber } from '../../helper/function/common';
 import { ResponseApi } from '../../helper/interface/response.interface';
 import MsaService from '../../service/msa/msa.service';
+// import * as fs from 'fs';
 
 export class MsaController {
   private msaService: MsaService;
@@ -20,73 +21,78 @@ export class MsaController {
 
   async create(req: Request, res: Response<ResponseApi<MsaAttributes>>) {
     try {
-      if (!req.file) {
-        throw new BadRequestException('File is required');
+      const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+      const filePKS = files['file_pks']?.[0];
+      const fileBAST = files['file_bast']?.[0];
+
+      if (!filePKS || !fileBAST) {
+        throw new BadRequestException('Both file_pks and file_bast are required');
       }
 
-      const result = await this.msaService.create(req.body, req.file! as Express.Multer.File);
+      const result = await this.msaService.create(req.body, filePKS, fileBAST);
       res.status(HttpStatusCode.Created).json({
         statusCode: HttpStatusCode.Created,
         message: 'MSA created successfully',
         data: result,
       });
     } catch (err) {
-      const fs = require('fs');
-      if (req.file) {
-        const filePath = req.file.path;
-        if (fs.existsSync(filePath)) {
+      const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+      [files['file_pks']?.[0]?.path ?? '', files['file_bast']?.[0]?.path ?? ''].forEach((filePath) => {
+        if (filePath && fs.existsSync(filePath)) {
           fs.unlinkSync(filePath);
         }
-      }
-      ProcessError(err, res);
-    }
-  }
-
-  async update(req: Request, res: Response<ResponseApi<MsaAttributes>>) {
-    try {
-      const id = req.params.id;
-
-      const bastFile = req.file ? req.file : undefined;
-
-      if (!isStringNumber(id)) {
-        throw new BadRequestException('Invalid MSA ID');
-      }
-
-      const msaId = parseInt(id, 10);
-
-      const result = await this.msaService.updateById(msaId, req.body, bastFile);
-      res.status(HttpStatusCode.Ok).json({
-        statusCode: HttpStatusCode.Ok,
-        message: 'MSA updated successfully',
-        data: result,
       });
-    } catch (err) {
+
       ProcessError(err, res);
     }
   }
 
-  async getFile(req: Request, res: Response) {
-    try {
-      const msaId = req.params.id;
+  // async update(req: Request, res: Response<ResponseApi<MsaAttributes>>) {
+  //   try {
+  //     const id = req.params.id;
 
-      if (!isStringNumber(msaId)) {
-        throw new BadRequestException('Invalid MSA ID');
-      }
+  //     const bastFile = req.file ? req.file : undefined;
 
-      await this.msaService.getById(parseInt(msaId, 10));
+  //     if (!isStringNumber(id)) {
+  //       throw new BadRequestException('Invalid MSA ID');
+  //     }
 
-      const msa = await this.msaService.getById(parseInt(msaId, 10));
+  //     const msaId = parseInt(id, 10);
 
-      const filePath = `./uploads/pks_msa/${msaId}/${msa.bast}`;
+  //     const result = await this.msaService.updateById(msaId, req.body, bastFile);
+  //     res.status(HttpStatusCode.Ok).json({
+  //       statusCode: HttpStatusCode.Ok,
+  //       message: 'MSA updated successfully',
+  //       data: result,
+  //     });
+  //   } catch (err) {
+  //     ProcessError(err, res);
+  //   }
+  // }
 
-      if (!fs.existsSync(filePath)) {
-        throw new Error('File not found');
-      }
-      res.download(filePath, msa.bast);
-    } catch (err) {
-      ProcessError(err, res);
-    }
-  }
+  // async getFile(req: Request, res: Response) {
+  //   try {
+  //     const msaId = req.params.id;
+
+  //     if (!isStringNumber(msaId)) {
+  //       throw new BadRequestException('Invalid MSA ID');
+  //     }
+
+  //     await this.msaService.getById(parseInt(msaId, 10));
+
+  //     const msa = await this.msaService.getById(parseInt(msaId, 10));
+
+  //     const filePath = `./uploads/pks_msa/${msaId}/${msa.bast}`;
+
+  //     if (!fs.existsSync(filePath)) {
+  //       throw new Error('File not found');
+  //     }
+  //     res.download(filePath, msa.bast);
+  //   } catch (err) {
+  //     ProcessError(err, res);
+  //   }
+  // }
 
   async index(req: Request, res: Response<ResponseApi<PaginationResult<MsaAttributes>>>) {
     try {

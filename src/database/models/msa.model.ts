@@ -4,19 +4,23 @@ import MsaDetail, { MsaDetailAttributes } from './msa_detail.model';
 
 export interface MsaAttributes extends BaseModelAttributes {
   pks: string;
-  bast: string;
+  file_pks: string;
+  file_bast: string;
   dateStarted: Date;
   dateEnded: Date;
   peopleQuota: number;
   budgetQuota: number;
-  fileUrl?: string;
+
+  pksFileUrl?: string;
+  bastFileUrl?: string;
 }
 
 export interface MsaCreationAttributes extends Omit<MsaAttributes, 'id'> {}
 
 class Msa extends BaseModel<MsaAttributes, MsaCreationAttributes> implements MsaAttributes {
   public pks!: string;
-  public bast!: string;
+  public file_pks!: string;
+  public file_bast!: string;
   public dateStarted!: Date;
   public dateEnded!: Date;
   public budgetQuota!: number;
@@ -32,7 +36,11 @@ Msa.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    bast: {
+    file_pks: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    file_bast: {
       type: DataTypes.STRING,
       allowNull: false,
     },

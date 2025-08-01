@@ -1,4 +1,6 @@
-import { IsDateString, IsNumber, IsOptional, IsPositive, IsString, Matches } from 'class-validator';
+import { IsArray, IsDateString, IsOptional, IsString, Matches, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import CreateMsaDetailDto from './CreateMsaDetailDto';
 
 export default class CreateMsaDto {
   @IsString()
@@ -6,7 +8,11 @@ export default class CreateMsaDto {
 
   @IsString()
   @IsOptional()
-  bast?: string;
+  file_pks?: string;
+
+  @IsString()
+  @IsOptional()
+  file_bast?: string;
 
   @IsDateString()
   date_started!: Date;
@@ -22,7 +28,10 @@ export default class CreateMsaDto {
 
   @IsString()
   @Matches(/^\d+(\.\d+)?$/, {
-    message: 'people_quota must be a string containing a positive number',
+    message: 'budget_quota must be a string containing a positive number',
   })
   budget_quota!: string;
+
+  @IsArray()
+  details!: CreateMsaDetailDto[];
 }

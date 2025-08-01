@@ -7,8 +7,10 @@ import { messages } from '../config/message';
 
 export function validationMiddleware<T extends object>(type: new () => T) {
   return async (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.body);
     const dto = plainToInstance(type, req.body);
     const errors: ValidationError[] = await validate(dto);
+
 
     if (errors.length > 0) {
       const errorResponse: ResponseApi<any> = {

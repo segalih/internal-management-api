@@ -35,6 +35,19 @@ export default class MsaDetailService {
     return msaDetail.toJSON();
   }
 
+  async createMany(data: CreateMsaDetailDto[], msaId: number): Promise<MsaDetail[]> {
+    return await MsaDetail.bulkCreate(
+      data.map((item) => ({
+        msaId,
+        name: item.name,
+        project: item.project,
+        role: item.role,
+        rate: item.rate,
+        groupPosition: item.group_position,
+      }))
+    );
+  }
+
   async updateById(msaId: number, msaDetailId: number, data: CreateMsaDetailDto): Promise<MsaDetailAttributes> {
     const msaDetail = await MsaDetail.findByPk(msaDetailId, {
       include: [
