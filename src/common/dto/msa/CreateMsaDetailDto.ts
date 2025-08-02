@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsPositive, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsPositive, IsString, Matches } from 'class-validator';
 
 export default class CreateMsaDetailDto {
   @IsNumber()
@@ -8,9 +8,11 @@ export default class CreateMsaDetailDto {
   @IsString()
   name!: string;
 
-  @IsNumber()
-  @IsPositive()
-  rate!: number;
+  @IsString()
+  @Matches(/^\d+(\.\d+)?$/, {
+    message: 'rate must be a string containing a positive number',
+  })
+  rate!: string;
 
   @IsString()
   role!: string;

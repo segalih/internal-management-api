@@ -21,6 +21,7 @@ const configConstants = {
   FE_HOST: process.env.FE_HOST ?? '',
   FE_PORT: parseInt(process.env.FE_PORT ?? '5173', 10) ?? 5173,
   API_URL: `${process.env.BE_HOST ?? 'http://localhost'}:${process.env.PORT ?? '8000'}`,
+  CRYPTO_KEY: process.env.CRYPTO_KEY ?? 'crypto-secret-key',
 };
 console.log('configConstants', configConstants);
 

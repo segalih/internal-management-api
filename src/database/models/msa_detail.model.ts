@@ -1,11 +1,12 @@
 import { DataTypes } from 'sequelize';
 import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from './base.model';
 import Msa from './msa.model';
+import { decrypt, encrypt } from '../../helper/function/crypto';
 
 export interface MsaDetailAttributes extends BaseModelAttributes {
   msaId: number;
   name: string;
-  rate: number;
+  rate: string;
   role: string;
   project: string;
   groupPosition: string;
@@ -16,7 +17,7 @@ export interface MsaDetailCreationAttributes extends Omit<MsaDetailAttributes, '
 class MsaDetail extends BaseModel<MsaDetailAttributes, MsaDetailCreationAttributes> implements MsaDetailAttributes {
   public msaId!: number;
   public name!: string;
-  public rate!: number;
+  public rate!: string;
   public role!: string;
   public project!: string;
   public groupPosition!: string;
@@ -36,8 +37,17 @@ MsaDetail.init(
       allowNull: false,
     },
     rate: {
-      type: DataTypes.DECIMAL(12, 2),
+      type: DataTypes.STRING,
       allowNull: false,
+      set(value: string) {
+        const encrypted = encrypt(value);
+        this.setDataValue('rate', encrypted);
+      },
+      get() {
+        const encrypted = this.getDataValue('rate');
+        if (!encrypted) return null;
+        return decrypt(encrypted);
+      },
     },
     role: {
       type: DataTypes.STRING,

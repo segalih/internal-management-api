@@ -71,11 +71,11 @@ export class LicenseController {
   }
 
   async index(req: Request, res: Response<ResponseApi<PaginationResult<LicenseAttributes>>>) {
-    const { offset, limit, bast } = req.query;
+    const { page, per_page, bast } = req.query;
 
     const licenses = await this.licenseService.getAll({
-      limit: parseInt((limit as string) ?? '10', 10),
-      offset: parseInt((offset as string) ?? '1', 10),
+      perPage: parseInt((per_page as string) ?? '10', 10),
+      page: parseInt((page as string) ?? '1', 10),
       searchConditions: [
         {
           keyValue: bast ?? '',

@@ -49,14 +49,14 @@ export default class LicenseService {
   }
 
   async getAll(input: {
-    limit: number;
-    offset: number;
+    perPage: number;
+    page: number;
     searchConditions?: SearchCondition[];
     sortOptions?: any;
   }): Promise<PaginationResult<LicenseAttributes>> {
     const results = await License.paginate<LicenseAttributes>({
-      offset: input.offset,
-      limit: input.limit,
+      PerPage: input.perPage,
+      page: input.page,
       searchConditions: input.searchConditions || [],
       sortOptions: input.sortOptions,
     });
