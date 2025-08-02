@@ -107,7 +107,7 @@ export class MsaController {
       const fileBAST = files['file_bast']?.[0];
 
       if (!isStringNumber(id)) {
-        throw new BadRequestException('Invalid MSA ID');
+        throw new BadRequestException('Invalid Url');
       }
 
       const msaId = parseInt(id, 10);
@@ -157,7 +157,7 @@ export class MsaController {
       res.status(HttpStatusCode.Ok).json({
         statusCode: HttpStatusCode.Ok,
         message: 'MSA updated successfully',
-        data: result,
+        data: this.msaService.MsaResponse(result),
       });
     } catch (err) {
       ProcessError(err, res);
