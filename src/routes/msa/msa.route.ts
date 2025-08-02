@@ -27,19 +27,18 @@ export default class MsaRoute {
         this.msaController.create(req, res)
       )
       .get((req, res) => this.msaController.index(req, res));
-    // this.router.route('/download-bast/:id').get((req, res) => this.msaController.getBastFile(req, res));
-    // this.router
-    //   .route('/:id/detail')
-    //   .post(validationMiddleware(CreateMsaDetailDto), (req, res) => this.msaDetailController.create(req, res));
-    // this.router
-    //   .route('/:id/detail/:msaDetailId')
-    //   .put(validationMiddleware(CreateMsaDetailDto), (req, res) => this.msaDetailController.update(req, res))
-    //   .delete((req, res) => this.msaDetailController.destroy(req, res));
+    this.router
+      .route('/:id/detail')
+      .post(validationMiddleware(CreateMsaDetailDto), (req, res) => this.msaDetailController.create(req, res));
+    this.router
+      .route('/:id/detail/:msaDetailId')
+      .put(validationMiddleware(CreateMsaDetailDto), (req, res) => this.msaDetailController.update(req, res))
+      .delete((req, res) => this.msaDetailController.destroy(req, res));
 
     this.router
       .route('/:id')
-      //   .get((req, res) => this.msaController.show(req, res))
-      //   .delete((req, res) => this.msaController.destroy(req, res))
+      .get((req, res) => this.msaController.show(req, res))
+      .delete((req, res) => this.msaController.destroy(req, res))
       .put(uploadForMSA, validationMiddleware(CreateMsaDto), (req, res) => this.msaController.update(req, res));
   }
 }

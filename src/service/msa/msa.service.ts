@@ -112,60 +112,20 @@ export default class MsaService {
   }
 
   async getAll(input: {
-    limit: number;
-    offset: number;
+    perPage: number;
+    page: number;
     searchConditions?: SearchCondition[];
     sortOptions?: sortOptions;
   }): Promise<PaginationResult<MsaAttributes>> {
     const results = await Msa.paginate<MsaAttributes>({
-      offset: input.offset,
-      limit: input.limit,
+      page: input.page,
+      PerPage: input.perPage,
       searchConditions: input.searchConditions || [],
       sortOptions: input.sortOptions,
     });
 
     return results;
   }
-
-  // async movePksMsaFiles(id: number): Promise<void> {
-  //   const msa = await Msa.findByPk(id);
-  //   if (!msa) {
-  //     throw new NotFoundException('MSA not found');
-  //   }
-
-  //   const oldPats = [`./uploads/${msa.file_pks}`, `./uploads/${msa.file_bast}`];
-  //   const newFileNames = {
-  //     pks: this.renameDocumentType(msa.file_pks, msa.id, 'PKS', msa.pks),
-  //     bast: this.renameDocumentType(msa.file_bast, msa.id, 'BAST', msa.pks),
-  //   };
-  //   const newFilePaths = [
-  //     `./uploads/pks_msa/${id}/${newFileNames.pks}`,
-  //     `./uploads/pks_msa/${id}/${newFileNames.bast}`,
-  //   ];
-
-  //   oldPats.forEach((oldPath, index) => {
-  //     if (fs.existsSync(oldPath)) {
-  //       if (!fs.existsSync(`./uploads/pks_msa/${id}`)) {
-  //         fs.mkdirSync(`./uploads/pks_msa/${id}`, { recursive: true });
-  //       }
-  //       const newFilePath = newFilePaths[index];
-  //       if (oldPath === newFilePath) {
-  //         return;
-  //       }
-
-  //       try {
-  //         fs.renameSync(oldPath, newFilePath);
-  //       } catch (err) {
-  //         throw new Error('Failed to move file');
-  //       }
-  //     }
-  //   });
-
-  //   await msa.update({
-  //     file_pks: newFileNames.pks,
-  //     file_bast: newFileNames.bast,
-  //   });
-  // }
 
   renameDocumentType(fileName: string, id: number, type: string, name: string): string {
     const ext = path.extname(fileName);

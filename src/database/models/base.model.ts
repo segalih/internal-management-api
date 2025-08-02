@@ -22,8 +22,8 @@ export interface sortOptions {
 }
 
 interface IPaginate {
-  offset: number;
-  limit: number;
+  page: number;
+  PerPage: number;
   searchConditions: SearchCondition[];
   sortOptions?: sortOptions;
   includeConditions?: Includeable[];
@@ -49,18 +49,12 @@ class BaseModel<
   public readonly deletedAt!: Date | null;
 
   static async paginate<T>(input: IPaginate): Promise<PaginationResult<T>> {
-    const offset = (input.offset - 1) * input.limit;
+    const perPage = input.PerPage ?? 10;
+    const page = input.page ?? 1;
+    const offset = (page - 1) * perPage;
 
     let whereConditions: WhereOptions = this.buildWhereClause(input.searchConditions);
 
-    // for (const condition of input.searchConditions) {
-    //   whereConditions[condition.keyColumn ?? condition.keySearch] = {
-    //     [condition.keyValue ? condition.operator : Op.substring]: condition.keyValue,
-    //   };
-    // }
-    // whereConditions['deletedAt'] = {
-    //   [Op.eq]: null,
-    // };
     if (input.symbolCondition) {
       whereConditions = { ...whereConditions, ...input.symbolCondition };
     }
@@ -71,7 +65,7 @@ class BaseModel<
     const results = await this.findAndCountAll({
       where: whereConditions,
       order: [[sortKey, sortOrder]],
-      limit: input.limit,
+      limit: perPage,
       offset,
       include: input.includeConditions,
       attributes: input.attributes,
@@ -81,9 +75,9 @@ class BaseModel<
     return {
       data: results.rows as T[],
       totalCount: results.count,
-      pageSize: input.limit,
-      totalPages: Math.ceil(results.count / input.limit),
-      currentPage: input.offset,
+      pageSize: input.PerPage,
+      totalPages: Math.ceil(results.count / input.PerPage),
+      currentPage: input.page,
     };
   }
 

@@ -169,8 +169,8 @@ export class MsaController {
 
   async index(req: Request, res: Response<ResponseApi<PaginationResult<MsaAttributes>>>) {
     try {
-      const limit = parseInt(req.query.limit as string, 10) || 10;
-      const offset = parseInt(req.query.offset as string, 10) || 1;
+      const page = parseInt(req.query.page as string, 10) || 10;
+      const perPage = parseInt(req.query.per_page as string, 10) || 1;
 
       const {
         pks,
@@ -255,8 +255,8 @@ export class MsaController {
       };
 
       const results = await this.msaService.getAll({
-        limit,
-        offset,
+        page,
+        perPage,
         searchConditions,
         sortOptions,
       });
