@@ -31,7 +31,7 @@ export default class MsaService {
     return await this.getById(msa.id);
   }
 
-  async updateById(id: number, data: CreateMsaDto, filePksId?: number, fileBastId?: number): Promise<MsaAttributes> {
+  async updateById(id: number, data: CreateMsaDto, filePksId?: number, fileBastId?: number): Promise<Msa> {
     const msa = await this.getById(id);
 
     if (!msa) {

@@ -39,12 +39,21 @@ export default class LicenseService {
     return null;
   }
 
-  async updateById(id: number, data: Partial<CreateLisenceDto>): Promise<License> {
+  async updateById(
+    id: number,
+    data: Partial<CreateLisenceDto>,
+    filePksId?: number,
+    fileBastId?: number
+  ): Promise<License> {
     const license = await License.findByPk(id);
     if (!license) {
       throw new NotFoundException('License not found');
     }
-    await license.update(data);
+    await license.update({
+      ...data,
+      pksFileId: filePksId ? filePksId : license.pksFileId,
+      bastFileId: fileBastId ? fileBastId : license.bastFileId,
+    });
     return license;
   }
 
@@ -64,11 +73,11 @@ export default class LicenseService {
     return results;
   }
 
-  licenseResponse(license: License): LicenseAttributes {
+  licenseResponse(license: LicenseAttributes): LicenseAttributes {
     const pksFileBase64 = Buffer.from(license.pksFileId?.toString() || '').toString('base64');
     const bastFileBase64 = Buffer.from(license.bastFileId?.toString() || '').toString('base64');
     return {
-      ...license.toJSON(),
+      ...license,
       pksFileUrl: `/api/document/${pksFileBase64}`,
       bastFileUrl: `/api/document/${bastFileBase64}`,
     };
