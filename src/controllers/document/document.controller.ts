@@ -14,11 +14,9 @@ export class DocumentController {
 
   async getDocument(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
-    if (!isStringNumber(id)) {
-      throw new BadRequestException('Invalid document ID format');
-    }
+    const decodedBase64Id = Buffer.from(id, 'base64').toString('utf-8');
     try {
-      const document = await this.documentService.getDocumentById(Number(id));
+      const document = await this.documentService.getDocumentById(decodedBase64Id);
 
       if (!document) {
         throw new NotFoundException('Document not found');
