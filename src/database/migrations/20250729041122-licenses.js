@@ -16,10 +16,22 @@ module.exports = {
       pks_file_id: {
         type: Sequelize.INTEGER,
         allowNull: true,
+        references: {
+          model: {
+            tableName: 'documents',
+          },
+          key: 'id',
+        },
       },
       bast_file_id: {
         type: Sequelize.INTEGER,
         allowNull: true,
+        references: {
+          model: {
+            tableName: 'documents',
+          },
+          key: 'id',
+        },
       },
       application: {
         type: Sequelize.STRING,
