@@ -145,31 +145,36 @@ export class LicenseController {
   }
 
   async index(req: Request, res: Response<ResponseApiWithPagination<LicenseAttributes>>) {
-    const { page, per_page, bast } = req.query;
+    try {
+      const { page, per_page, bast } = req.query;
 
-    const licenses = await this.licenseService.getAll({
-      perPage: parseInt((per_page as string) ?? '10', 10),
-      page: parseInt((page as string) ?? '1', 10),
-      searchConditions: [
-        {
-          keyValue: bast ?? '',
-          operator: Op.eq,
-          keyColumn: 'bast',
-          keySearch: 'bast',
+      const licenses = await this.licenseService.getAll({
+        perPage: parseInt((per_page as string) ?? '10', 10),
+        page: parseInt((page as string) ?? '1', 10),
+        searchConditions: [
+          {
+            keyValue: bast ?? '',
+            operator: Op.eq,
+            keyColumn: 'bast',
+            keySearch: 'bast',
+          },
+        ],
+      });
+
+      res.status(HttpStatusCode.Ok).json({
+        message: 'OK',
+        statusCode: HttpStatusCode.Ok,
+        data: licenses.data.map((license) => this.licenseService.licenseResponse(license)),
+        meta: {
+          currentPage: licenses.currentPage,
+          pageSize: licenses.pageSize,
+          totalCount: licenses.totalCount,
+          totalPages: licenses.totalPages,
         },
-      ],
-    });
-
-    res.status(HttpStatusCode.Ok).json({
-      message: 'OK',
-      statusCode: HttpStatusCode.Ok,
-      data: licenses.data,
-      meta: {
-        currentPage: licenses.currentPage,
-        pageSize: licenses.pageSize,
-        totalCount: licenses.totalCount,
-        totalPages: licenses.totalPages,
-      },
-    });
+      });
+    } catch (error) {
+      ProcessError(error, res);
+    }
+    
   }
 }

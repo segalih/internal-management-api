@@ -18,6 +18,7 @@ export interface LicenseAttributes extends BaseModelAttributes {
   bastFileUrl?: string;
   pks_file_id?: number;
   bast_file_id?: number;
+  status?: string;
 }
 
 export interface LicenseCreationAttributes extends Omit<LicenseAttributes, 'id'> {}
@@ -62,14 +63,26 @@ License.init(
     dueDateLicense: {
       type: DataTypes.STRING,
       allowNull: true,
+      get() {
+        const value = this.getDataValue('dueDateLicense');
+        return value ? new Date(value).toISOString() : null;
+      },
     },
     healthCheckRoutine: {
       type: DataTypes.STRING,
       allowNull: true,
+      get() {
+        const value = this.getDataValue('healthCheckRoutine');
+        return value ? new Date(value).toISOString() : null;
+      },
     },
     healthCheckActual: {
       type: DataTypes.STRING,
       allowNull: true,
+      get() {
+        const value = this.getDataValue('healthCheckActual');
+        return value ? new Date(value).toISOString() : null;
+      },
     },
   },
   {
