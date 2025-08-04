@@ -9,7 +9,9 @@ export default class LicenseService {
   constructor() {}
 
   async getById(id: number): Promise<License> {
-    const license = await License.findByPk(id);
+    const license = await License.findByPk(id,{
+    
+    });
     if (!license) {
       throw new NotFoundException('License not found');
     }
@@ -73,13 +75,15 @@ export default class LicenseService {
     return results;
   }
 
-  licenseResponse(license: LicenseAttributes): LicenseAttributes {
+  licenseResponse(license: License): LicenseAttributes {
     const pksFileBase64 = Buffer.from(license.pksFileId?.toString() || '').toString('base64');
     const bastFileBase64 = Buffer.from(license.bastFileId?.toString() || '').toString('base64');
     return {
-      ...license,
+      ...license.toJSON(),
       pksFileUrl: `/api/document/${pksFileBase64}`,
       bastFileUrl: `/api/document/${bastFileBase64}`,
+      pks_file_id: undefined,
+      bast_file_id: undefined,
     };
   }
 }

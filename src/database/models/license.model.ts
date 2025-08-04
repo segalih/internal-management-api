@@ -16,6 +16,8 @@ export interface LicenseAttributes extends BaseModelAttributes {
 
   pksFileUrl?: string;
   bastFileUrl?: string;
+  pks_file_id?: number;
+  bast_file_id?: number;
 }
 
 export interface LicenseCreationAttributes extends Omit<LicenseAttributes, 'id'> {}

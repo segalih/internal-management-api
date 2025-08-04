@@ -5,7 +5,7 @@ import { Op } from 'sequelize';
 import { PaginationResult } from '../../database/models/base.model';
 import { LicenseAttributes, LISENCE_CONSTANTS } from '../../database/models/license.model';
 import { ProcessError } from '../../helper/Error/errorHandler';
-import { ResponseApi } from '../../helper/interface/response.interface';
+import { ResponseApi, ResponseApiWithPagination } from '../../helper/interface/response.interface';
 import LicenseService from '../../service/license/license.service';
 import { DocumentService } from '../../service/document/document.service';
 import { CreateLisenceDto } from '../../common/dto/lisence/CreateLisenceDto';
@@ -74,7 +74,7 @@ export class LicenseController {
       res.status(HttpStatusCode.Ok).json({
         message: 'License retrieved successfully',
         statusCode: HttpStatusCode.Ok,
-        data: license,
+        data: this.licenseService.licenseResponse(license),
       });
     } catch (err) {
       ProcessError(err, res);
@@ -144,7 +144,7 @@ export class LicenseController {
     }
   }
 
-  async index(req: Request, res: Response<ResponseApi<PaginationResult<LicenseAttributes>>>) {
+  async index(req: Request, res: Response<ResponseApiWithPagination<LicenseAttributes>>) {
     const { page, per_page, bast } = req.query;
 
     const licenses = await this.licenseService.getAll({
@@ -163,7 +163,13 @@ export class LicenseController {
     res.status(HttpStatusCode.Ok).json({
       message: 'OK',
       statusCode: HttpStatusCode.Ok,
-      data: licenses,
+      data: licenses.data,
+      meta: {
+        currentPage: licenses.currentPage,
+        pageSize: licenses.pageSize,
+        totalCount: licenses.totalCount,
+        totalPages: licenses.totalPages,
+      },
     });
   }
 }
