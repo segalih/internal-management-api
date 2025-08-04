@@ -1,4 +1,3 @@
-import fs from 'fs';
 import path from 'path';
 import CreateMsaDto from '../../common/dto/msa/CreateMsaDto';
 import { PaginationResult, SearchCondition, sortOptions } from '../../database/models/base.model';
@@ -6,9 +5,6 @@ import Msa, { MsaAttributes } from '../../database/models/msa.model';
 import MsaDetail from '../../database/models/msa_detail.model';
 import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
 import MsaDetailService from './msaDetail.service';
-import { UnprocessableEntityException } from '../../helper/Error/UnprocessableEntity/UnprocessableEntityException';
-import Document from '../../database/models/document.model';
-import { encrypt } from '../../helper/function/crypto';
 export default class MsaService {
   private msaDetailService: MsaDetailService;
   constructor() {
