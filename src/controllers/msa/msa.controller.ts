@@ -166,8 +166,8 @@ export class MsaController {
 
   async index(req: Request, res: Response<ResponseApiWithPagination<MsaAttributes>>) {
     try {
-      const page = parseInt(req.query.page as string, 10) || 10;
-      const perPage = parseInt(req.query.per_page as string, 10) || 1;
+      const page = parseInt(req.query.page as string, 10) || 1;
+      const perPage = parseInt(req.query.per_page as string, 10) || 10;
 
       const {
         pks,
