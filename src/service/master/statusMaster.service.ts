@@ -13,4 +13,9 @@ export class StatusMasterService {
 
     return status;
   }
+
+  async fetchAll(): Promise<Status[]> {
+    const status = await Status.findAll();
+    return status;
+  }
 }

@@ -1,7 +1,7 @@
 import Application from '../../database/models/application.model';
 import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
 
-export class ApplicationMaster {
+export class ApplicationMasterService {
   constructor() {}
 
   async getById(id: number): Promise<Application> {
@@ -12,5 +12,11 @@ export class ApplicationMaster {
     }
 
     return application;
+  }
+
+  async fetchAll(): Promise<Application[]> {
+    const applications = await Application.findAll();
+
+    return applications;
   }
 }
