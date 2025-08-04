@@ -1,10 +1,8 @@
-import { Op } from 'sequelize';
+import { DateTime } from 'luxon';
 import { CreateLisenceDto } from '../../common/dto/lisence/CreateLisenceDto';
+import { PaginationResult, SearchCondition } from '../../database/models/base.model';
 import License, { LicenseAttributes } from '../../database/models/license.model';
 import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
-import { PaginationResult, SearchCondition } from '../../database/models/base.model';
-import { encrypt } from '../../helper/function/crypto';
-import { DateTime } from 'luxon';
 
 export default class LicenseService {
   constructor() {}
@@ -82,9 +80,7 @@ export default class LicenseService {
     const pksFileBase64 = Buffer.from(license.pksFileId?.toString() || '').toString('base64');
     const bastFileBase64 = Buffer.from(license.bastFileId?.toString() || '').toString('base64');
     const dueDate = DateTime.fromISO(license.dueDateLicense.toString());
-    console.log(`due date ${dueDate}`);
     const dayTodaytoDueDate = dueDate.diffNow('days').days;
-    console.log('dayTodaytoDueDate', dayTodaytoDueDate);
     let colorStatus = 'green';
     if (dayTodaytoDueDate < 30) {
       colorStatus = 'red';
