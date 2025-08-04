@@ -69,20 +69,6 @@ export default class MsaService {
             exclude: ['createdAt', 'updatedAt', 'deletedAt'],
           },
         },
-        {
-          model: Document,
-          as: 'pksFile',
-          attributes: {
-            exclude: ['createdAt', 'updatedAt', 'deletedAt', 'filename', 'path'],
-          },
-        },
-        {
-          model: Document,
-          as: 'bastFile',
-          attributes: {
-            exclude: ['createdAt', 'updatedAt', 'deletedAt', 'filename', 'path'],
-          },
-        },
       ],
       attributes: {
         exclude: ['file_pks', 'file_bast', 'createdAt', 'updatedAt', 'deletedAt'],
