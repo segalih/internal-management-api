@@ -89,8 +89,8 @@ export class MsaDetailController {
 
       const totalBudgetUsed = this.msaDetailService.totalBudgetUsed(msa.details ?? []);
       const currentMsa = msa.details?.find((detail) => detail.id === parseInt(msaDetailId, 10));
-      const bugdetWithoutCurrent = totalBudgetUsed - (currentMsa ? parseInt(currentMsa.rate, 10) : 0);
-      const newTotalBudget = (totalBudgetUsed - bugdetWithoutCurrent + parseInt(req.body.rate, 10)) * diffDate.months;
+      const budgetWithoutCurrent = totalBudgetUsed - (currentMsa ? parseInt(currentMsa.rate, 10) : 0);
+      const newTotalBudget = (totalBudgetUsed - budgetWithoutCurrent + parseInt(req.body.rate, 10)) * diffDate.months;
 
       if (newTotalBudget > msa.budgetQuota) {
         throw new BadRequestException(
