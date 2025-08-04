@@ -8,6 +8,7 @@ import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException
 import MsaDetailService from './msaDetail.service';
 import { UnprocessableEntityException } from '../../helper/Error/UnprocessableEntity/UnprocessableEntityException';
 import Document from '../../database/models/document.model';
+import { encrypt } from '../../helper/function/crypto';
 export default class MsaService {
   private msaDetailService: MsaDetailService;
   constructor() {
@@ -30,7 +31,7 @@ export default class MsaService {
     return await this.getById(msa.id);
   }
 
-  async updateById(id: number, data: CreateMsaDto, filePksId?: number, fileBastId?: number): Promise<MsaAttributes> {
+  async updateById(id: number, data: CreateMsaDto, filePksId?: number, fileBastId?: number): Promise<Msa> {
     const msa = await this.getById(id);
 
     if (!msa) {
@@ -96,10 +97,12 @@ export default class MsaService {
   }
 
   MsaResponse(msa: Msa): MsaAttributes {
+    const pksFileIdBase64 = Buffer.from(msa.pksFileId?.toString() || '').toString('base64');
+    const bastFileIdBase64 = Buffer.from(msa.bastFileId?.toString() || '').toString('base64');
     return {
       ...msa.toJSON(),
-      pksFileUrl: `/api/document/${msa.pksFileId}`,
-      bastFileUrl: `/api/document/${msa.bastFileId}`,
+      pksFileUrl: `/api/document/${pksFileIdBase64}`,
+      bastFileUrl: `/api/document/${bastFileIdBase64}`,
     };
   }
 

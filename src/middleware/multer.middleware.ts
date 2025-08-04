@@ -61,3 +61,4 @@ export function createFlexibleUploadMiddleware(fields: string[]) {
 }
 
 export const uploadForMSA = createFlexibleUploadMiddleware(['file_pks', 'file_bast']);
+export const uploadForLicense = createFlexibleUploadMiddleware(['file_pks', 'file_bast']);

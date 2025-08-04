@@ -33,7 +33,7 @@ export class DocumentService {
     }
   }
 
-  async getDocumentById(id: number): Promise<Document | null> {
+  async getDocumentById(id: string): Promise<Document | null> {
     return await Document.findByPk(id);
   }
 }

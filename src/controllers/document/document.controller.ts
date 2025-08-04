@@ -14,18 +14,15 @@ export class DocumentController {
 
   async getDocument(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
-    if (!isStringNumber(id)) {
-      throw new BadRequestException('Invalid document ID format');
-    }
+    const decodedBase64Id = Buffer.from(id, 'base64').toString('utf-8');
     try {
-      const document = await this.documentService.getDocumentById(Number(id));
+      const document = await this.documentService.getDocumentById(decodedBase64Id);
 
       if (!document) {
         throw new NotFoundException('Document not found');
       }
 
       const absolutePath = path.resolve(document.path);
-      console.log('Document absolute path:', absolutePath);
 
       if (!fs.existsSync(`.${absolutePath}`)) {
         return ProcessError(new NotFoundException('Document file not found'), res);

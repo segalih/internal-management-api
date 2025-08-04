@@ -3,13 +3,6 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    /**
-     * Add altering commands here.
-     *
-     * Example:
-     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-     */
-
     await queryInterface.createTable('licenses', {
       id: {
         type: Sequelize.INTEGER,
@@ -20,24 +13,40 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      bast: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      pks_file_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: {
+            tableName: 'documents',
+          },
+          key: 'id',
+        },
       },
-      aplikasi: {
+      bast_file_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: {
+            tableName: 'documents',
+          },
+          key: 'id',
+        },
+      },
+      application: {
         type: Sequelize.STRING,
         allowNull: false,
       },
       due_date_license: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: true,
       },
       health_check_routine: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: true,
       },
       health_check_actual: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: true,
       },
       created_at: {
@@ -58,13 +67,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
-
     await queryInterface.dropTable('licenses');
   },
 };

@@ -1,24 +1,33 @@
 import { DataTypes } from 'sequelize';
 import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from './base.model';
+import Document from './document.model';
 
+export const LISENCE_CONSTANTS = {
+  BASE_PATH: '/uploads/lisence/',
+};
 export interface LicenseAttributes extends BaseModelAttributes {
   pks: string;
-  bast: string;
-  aplikasi: string;
-  dueDateLicense: Date;
-  healthCheckRoutine: Date;
-  healthCheckActual: Date;
+  pksFileId?: number;
+  bastFileId?: number;
+  application: string;
+  dueDateLicense: string;
+  healthCheckRoutine: string;
+  healthCheckActual: string;
+
+  pksFileUrl?: string;
+  bastFileUrl?: string;
 }
 
 export interface LicenseCreationAttributes extends Omit<LicenseAttributes, 'id'> {}
 
 class License extends BaseModel<LicenseAttributes, LicenseCreationAttributes> implements LicenseAttributes {
   public pks!: string;
-  public bast!: string;
-  public aplikasi!: string;
-  public dueDateLicense!: Date;
-  public healthCheckRoutine!: Date;
-  public healthCheckActual!: Date;
+  public pksFileId?: number;
+  public bastFileId?: number;
+  public application!: string;
+  public dueDateLicense!: string;
+  public healthCheckRoutine!: string;
+  public healthCheckActual!: string;
 }
 
 License.init(
@@ -28,24 +37,36 @@ License.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    bast: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    pksFileId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'documents',
+        key: 'id',
+      },
     },
-    aplikasi: {
+    bastFileId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'documents',
+        key: 'id',
+      },
+    },
+    application: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     dueDateLicense: {
-      type: DataTypes.DATE,
-      allowNull: false,
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     healthCheckRoutine: {
-      type: DataTypes.DATE,
-      allowNull: false,
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     healthCheckActual: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
       allowNull: true,
     },
   },
@@ -54,5 +75,15 @@ License.init(
     tableName: 'licenses',
   }
 );
+
+License.belongsTo(Document, {
+  foreignKey: 'pks_file_id',
+  as: 'pksFile',
+});
+
+License.belongsTo(Document, {
+  foreignKey: 'bast_file_id',
+  as: 'bastFile',
+});
 
 export default License;

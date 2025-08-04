@@ -17,12 +17,14 @@ const configConstants = {
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN ?? '1d',
   JWT_SECRET_REFRESH_TOKEN: process.env.JWT_SECRET_REFRESH_TOKEN ?? 'secret',
   JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN ?? '7d',
-
+  NODE_ENV: process.env.NODE_ENV ?? 'development',
   FE_HOST: process.env.FE_HOST ?? '',
   FE_PORT: parseInt(process.env.FE_PORT ?? '5173', 10) ?? 5173,
   API_URL: `${process.env.BE_HOST ?? 'http://localhost'}:${process.env.PORT ?? '8000'}`,
   CRYPTO_KEY: process.env.CRYPTO_KEY ?? 'crypto-secret-key',
 };
-console.log('configConstants', configConstants);
+if (configConstants.NODE_ENV === 'development') {
+  console.log('configConstants', configConstants);
+}
 
 export default configConstants;

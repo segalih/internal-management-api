@@ -1,24 +1,28 @@
-import { IsDate, IsDateString, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateLisenceDto {
   @IsString()
+  @IsNotEmpty()
   pks!: string;
 
+  @IsOptional()
   @IsString()
-  bast!: string;
+  file_pks_id?: number;
+
+  @IsOptional()
+  @IsString()
+  file_bast_id?: number;
 
   @IsString()
-  aplikasi!: string;
+  @IsNotEmpty()
+  application!: string;
 
   @IsDateString()
-  @IsOptional()
-  due_date_license!: Date;
+  due_date_license!: string;
 
   @IsDateString()
-  @IsOptional()
-  health_check_routine!: Date;
+  health_check_routine!: string;
 
   @IsDateString()
-  @IsOptional()
-  health_check_actual!: Date;
+  health_check_actual!: string;
 }
