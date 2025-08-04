@@ -46,10 +46,18 @@ Msa.init(
     dateStarted: {
       type: DataTypes.DATE,
       allowNull: false,
+      get() {
+        const date = this.getDataValue('dateStarted');
+        return date ? new Date(date).toISOString() : null;
+      },
     },
     dateEnded: {
       type: DataTypes.DATE,
       allowNull: false,
+      get() {
+        const date = this.getDataValue('dateEnded');
+        return date ? new Date(date).toISOString() : null;
+      },
     },
     peopleQuota: {
       type: DataTypes.INTEGER,

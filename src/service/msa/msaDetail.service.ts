@@ -7,20 +7,7 @@ import { UnprocessableEntityException } from '../../helper/Error/UnprocessableEn
 export default class MsaDetailService {
   constructor() {}
 
-  async create(data: CreateMsaDetailDto, msaId: string): Promise<MsaDetailAttributes> {
-    const msa = await Msa.findByPk(msaId, {
-      include: [
-        {
-          model: MsaDetail,
-          as: 'details',
-        },
-      ],
-    });
-    if (!msa) {
-      throw new NotFoundException('MSA not found');
-    }
-    this.checkQuotaLimits(msa, data);
-
+  async create(data: CreateMsaDetailDto, msaId: string): Promise<MsaDetail> {
     const msaDetail = await MsaDetail.create({
       name: data.name,
       rate: data.rate,
@@ -32,7 +19,7 @@ export default class MsaDetailService {
     if (!msaDetail) {
       throw new UnprocessableEntityException('MSA detail not created', {});
     }
-    return msaDetail.toJSON();
+    return msaDetail;
   }
 
   async createMany(data: CreateMsaDetailDto[], msaId: number): Promise<MsaDetail[]> {
@@ -46,6 +33,16 @@ export default class MsaDetailService {
         groupPosition: item.group_position,
       }))
     );
+  }
+
+  async getById(id: number): Promise<MsaDetail | null> {
+    const msaDetail = await MsaDetail.findByPk(id, {
+      include: [{ model: Msa, as: 'msa' }],
+    });
+    if (!msaDetail) {
+      throw new NotFoundException('MSA detail not found');
+    }
+    return msaDetail;
   }
 
   async updateById(msaId: number, msaDetailId: number, data: CreateMsaDetailDto): Promise<MsaDetailAttributes> {
@@ -63,11 +60,6 @@ export default class MsaDetailService {
     if (!msaDetail || !msaDetail.msa) {
       throw new NotFoundException('MSA detail not found');
     }
-    const payload = {
-      ...data,
-      id: msaDetailId,
-    };
-    this.checkQuotaLimits(msaDetail.msa, payload, true);
 
     const updatedMsaDetail = await msaDetail.update({
       name: data.name,
@@ -116,13 +108,6 @@ export default class MsaDetailService {
       throw new UnprocessableEntityException('Maximum number of people exceeded', {
         maxPeople: msa.peopleQuota,
         totalPeople,
-      });
-    }
-
-    if (totalBudget > msa.budgetQuota) {
-      throw new UnprocessableEntityException(`Your budget limit has been exceeded. Please check your budget quota.`, {
-        remainingBugdet: msa.budgetQuota - totalBudgetUsed,
-        totalBudget: parseFloat(msa.budgetQuota.toString()),
       });
     }
   };
