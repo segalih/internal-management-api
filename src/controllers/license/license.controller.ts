@@ -134,7 +134,6 @@ export class LicenseController {
       }
 
       const updatedLicense = await this.licenseService.updateById(licenseId, payload, filePksId, fileBastId);
-      console.log('Updated License:', updatedLicense);
       res.status(HttpStatusCode.Ok).json({
         message: 'License updated successfully',
         statusCode: HttpStatusCode.Ok,

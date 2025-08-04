@@ -23,7 +23,6 @@ export class DocumentController {
       }
 
       const absolutePath = path.resolve(document.path);
-      console.log('Document absolute path:', absolutePath);
 
       if (!fs.existsSync(`.${absolutePath}`)) {
         return ProcessError(new NotFoundException('Document file not found'), res);
