@@ -1,17 +1,14 @@
-import { Op } from 'sequelize';
+import { DateTime } from 'luxon';
 import { CreateLisenceDto } from '../../common/dto/lisence/CreateLisenceDto';
+import { PaginationResult, SearchCondition } from '../../database/models/base.model';
 import License, { LicenseAttributes } from '../../database/models/license.model';
 import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
-import { PaginationResult, SearchCondition } from '../../database/models/base.model';
-import { encrypt } from '../../helper/function/crypto';
 
 export default class LicenseService {
   constructor() {}
 
   async getById(id: number): Promise<License> {
-    const license = await License.findByPk(id,{
-    
-    });
+    const license = await License.findByPk(id, {});
     if (!license) {
       throw new NotFoundException('License not found');
     }
@@ -52,7 +49,11 @@ export default class LicenseService {
       throw new NotFoundException('License not found');
     }
     await license.update({
-      ...data,
+      pks: data.pks,
+      application: data.application,
+      dueDateLicense: data.due_date_license,
+      healthCheckRoutine: data.health_check_routine,
+      healthCheckActual: data.health_check_actual,
       pksFileId: filePksId ? filePksId : license.pksFileId,
       bastFileId: fileBastId ? fileBastId : license.bastFileId,
     });
@@ -64,8 +65,8 @@ export default class LicenseService {
     page: number;
     searchConditions?: SearchCondition[];
     sortOptions?: any;
-  }): Promise<PaginationResult<LicenseAttributes>> {
-    const results = await License.paginate<LicenseAttributes>({
+  }): Promise<PaginationResult<License>> {
+    const results = await License.paginate<License>({
       PerPage: input.perPage,
       page: input.page,
       searchConditions: input.searchConditions || [],
@@ -78,12 +79,21 @@ export default class LicenseService {
   licenseResponse(license: License): LicenseAttributes {
     const pksFileBase64 = Buffer.from(license.pksFileId?.toString() || '').toString('base64');
     const bastFileBase64 = Buffer.from(license.bastFileId?.toString() || '').toString('base64');
+    const dueDate = DateTime.fromISO(license.dueDateLicense.toString());
+    const dayTodaytoDueDate = dueDate.diffNow('days').days;
+    let colorStatus = 'green';
+    if (dayTodaytoDueDate < 30) {
+      colorStatus = 'red';
+    } else if (dayTodaytoDueDate < 90) {
+      colorStatus = 'yellow';
+    }
     return {
       ...license.toJSON(),
       pksFileUrl: `/api/document/${pksFileBase64}`,
       bastFileUrl: `/api/document/${bastFileBase64}`,
       pks_file_id: undefined,
       bast_file_id: undefined,
+      status: colorStatus,
     };
   }
 }

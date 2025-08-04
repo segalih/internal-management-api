@@ -1,17 +1,17 @@
 /// <reference path="../custom.d.ts" />
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
-import { Op } from 'sequelize';
-import { PaginationResult } from '../../database/models/base.model';
-import { LicenseAttributes, LISENCE_CONSTANTS } from '../../database/models/license.model';
-import { ProcessError } from '../../helper/Error/errorHandler';
-import { ResponseApi, ResponseApiWithPagination } from '../../helper/interface/response.interface';
-import LicenseService from '../../service/license/license.service';
-import { DocumentService } from '../../service/document/document.service';
-import { CreateLisenceDto } from '../../common/dto/lisence/CreateLisenceDto';
-import { BadRequestException } from '../../helper/Error/BadRequestException/BadRequestException';
 import fs from 'fs';
+import { DateTime } from 'luxon';
+import { Op } from 'sequelize';
+import { CreateLisenceDto } from '../../common/dto/lisence/CreateLisenceDto';
+import { LicenseAttributes, LISENCE_CONSTANTS } from '../../database/models/license.model';
+import { BadRequestException } from '../../helper/Error/BadRequestException/BadRequestException';
+import { ProcessError } from '../../helper/Error/errorHandler';
 import { isStringNumber } from '../../helper/function/common';
+import { ResponseApi, ResponseApiWithPagination } from '../../helper/interface/response.interface';
+import { DocumentService } from '../../service/document/document.service';
+import LicenseService from '../../service/license/license.service';
 
 export class LicenseController {
   private licenseService: LicenseService;
@@ -145,31 +145,63 @@ export class LicenseController {
   }
 
   async index(req: Request, res: Response<ResponseApiWithPagination<LicenseAttributes>>) {
-    const { page, per_page, bast } = req.query;
+    try {
+      let { page, per_page, bast, status } = req.query;
 
-    const licenses = await this.licenseService.getAll({
-      perPage: parseInt((per_page as string) ?? '10', 10),
-      page: parseInt((page as string) ?? '1', 10),
-      searchConditions: [
-        {
-          keyValue: bast ?? '',
-          operator: Op.eq,
-          keyColumn: 'bast',
-          keySearch: 'bast',
+      if (!status) {
+        status = 'all';
+      }
+
+      let dueDateThreshold: number | undefined;
+
+      switch (status) {
+        case 'under_3_months':
+          dueDateThreshold = 90;
+          break;
+        case 'under_1_month':
+          dueDateThreshold = 30;
+          break;
+        default:
+          dueDateThreshold = 0;
+      }
+      let thresholdDate: string | null = null;
+      if (dueDateThreshold !== 0) {
+        const today = DateTime.now();
+        thresholdDate = today.plus({ days: dueDateThreshold }).toISODate();
+      }
+
+      const licenses = await this.licenseService.getAll({
+        perPage: parseInt((per_page as string) ?? '10', 10),
+        page: parseInt((page as string) ?? '1', 10),
+        searchConditions: [
+          {
+            keyValue: bast ?? '',
+            operator: Op.eq,
+            keyColumn: 'bast',
+            keySearch: 'bast',
+          },
+          {
+            keyValue: thresholdDate ?? '',
+            operator: Op.lte,
+            keyColumn: 'dueDateLicense',
+            keySearch: 'dueDateLicense',
+          },
+        ],
+      });
+
+      res.status(HttpStatusCode.Ok).json({
+        message: 'OK',
+        statusCode: HttpStatusCode.Ok,
+        data: licenses.data.map((license) => this.licenseService.licenseResponse(license)),
+        meta: {
+          currentPage: licenses.currentPage,
+          pageSize: licenses.pageSize,
+          totalCount: licenses.totalCount,
+          totalPages: licenses.totalPages,
         },
-      ],
-    });
-
-    res.status(HttpStatusCode.Ok).json({
-      message: 'OK',
-      statusCode: HttpStatusCode.Ok,
-      data: licenses.data,
-      meta: {
-        currentPage: licenses.currentPage,
-        pageSize: licenses.pageSize,
-        totalCount: licenses.totalCount,
-        totalPages: licenses.totalPages,
-      },
-    });
+      });
+    } catch (error) {
+      ProcessError(error, res);
+    }
   }
 }
