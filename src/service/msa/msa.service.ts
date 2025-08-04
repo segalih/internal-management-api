@@ -1,4 +1,3 @@
-import fs from 'fs';
 import path from 'path';
 import CreateMsaDto from '../../common/dto/msa/CreateMsaDto';
 import { PaginationResult, SearchCondition, sortOptions } from '../../database/models/base.model';
@@ -6,8 +5,6 @@ import Msa, { MsaAttributes } from '../../database/models/msa.model';
 import MsaDetail from '../../database/models/msa_detail.model';
 import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
 import MsaDetailService from './msaDetail.service';
-import { UnprocessableEntityException } from '../../helper/Error/UnprocessableEntity/UnprocessableEntityException';
-import Document from '../../database/models/document.model';
 export default class MsaService {
   private msaDetailService: MsaDetailService;
   constructor() {
@@ -30,7 +27,7 @@ export default class MsaService {
     return await this.getById(msa.id);
   }
 
-  async updateById(id: number, data: CreateMsaDto, filePksId?: number, fileBastId?: number): Promise<MsaAttributes> {
+  async updateById(id: number, data: CreateMsaDto, filePksId?: number, fileBastId?: number): Promise<Msa> {
     const msa = await this.getById(id);
 
     if (!msa) {
@@ -68,23 +65,9 @@ export default class MsaService {
             exclude: ['createdAt', 'updatedAt', 'deletedAt'],
           },
         },
-        {
-          model: Document,
-          as: 'pksFile',
-          attributes: {
-            exclude: ['createdAt', 'updatedAt', 'deletedAt', 'filename', 'path'],
-          },
-        },
-        {
-          model: Document,
-          as: 'bastFile',
-          attributes: {
-            exclude: ['createdAt', 'updatedAt', 'deletedAt', 'filename', 'path'],
-          },
-        },
       ],
       attributes: {
-        exclude: ['file_pks', 'file_bast', 'createdAt', 'updatedAt', 'deletedAt'],
+        exclude: ['createdAt', 'updatedAt', 'deletedAt'],
       },
     });
 
@@ -96,10 +79,12 @@ export default class MsaService {
   }
 
   MsaResponse(msa: Msa): MsaAttributes {
+    const pksFileIdBase64 = Buffer.from(msa.pksFileId?.toString() || '').toString('base64');
+    const bastFileIdBase64 = Buffer.from(msa.bastFileId?.toString() || '').toString('base64');
     return {
       ...msa.toJSON(),
-      pksFileUrl: `/api/document/${msa.pksFileId}`,
-      bastFileUrl: `/api/document/${msa.bastFileId}`,
+      pksFileUrl: `/api/document/${pksFileIdBase64}`,
+      bastFileUrl: `/api/document/${bastFileIdBase64}`,
     };
   }
 

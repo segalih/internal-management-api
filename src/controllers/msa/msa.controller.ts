@@ -3,19 +3,16 @@ import { Request, Response } from 'express';
 import * as fs from 'fs';
 import { DateTime } from 'luxon';
 import { Op } from 'sequelize';
+import CreateMsaDto from '../../common/dto/msa/CreateMsaDto';
 import { PaginationResult, SearchCondition } from '../../database/models/base.model';
 import { MSA_CONSTANTS, MsaAttributes } from '../../database/models/msa.model';
 import { BadRequestException } from '../../helper/Error/BadRequestException/BadRequestException';
 import { ProcessError } from '../../helper/Error/errorHandler';
 import { isStringNumber } from '../../helper/function/common';
-import { ResponseApi } from '../../helper/interface/response.interface';
+import { ResponseApi, ResponseApiWithPagination } from '../../helper/interface/response.interface';
+import { DocumentService } from '../../service/document/document.service';
 import MsaService from '../../service/msa/msa.service';
 import MsaDetailService from '../../service/msa/msaDetail.service';
-import CreateMsaDto from '../../common/dto/msa/CreateMsaDto';
-import { UnprocessableEntityException } from '../../helper/Error/UnprocessableEntity/UnprocessableEntityException';
-import { DocumentService } from '../../service/document/document.service';
-import path from 'path';
-// import * as fs from 'fs';
 
 export class MsaController {
   private msaService: MsaService;
@@ -110,7 +107,7 @@ export class MsaController {
       const fileBAST = files['file_bast']?.[0];
 
       if (!isStringNumber(id)) {
-        throw new BadRequestException('Invalid MSA ID');
+        throw new BadRequestException('Invalid Url');
       }
 
       const msaId = parseInt(id, 10);
@@ -160,17 +157,17 @@ export class MsaController {
       res.status(HttpStatusCode.Ok).json({
         statusCode: HttpStatusCode.Ok,
         message: 'MSA updated successfully',
-        data: result,
+        data: this.msaService.MsaResponse(result),
       });
     } catch (err) {
       ProcessError(err, res);
     }
   }
 
-  async index(req: Request, res: Response<ResponseApi<PaginationResult<MsaAttributes>>>) {
+  async index(req: Request, res: Response<ResponseApiWithPagination<MsaAttributes>>) {
     try {
-      const page = parseInt(req.query.page as string, 10) || 10;
-      const perPage = parseInt(req.query.per_page as string, 10) || 1;
+      const page = parseInt(req.query.page as string, 10) || 1;
+      const perPage = parseInt(req.query.per_page as string, 10) || 10;
 
       const {
         pks,
@@ -264,7 +261,13 @@ export class MsaController {
       res.status(HttpStatusCode.Ok).json({
         statusCode: HttpStatusCode.Ok,
         message: 'MSA list retrieved successfully',
-        data: results,
+        data: results.data,
+        meta: {
+          currentPage: results.currentPage,
+          pageSize: results.pageSize,
+          totalCount: results.totalCount,
+          totalPages: results.totalPages,
+        },
       });
     } catch (err) {
       ProcessError(err, res);

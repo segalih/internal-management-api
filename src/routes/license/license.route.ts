@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { LicenseController } from '../../controllers/license/license.controller';
 import { validationMiddleware } from '../../middleware/validation.middleware';
 import { CreateLisenceDto } from '../../common/dto/lisence/CreateLisenceDto';
+import { uploadForLicense } from '../../middleware/multer.middleware';
 
 export default class LicenseRoute {
   router: Router;
@@ -15,12 +16,16 @@ export default class LicenseRoute {
   serve() {
     this.router
       .route('/')
-      .post(validationMiddleware(CreateLisenceDto), (req, res) => this.licenseController.create(req, res))
+      .post(uploadForLicense, validationMiddleware(CreateLisenceDto), (req, res) =>
+        this.licenseController.create(req, res)
+      )
       .get((req, res) => this.licenseController.index(req, res));
     this.router
       .route('/:id')
       .get((req, res) => this.licenseController.show(req, res))
       .delete((req, res) => this.licenseController.destroy(req, res))
-      .put(validationMiddleware(CreateLisenceDto), (req, res) => this.licenseController.update(req, res));
+      .put(uploadForLicense, validationMiddleware(CreateLisenceDto), (req, res) =>
+        this.licenseController.update(req, res)
+      );
   }
 }
