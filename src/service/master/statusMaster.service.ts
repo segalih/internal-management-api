@@ -4,7 +4,7 @@ import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException
 export class StatusMasterService {
   constructor() {}
 
-  async getStatusById(id: number): Promise<Status> {
+  async getById(id: number): Promise<Status> {
     const status = await Status.findByPk(id);
 
     if (!status) {

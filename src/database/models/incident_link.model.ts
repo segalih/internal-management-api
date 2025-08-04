@@ -37,9 +37,16 @@ IncidentLink.init(
   }
 );
 
+
+
+Incident.hasMany(IncidentLink, {
+  foreignKey: 'incident_id',
+  as: 'links',
+});
+
 IncidentLink.belongsTo(Incident, {
   foreignKey: 'incident_id',
-  as: 'incident',
+  as: 'incidentParent',
 });
 
 export default IncidentLink;

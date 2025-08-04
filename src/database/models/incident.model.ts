@@ -14,14 +14,13 @@ export interface IncidentAttributes extends BaseModelAttributes {
   title: string;
   detail: string;
   statusId?: number;
-  temporaryAction: string;
-  fullAction: string;
-  rootCauseReason: string;
-  category: string;
-  rootCause: string;
-  note: string;
-  flag: boolean;
-  updateDate: string;
+  temporaryAction?: string;
+  fullAction?: string;
+  rootCauseReason?: string;
+  category?: string;
+  rootCause?: string;
+  note?: string;
+  flag?: boolean;
 
   application?: Application;
   personInCharge?: PersonInCharge;
@@ -100,39 +99,35 @@ Incident.init(
     temporaryAction: {
       type: DataTypes.STRING,
       field: 'temporary_action',
+      allowNull: true,
     },
     fullAction: {
       type: DataTypes.STRING,
       field: 'full_action',
+      allowNull: true,
     },
     rootCauseReason: {
       type: DataTypes.STRING,
       field: 'root_cause_reason',
+      allowNull: true,
     },
     category: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     rootCause: {
       type: DataTypes.STRING,
       field: 'root_cause',
+      allowNull: true,
     },
     note: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     flag: {
       type: DataTypes.BOOLEAN,
       field: 'flag',
       defaultValue: true,
-    },
-    updateDate: {
-      type: DataTypes.DATE,
-      field: 'update_date',
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-      get() {
-        const value = this.getDataValue('updateDate');
-        return value ? new Date(value).toISOString() : null;
-      },
     },
   },
   {
@@ -157,9 +152,23 @@ Incident.belongsTo(Status, {
   as: 'status',
 });
 
-Incident.hasMany(IncidentLink, {
-  foreignKey: 'incident_id',
-  as: 'links',
+Application.hasMany(Incident, {
+  foreignKey: 'application_id',
+  as: 'applicationIncidents',
 });
+
+PersonInCharge.hasMany(Incident, {
+  foreignKey: 'person_in_charge_id',
+  as: 'personInChargeIncidents',
+});
+
+Status.hasMany(Incident, {
+  foreignKey: 'status_id',
+  as: 'statusIncidents',
+});
+
+
+
+
 
 export default Incident;
