@@ -71,7 +71,7 @@ export default class MsaService {
         },
       ],
       attributes: {
-        exclude: ['file_pks', 'file_bast', 'createdAt', 'updatedAt', 'deletedAt'],
+        exclude: ['createdAt', 'updatedAt', 'deletedAt'],
       },
     });
 
