@@ -17,10 +17,6 @@ export class PersonInChargeService {
   async fetchAll(): Promise<PersonInCharge[]> {
     const personInCharges = await PersonInCharge.findAll();
 
-    if (personInCharges.length === 0) {
-      throw new NotFoundException('No person in charge found');
-    }
-
     return personInCharges;
   }
 }
