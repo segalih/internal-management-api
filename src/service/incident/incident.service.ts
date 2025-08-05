@@ -10,6 +10,7 @@ import PersonInCharge from '../../database/models/person_in_charge.model';
 import Application from '../../database/models/application.model';
 import { IncidentLinkService } from './linkIncident.service';
 import { PaginationResult, SearchCondition } from '../../database/models/base.model';
+import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
 
 export class IncidentService {
   private statusService: StatusMasterService;
@@ -99,7 +100,7 @@ export class IncidentService {
     });
 
     if (!incident) {
-      throw new Error('Incident not found');
+      throw new NotFoundException('Incident not found');
     }
 
     return incident;
