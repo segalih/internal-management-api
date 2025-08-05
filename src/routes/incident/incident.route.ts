@@ -15,10 +15,12 @@ export class IncidentRouter {
   serve() {
     this.router
       .route('/')
-      .post(validationMiddleware(CreateIncidentDto), (req, res) => this.incidentController.create(req, res));
-
-      this.router
-        .route('/:id')
-        .put(validationMiddleware(CreateIncidentDto), (req, res) => this.incidentController.update(req, res));
+      .post(validationMiddleware(CreateIncidentDto), (req, res) => this.incidentController.create(req, res))
+      .get((req, res) => this.incidentController.index(req, res));
+    this.router
+      .route('/:id')
+      .put(validationMiddleware(CreateIncidentDto), (req, res) => this.incidentController.update(req, res))
+      .get((req, res) => this.incidentController.show(req, res))
+      .delete((req, res) => this.incidentController.delete(req, res));
   }
 }

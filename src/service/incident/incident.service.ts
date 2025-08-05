@@ -9,6 +9,7 @@ import Status from '../../database/models/status.model';
 import PersonInCharge from '../../database/models/person_in_charge.model';
 import Application from '../../database/models/application.model';
 import { IncidentLinkService } from './linkIncident.service';
+import { PaginationResult, SearchCondition } from '../../database/models/base.model';
 
 export class IncidentService {
   private statusService: StatusMasterService;
@@ -158,5 +159,57 @@ export class IncidentService {
     }
 
     return incident.reload();
+  }
+
+  async deleteById(id: number, transaction?: Transaction): Promise<void> {
+    const incident = await this.getById(id, transaction);
+    await Incident.softDelete({ id });
+    await this.incidentLinkService.deleteByIncidentId(id);
+  }
+
+  async getAll(input: {
+    perPage: number;
+    page: number;
+    searchConditions?: SearchCondition[];
+    sortOptions?: any;
+  }): Promise<PaginationResult<Incident>> {
+    const results = await Incident.paginate<Incident>({
+      PerPage: input.perPage,
+      page: input.page,
+      searchConditions: input.searchConditions ?? [],
+      sortOptions: input.sortOptions,
+      includeConditions: [
+        {
+          model: IncidentLink,
+          as: 'links',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'incidentId', 'deletedAt'],
+          },
+        },
+        {
+          model: Status,
+          as: 'status',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'incidentId', 'deletedAt'],
+          },
+        },
+        {
+          model: PersonInCharge,
+          as: 'personInCharge',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'incidentId', 'deletedAt'],
+          },
+        },
+        {
+          model: Application,
+          as: 'application',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'incidentId', 'deletedAt'],
+          },
+        },
+      ],
+    });
+
+    return results;
   }
 }
