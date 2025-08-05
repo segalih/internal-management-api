@@ -16,5 +16,9 @@ export class IncidentRouter {
     this.router
       .route('/')
       .post(validationMiddleware(CreateIncidentDto), (req, res) => this.incidentController.create(req, res));
+
+      this.router
+        .route('/:id')
+        .put(validationMiddleware(CreateIncidentDto), (req, res) => this.incidentController.update(req, res));
   }
 }

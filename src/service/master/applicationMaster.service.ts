@@ -1,3 +1,4 @@
+import { Transaction } from 'sequelize';
 import Application from '../../database/models/application.model';
 import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
 
