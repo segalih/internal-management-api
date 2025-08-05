@@ -2,6 +2,7 @@ import Document, { DocumentCreationAttributes } from '../../database/models/docu
 import fs from 'fs';
 import path from 'path';
 import logger from '../../logger';
+import { Request } from 'express';
 export class DocumentService {
   constructor() {}
 

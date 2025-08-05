@@ -1,0 +1,125 @@
+import { Request, Response } from 'express';
+import { IncidentService } from '../../service/incident/incident.service';
+import Database from '../../../src/config/db';
+import { ProcessError } from '../../helper/Error/errorHandler';
+import { CreateIncidentDto } from '../../common/dto/incident/CreateIncidentDto';
+import { ResponseApi, ResponseApiWithPagination } from '../../helper/interface/response.interface';
+import Incident, { IncidentAttributes } from '../../database/models/incident.model';
+import { HttpStatusCode } from 'axios';
+import { isStringNumber } from '../../helper/function/common';
+import { BadRequestException } from '../../helper/Error/BadRequestException/BadRequestException';
+
+export class IncidentController {
+  private incidentService: IncidentService;
+  constructor() {
+    this.incidentService = new IncidentService();
+  }
+
+  async create(req: Request, res: Response<ResponseApi<IncidentAttributes>>) {
+    const transaction = await Database.database.transaction();
+
+    try {
+      const incident = await this.incidentService.create(req.body as CreateIncidentDto, transaction);
+      const result = await this.incidentService.getById(incident.id, transaction);
+      await transaction.commit();
+      res.status(HttpStatusCode.Created).json({
+        statusCode: HttpStatusCode.Created,
+        message: 'Incident created successfully',
+        data: this.incidentService.incidentResponse(result),
+      });
+    } catch (error) {
+      await transaction.rollback();
+      ProcessError(error, res);
+    }
+  }
+
+  async update(req: Request, res: Response<ResponseApi<IncidentAttributes>>) {
+    const transaction = await Database.database.transaction();
+
+    try {
+      const { id } = req.params;
+
+      if (!isStringNumber(id)) {
+        throw new BadRequestException('Invalid incident ID format');
+      }
+
+      const incident = await this.incidentService.updateById(parseInt(id), req.body as CreateIncidentDto, transaction);
+      const result = await this.incidentService.getById(incident.id, transaction);
+      await transaction.commit();
+      res.status(HttpStatusCode.Ok).json({
+        statusCode: HttpStatusCode.Ok,
+        message: 'Incident updated successfully',
+        data: this.incidentService.incidentResponse(result),
+      });
+    } catch (error) {
+      await transaction.rollback();
+      ProcessError(error, res);
+    }
+  }
+
+  async show(req: Request, res: Response<ResponseApi<IncidentAttributes>>) {
+    const { id } = req.params;
+
+    if (!isStringNumber(id)) {
+      throw new BadRequestException('Invalid incident ID format');
+    }
+
+    try {
+      const incident = await this.incidentService.getById(parseInt(id));
+      res.status(HttpStatusCode.Ok).json({
+        statusCode: HttpStatusCode.Ok,
+        message: 'Incident retrieved successfully',
+        data: this.incidentService.incidentResponse(incident),
+      });
+    } catch (error) {
+      ProcessError(error, res);
+    }
+  }
+
+  async index(req: Request, res: Response<ResponseApiWithPagination<IncidentAttributes>>) {
+    try {
+      const { page = 1, per_page = 10 } = req.query;
+
+      const incidents = await this.incidentService.getAll({
+        page: page ? parseInt(page as string) : 1,
+        perPage: per_page ? parseInt(per_page as string) : 10,
+      });
+      res.status(HttpStatusCode.Ok).json({
+        statusCode: HttpStatusCode.Ok,
+        message: 'Incidents retrieved successfully',
+        data: incidents.data.map((incident) => this.incidentService.incidentResponse(incident)),
+        meta: {
+          currentPage: incidents.currentPage,
+          totalPages: incidents.totalPages,
+          totalCount: incidents.totalCount,
+          pageSize: incidents.pageSize,
+        },
+      });
+    } catch (error) {
+      ProcessError(error, res);
+    }
+  }
+
+  async delete(req: Request, res: Response<ResponseApi<null>>) {
+    const transaction = await Database.database.transaction();
+
+    try {
+      const { id } = req.params;
+
+      if (!isStringNumber(id)) {
+        throw new BadRequestException('Invalid incident ID format');
+      }
+
+      await this.incidentService.deleteById(parseInt(id), transaction);
+      await transaction.commit();
+      res.status(HttpStatusCode.NoContent).json({
+        statusCode: HttpStatusCode.NoContent,
+        message: 'Incident deleted successfully',
+        data: null,
+      });
+    } catch (error) {
+      await transaction.rollback();
+      ProcessError(error, res);
+    }
+  }
+}

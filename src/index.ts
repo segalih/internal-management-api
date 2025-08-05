@@ -23,6 +23,8 @@ const server = http.createServer(expressInstance);
 server.listen(port);
 server.on('error', (error: NodeJS.ErrnoException, res: Response) => {
   if (error.syscall !== 'listen') {
+    logger.error(`Server error: ${error.message}`);
+    logger.error(`Error details: ${JSON.stringify(error)}`);
     throw error;
   }
   onError(error);
@@ -58,6 +60,8 @@ function normalizePort(val: number | string): number | string | boolean {
 
 function onError(error: NodeJS.ErrnoException): void {
   if (error.syscall !== 'listen') {
+    logger.error(`Server error: ${error.message}`);
+    logger.error(`Error details: ${JSON.stringify(error)}`);
     throw error;
   }
   const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
