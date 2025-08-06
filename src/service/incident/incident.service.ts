@@ -1,27 +1,25 @@
+import { DateTime } from 'luxon';
 import { Transaction } from 'sequelize';
 import { CreateIncidentDto } from '../../common/dto/incident/CreateIncidentDto';
+import Application from '../../database/models/application.model';
+import { PaginationResult, SearchCondition } from '../../database/models/base.model';
 import Incident, { IncidentAttributes } from '../../database/models/incident.model';
-import IncidentLink from '../../database/models/incident_link.model';
+import Link from '../../database/models/link.model';
+import PersonInCharge from '../../database/models/person_in_charge.model';
+import Status from '../../database/models/status.model';
+import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
 import { ApplicationMasterService } from '../master/applicationMaster.service';
 import { PersonInChargeService } from '../master/personInCharge.service';
 import { StatusMasterService } from '../master/statusMaster.service';
-import Status from '../../database/models/status.model';
-import PersonInCharge from '../../database/models/person_in_charge.model';
-import Application from '../../database/models/application.model';
-import { IncidentLinkService } from './linkIncident.service';
-import { PaginationResult, SearchCondition } from '../../database/models/base.model';
-import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
 
 export class IncidentService {
   private statusService: StatusMasterService;
   private personInChargeService: PersonInChargeService;
   private applicationService: ApplicationMasterService;
-  private incidentLinkService: IncidentLinkService;
   constructor() {
     this.statusService = new StatusMasterService();
     this.personInChargeService = new PersonInChargeService();
     this.applicationService = new ApplicationMasterService();
-    this.incidentLinkService = new IncidentLinkService();
   }
 
   async create(data: CreateIncidentDto, transaction?: Transaction): Promise<Incident> {
@@ -52,14 +50,26 @@ export class IncidentService {
     );
 
     if (data.link) {
-      await IncidentLink.create(
-        {
-          incidentId: incident.id,
-          linkUrl: data.link,
-        },
-        { transaction }
-      );
+      data.link.forEach(async (link) => {
+        await Link.create(
+          {
+            link: link,
+            linkableId: incident.id,
+            linkableType: 'incident',
+          },
+          { transaction }
+        );
+      });
     }
+
+    await Link.findAll({
+      where: {
+        linkableId: incident.id,
+        linkableType: 'incident',
+        deletedAt: null,
+      },
+      transaction,
+    });
 
     return incident;
   }
@@ -68,31 +78,33 @@ export class IncidentService {
     const incident = await Incident.findByPk(id, {
       include: [
         {
-          model: IncidentLink,
-          as: 'links',
-          attributes: {
-            exclude: ['createdAt', 'updatedAt', 'incidentId', 'deletedAt'],
+          model: Link,
+          as: 'incidentLinks',
+          where: {
+            linkableType: 'incident',
+            linkableId: id,
+            deletedAt: null,
           },
         },
         {
           model: Status,
           as: 'status',
           attributes: {
-            exclude: ['createdAt', 'updatedAt', 'incidentId', 'deletedAt'],
+            exclude: ['createdAt', 'updatedAt', 'deletedAt'],
           },
         },
         {
           model: PersonInCharge,
           as: 'personInCharge',
           attributes: {
-            exclude: ['createdAt', 'updatedAt', 'incidentId', 'deletedAt'],
+            exclude: ['createdAt', 'updatedAt', 'deletedAt'],
           },
         },
         {
           model: Application,
           as: 'application',
           attributes: {
-            exclude: ['createdAt', 'updatedAt', 'incidentId', 'deletedAt'],
+            exclude: ['createdAt', 'updatedAt', 'deletedAt'],
           },
         },
       ],
@@ -107,8 +119,14 @@ export class IncidentService {
   }
 
   incidentResponse(incident: Incident): IncidentAttributes {
+    const incidentLinks = incident.incidentLinks ?? [];
+
+    const links = incidentLinks.map((link) => link.link);
+
     return {
       ...incident.toJSON(),
+      links,
+      incidentLinks: undefined,
       applicationId: incident.application?.id,
       personInChargeId: incident.personInCharge?.id,
       statusId: incident.status?.id,
@@ -127,8 +145,6 @@ export class IncidentService {
     if (data.status_id) {
       await this.statusService.getById(data.status_id);
     }
-
-    await this.incidentLinkService.deleteByIncidentId(id);
 
     await incident.update(
       {
@@ -150,13 +166,29 @@ export class IncidentService {
       { transaction }
     );
     if (data.link) {
-      await IncidentLink.upsert(
+      await Link.update(
         {
-          incidentId: incident.id,
-          linkUrl: data.link,
+          deletedAt: DateTime.now().toJSDate(),
         },
-        { transaction }
+        {
+          where: {
+            linkableId: incident.id,
+            linkableType: 'incident',
+          },
+          transaction,
+        }
       );
+
+      data.link.forEach(async (link) => {
+        await Link.create(
+          {
+            link: link,
+            linkableId: incident.id,
+            linkableType: 'incident',
+          },
+          { transaction }
+        );
+      });
     }
 
     return incident.reload();
@@ -165,7 +197,6 @@ export class IncidentService {
   async deleteById(id: number, transaction?: Transaction): Promise<void> {
     const incident = await this.getById(id, transaction);
     await Incident.softDelete({ id });
-    await this.incidentLinkService.deleteByIncidentId(id);
   }
 
   async getAll(input: {
@@ -181,36 +212,44 @@ export class IncidentService {
       sortOptions: input.sortOptions,
       includeConditions: [
         {
-          model: IncidentLink,
+          model: Link,
           as: 'links',
           attributes: {
-            exclude: ['createdAt', 'updatedAt', 'incidentId', 'deletedAt'],
+            exclude: ['createdAt', 'updatedAt', 'linkableId', 'linkableType', 'deletedAt'],
           },
         },
         {
           model: Status,
           as: 'status',
           attributes: {
-            exclude: ['createdAt', 'updatedAt', 'incidentId', 'deletedAt'],
+            exclude: ['createdAt', 'updatedAt', 'deletedAt'],
           },
         },
         {
           model: PersonInCharge,
           as: 'personInCharge',
           attributes: {
-            exclude: ['createdAt', 'updatedAt', 'incidentId', 'deletedAt'],
+            exclude: ['createdAt', 'updatedAt', 'deletedAt'],
           },
         },
         {
           model: Application,
           as: 'application',
           attributes: {
-            exclude: ['createdAt', 'updatedAt', 'incidentId', 'deletedAt'],
+            exclude: ['createdAt', 'updatedAt', 'deletedAt'],
           },
         },
       ],
     });
 
     return results;
+  }
+
+  async getLastId(transaction?: Transaction): Promise<number> {
+    const lastIncident = await Incident.findOne({
+      order: [['id', 'DESC']],
+    });
+
+    return lastIncident ? lastIncident.id : 0;
   }
 }
