@@ -5,7 +5,9 @@ import Msa, { MsaAttributes } from '../../database/models/msa.model';
 import MsaDetail from '../../database/models/msa_detail.model';
 import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
 import MsaDetailService from './msaDetail.service';
-export default class MsaService {
+import { IMsaService } from './msa.type';
+
+export default class MsaService implements IMsaService {
   private msaDetailService: MsaDetailService;
   constructor() {
     this.msaDetailService = new MsaDetailService();
