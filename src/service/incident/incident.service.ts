@@ -49,27 +49,18 @@ export class IncidentService {
       }
     );
 
-    if (data.link) {
-      data.link.forEach(async (link) => {
-        await Link.create(
+    await Promise.all(
+      (data.link ?? []).map((link) =>
+        Link.create(
           {
-            link: link,
+            link,
             linkableId: incident.id,
             linkableType: 'incident',
           },
           { transaction }
-        );
-      });
-    }
-
-    await Link.findAll({
-      where: {
-        linkableId: incident.id,
-        linkableType: 'incident',
-        deletedAt: null,
-      },
-      transaction,
-    });
+        )
+      )
+    );
 
     return incident;
   }
@@ -179,16 +170,18 @@ export class IncidentService {
         }
       );
 
-      data.link.forEach(async (link) => {
-        await Link.create(
-          {
-            link: link,
-            linkableId: incident.id,
-            linkableType: 'incident',
-          },
-          { transaction }
-        );
-      });
+      await Promise.all(
+        data.link.map((link) =>
+          Link.create(
+            {
+              link,
+              linkableId: incident.id,
+              linkableType: 'incident',
+            },
+            { transaction }
+          )
+        )
+      );
     }
 
     return incident.reload();
