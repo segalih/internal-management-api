@@ -15,6 +15,16 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
+      pks_msa_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: 'v2_pks_msa',
+          },
+          key: 'id',
+        },
+      },
       role_id: {
         type: Sequelize.INTEGER,
         allowNull: false,

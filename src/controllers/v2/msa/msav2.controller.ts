@@ -24,11 +24,13 @@ export class MsaV2Controller {
         throw new BadRequestException('Failed to create MSA');
       }
 
+      const result = await this.pksMsaService.getById(pksMsa.id, transaction);
+
       await transaction.commit();
       res.status(HttpStatusCode.Created).json({
         statusCode: HttpStatusCode.Created,
         message: 'Msa created successfully',
-        data: this.pksMsaService.pksMsaResponse(pksMsa),
+        data: this.pksMsaService.pksMsaResponse(result),
       });
     } catch (error) {
       await transaction.rollback();

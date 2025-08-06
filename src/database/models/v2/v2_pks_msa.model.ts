@@ -1,6 +1,8 @@
 // src/database/models/v2_pks_msa.model.ts
 import { DataTypes } from 'sequelize';
 import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from '../base.model';
+import V2Msa, { V2MsaAttributes } from './v2_msa.model';
+import V2MsaHasRoles, { V2MsaHasRolesAttributes } from './v2_msa_has_roles.model';
 
 export interface V2PksMsaAttributes extends BaseModelAttributes {
   pks: string;
@@ -10,6 +12,9 @@ export interface V2PksMsaAttributes extends BaseModelAttributes {
   dateEnded: string;
   peopleQuota: number;
   budgetQuota: number;
+
+  msaDetails?: V2MsaAttributes[] | undefined | undefined[];
+  roles?: V2MsaHasRoles[] | V2MsaHasRolesAttributes[];
 }
 
 export interface V2PksMsaCreationAttributes extends Omit<V2PksMsaAttributes, 'id'> {}
@@ -22,6 +27,9 @@ export class V2PksMsa extends BaseModel<V2PksMsaAttributes, V2PksMsaCreationAttr
   public dateEnded!: string;
   public peopleQuota!: number;
   public budgetQuota!: number;
+
+  pksMsa?: V2Msa[];
+  roles?: V2MsaHasRoles[];
 }
 
 V2PksMsa.init(
