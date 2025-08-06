@@ -20,10 +20,10 @@ export class CreateMsaV2Dto {
   date_ended!: string;
 
   @IsNumber()
-  people_quota!: string;
+  people_quota!: number;
 
   @IsNumber()
-  budget_quota!: string;
+  budget_quota!: number;
 
   @IsArray()
   roles!: CreateRoleDto[];
