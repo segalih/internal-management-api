@@ -1,9 +1,9 @@
 import { DataTypes } from 'sequelize';
-import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from './base.model';
 import Application from './application.model';
+import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from './base.model';
+import Link from './link.model';
 import PersonInCharge from './person_in_charge.model';
 import Status from './status.model';
-import IncidentLink from './incident_link.model';
 
 export interface IncidentAttributes extends BaseModelAttributes {
   ticketNumber: string;
@@ -25,7 +25,8 @@ export interface IncidentAttributes extends BaseModelAttributes {
   application?: Application;
   personInCharge?: PersonInCharge;
   status?: Status;
-  links?: IncidentLink[];
+  links?: string[];
+  incidentLinks?: Link[];
 }
 
 export interface IncidentCreationAttributes extends Omit<IncidentAttributes, 'id'> {}
@@ -51,7 +52,8 @@ class Incident extends BaseModel<IncidentAttributes, IncidentCreationAttributes>
   public application?: Application;
   public personInCharge?: PersonInCharge;
   public status?: Status;
-  public links?: IncidentLink[];
+  public links?: string[];
+  public incidentLinks?: Link[];
 }
 
 Incident.init(

@@ -1,13 +1,14 @@
-import { Request, Response } from 'express';
-import { IncidentService } from '../../service/incident/incident.service';
-import Database from '../../../src/config/db';
-import { ProcessError } from '../../helper/Error/errorHandler';
-import { CreateIncidentDto } from '../../common/dto/incident/CreateIncidentDto';
-import { ResponseApi, ResponseApiWithPagination } from '../../helper/interface/response.interface';
-import Incident, { IncidentAttributes } from '../../database/models/incident.model';
 import { HttpStatusCode } from 'axios';
-import { isStringNumber } from '../../helper/function/common';
+import { Request, Response } from 'express';
+import { DateTime } from 'luxon';
+import Database from '../../../src/config/db';
+import { CreateIncidentDto } from '../../common/dto/incident/CreateIncidentDto';
+import { IncidentAttributes } from '../../database/models/incident.model';
 import { BadRequestException } from '../../helper/Error/BadRequestException/BadRequestException';
+import { ProcessError } from '../../helper/Error/errorHandler';
+import { isStringNumber } from '../../helper/function/common';
+import { ResponseApi, ResponseApiWithPagination } from '../../helper/interface/response.interface';
+import { IncidentService } from '../../service/incident/incident.service';
 
 export class IncidentController {
   private incidentService: IncidentService;
@@ -19,9 +20,18 @@ export class IncidentController {
     const transaction = await Database.database.transaction();
 
     try {
-      const incident = await this.incidentService.create(req.body as CreateIncidentDto, transaction);
+      const dateNow = DateTime.now();
+      const ticketNumber = `FCS${dateNow.toFormat('yyyyMMdd')}-${(await this.incidentService.getLastId()) + 1}`;
+
+      const incident = await this.incidentService.create(
+        { ...req.body, ticket_number: ticketNumber, entry_date: dateNow } as CreateIncidentDto,
+        transaction
+      );
+
       const result = await this.incidentService.getById(incident.id, transaction);
+
       await transaction.commit();
+
       res.status(HttpStatusCode.Created).json({
         statusCode: HttpStatusCode.Created,
         message: 'Incident created successfully',

@@ -1,13 +1,13 @@
-import { IsString, IsOptional, IsNotEmpty, IsBoolean, IsDateString, IsNumber } from 'class-validator';
+import { IsString, IsOptional, IsNotEmpty, IsBoolean, IsDateString, IsNumber, IsArray } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateIncidentDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   ticket_number!: string;
 
   @IsDateString()
-  @IsNotEmpty()
+  @IsOptional()
   entry_date!: string;
 
   @IsNumber()
@@ -59,7 +59,8 @@ export class CreateIncidentDto {
   @IsOptional()
   note?: string;
 
-  @IsString()
   @IsOptional()
-  link?: string;
+  @IsArray()
+  @IsString({ each: true })
+  link?: string[];
 }
