@@ -1,12 +1,14 @@
 // src/database/models/v2_msa_has_roles.model.ts
 import { DataTypes } from 'sequelize';
 import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from '../base.model';
-import V2PksMsa from './v2_pks_msa.model';
+import V2PksMsa, { V2PksMsaAttributes } from './v2_pks_msa.model';
 
 export interface V2MsaHasRolesAttributes extends BaseModelAttributes {
   pksMsaId: number;
   role: string;
   rate: number;
+
+  pksMsa?: V2PksMsa | V2PksMsaAttributes;
 }
 
 export interface V2MsaHasRolesCreationAttributes extends Omit<V2MsaHasRolesAttributes, 'id'> {}
@@ -18,6 +20,8 @@ export class V2MsaHasRoles
   public pksMsaId!: number;
   public role!: string;
   public rate!: number;
+
+  public pksMsa?: V2PksMsa;
 }
 
 V2MsaHasRoles.init(

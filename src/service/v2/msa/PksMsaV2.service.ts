@@ -1,10 +1,9 @@
 import { Transaction } from 'sequelize';
 import { CreateMsaV2Dto } from '../../../common/dto/v2/msaV2/createMsaV2Dto';
-import V2PksMsa, { V2PksMsaAttributes } from '../../../database/models/v2/v2_pks_msa.model';
-import V2MsaHasRoles from '../../../database/models/v2/v2_msa_has_roles.model';
+import { PaginationResult, SearchCondition, sortOptions } from '../../../database/models/base.model';
 import V2Msa from '../../../database/models/v2/v2_msa.model';
-import { roleV2resource } from '../../../resource/v2/pks-msa/role.resource';
-import { msaV2resource } from '../../../resource/v2/pks-msa/msa.resource';
+import V2MsaHasRoles from '../../../database/models/v2/v2_msa_has_roles.model';
+import V2PksMsa, { V2PksMsaAttributes } from '../../../database/models/v2/v2_pks_msa.model';
 import { pksMsaV2resource } from '../../../resource/v2/pks-msa/pks-msa.resource';
 
 export class PksMsaV2Service {
@@ -44,7 +43,7 @@ export class PksMsaV2Service {
     return pksMsaV2resource(pksMsa);
   }
 
-  async getById(id: number, transaction: Transaction): Promise<V2PksMsa> {
+  async getById(id: number, transaction?: Transaction): Promise<V2PksMsa> {
     const pksMsa = await V2PksMsa.findByPk(id, {
       include: [
         {
@@ -68,5 +67,45 @@ export class PksMsaV2Service {
       throw new Error(`PKS MSA with ID ${id} not found`);
     }
     return pksMsa;
+  }
+
+  async deleteById(id: number, transaction?: Transaction): Promise<void> {
+    const pksMsa = await V2PksMsa.findByPk(id, { transaction });
+    if (!pksMsa) {
+      throw new Error(`PKS MSA with ID ${id} not found`);
+    }
+    await pksMsa.destroy({ transaction });
+  }
+
+  async getAll(input: {
+    perPage: number;
+    page: number;
+    searchConditions?: SearchCondition[];
+    sortOptions?: sortOptions;
+  }): Promise<PaginationResult<V2PksMsa>> {
+    const results = await V2PksMsa.paginate<V2PksMsa>({
+      page: input.page,
+      PerPage: input.perPage,
+      searchConditions: input.searchConditions || [],
+      sortOptions: input.sortOptions,
+      includeConditions: [
+        {
+          model: V2MsaHasRoles,
+          as: 'roles',
+        },
+        {
+          model: V2Msa,
+          as: 'msas',
+          include: [
+            {
+              model: V2MsaHasRoles,
+              as: 'role',
+            },
+          ],
+        },
+      ],
+    });
+
+    return results;
   }
 }

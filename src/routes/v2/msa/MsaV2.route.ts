@@ -20,8 +20,8 @@ export default class MsaV2Route {
   serve() {
     this.router
       .route('/')
-      .post(validationMiddleware(CreateMsaV2Dto), (req, res) => this.MsaV2Controller.create(req, res));
-    // .get((req, res) => this.MsaV2Controller.index(req, res));
+      .post(validationMiddleware(CreateMsaV2Dto), (req, res) => this.MsaV2Controller.create(req, res))
+      .get((req, res) => this.MsaV2Controller.index(req, res));
     // this.router
     //   .route('/:id/detail')
     //   .post(validationMiddleware(CreateMsaDetaiV2lDto), (req, res) => this.msaDetailV2Controller.create(req, res));
@@ -30,10 +30,10 @@ export default class MsaV2Route {
     //   .put(validationMiddleware(CreateMsaDetaiV2lDto), (req, res) => this.msaDetailV2Controller.update(req, res))
     //   .delete((req, res) => this.msaDetailV2Controller.destroy(req, res));
 
-    // this.router
-    //   .route('/:id')
-    //   .get((req, res) => this.MsaV2Controller.show(req, res))
-    //   .delete((req, res) => this.MsaV2Controller.destroy(req, res))
+    this.router
+      .route('/:id')
+      .get((req, res) => this.MsaV2Controller.show(req, res))
+      .delete((req, res) => this.MsaV2Controller.destroy(req, res));
     //   .put(validationMiddleware(CreateMsaV2Dto), (req, res) => this.MsaV2Controller.update(req, res));
   }
 }
