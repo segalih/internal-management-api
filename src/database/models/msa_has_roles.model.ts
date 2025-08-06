@@ -5,7 +5,7 @@ import Msa from './msa.model';
 export interface MsaHasRoleAttributes extends BaseModelAttributes {
   msaId: number;
   role: string;
-  rate: string;
+  rate: number;
 }
 
 export interface MsaHasRoleCreationAttributes extends Omit<MsaHasRoleAttributes, 'id'> {}
