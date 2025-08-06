@@ -3,8 +3,9 @@ import Msa from '../../database/models/msa.model';
 import MsaDetail, { MsaDetailAttributes } from '../../database/models/msa_detail.model';
 import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
 import { UnprocessableEntityException } from '../../helper/Error/UnprocessableEntity/UnprocessableEntityException';
+import { IMsaDetailService } from './msaDetail.type';
 
-export default class MsaDetailService {
+export default class MsaDetailService implements IMsaDetailService {
   constructor() {}
 
   async create(data: CreateMsaDetailDto, msaId: string): Promise<MsaDetail> {

@@ -8,6 +8,7 @@ import MsaRoute from './routes/msa/msa.route';
 import DocumentRouter from './routes/document/document.route';
 import { MasterRouter } from './routes/master/master.route';
 import { IncidentRouter } from './routes/incident/incident.route';
+import MsaV2Route from './routes/v2/msa/MsaV2.route';
 
 export class Routes {
   constructor(private expressInstance: express.Express) {
@@ -24,5 +25,6 @@ export class Routes {
     this.expressInstance.use('/api/document', new DocumentRouter().router);
     this.expressInstance.use('/api/master', new MasterRouter().router);
     this.expressInstance.use('/api/incidents', jwtMiddleware(), new IncidentRouter().router);
+    this.expressInstance.use('/api/v2/msa', jwtMiddleware(), new MsaV2Route().router);
   }
 }

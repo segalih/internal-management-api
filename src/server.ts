@@ -9,6 +9,7 @@ import helmet from 'helmet';
 import path from 'path';
 import 'reflect-metadata'; // <= PENTING!
 import { Routes } from './routeSetup';
+import { CronJob } from './cronjob/cronjob';
 
 const Reset = '\x1b[0m';
 const FgGreen = '\x1b[32m';
@@ -24,6 +25,8 @@ export default class Server {
     this.routes = new Routes(this.expressInstance);
     this.printRegisteredRoutes();
     this.initializeClient();
+
+    new CronJob();
   }
 
   private initializeClient() {

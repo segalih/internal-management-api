@@ -9,7 +9,12 @@ import logger from '../../logger';
 
 export function ProcessError(err: any, res: Response) {
   console.log(err);
-  logger.error(err);
+ logger.error({
+   message: err.message ?? 'Unknown error',
+   stack: err.stack ?? '',
+   name: err.name ?? '',
+   raw: err,
+ });
   if (err instanceof BadRequestException) {
     res.status(HttpStatusCode.BadRequest).json({
       statusCode: HttpStatusCode.BadRequest,
