@@ -13,7 +13,7 @@ export interface MsaHasRoleCreationAttributes extends Omit<MsaHasRoleAttributes,
 class MsaHasRole extends BaseModel<MsaHasRoleAttributes, MsaHasRoleCreationAttributes> implements MsaHasRoleAttributes {
   public msaId!: number;
   public role!: string;
-  public rate!: string;
+  public rate!: number;
 
   public msa?: Msa;
 }
