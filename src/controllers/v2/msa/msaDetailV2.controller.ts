@@ -57,7 +57,7 @@ export class MsaDetailV2Controller {
         );
       }
 
-      await Promise.all(msa.map((_msa) => this.msaService.create(parseInt(id), _msa)));
+      await Promise.all(msa.map((_msa) => this.msaService.create(parseInt(id), _msa, transaction)));
 
       await transaction.commit();
       res.status(HttpStatusCode.Created).json(req.body);
