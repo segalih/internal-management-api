@@ -197,11 +197,7 @@ export class MsaController {
         {
           keySearch: 'dateStarted',
           operator: Op.lte,
-          keyValue: date_started_to
-            ? DateTime.fromISO(date_started_to as string)
-                .plus({ days: 1 })
-                .toISO()
-            : '',
+          keyValue: date_started_to ? DateTime.fromISO(date_started_to as string).toISO() : '',
           keyColumn: 'dateStarted',
         },
         {
