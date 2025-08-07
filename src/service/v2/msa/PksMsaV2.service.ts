@@ -5,6 +5,7 @@ import V2Msa from '../../../database/models/v2/v2_msa.model';
 import V2MsaHasRoles from '../../../database/models/v2/v2_msa_has_roles.model';
 import V2PksMsa, { V2PksMsaAttributes } from '../../../database/models/v2/v2_pks_msa.model';
 import { pksMsaV2resource } from '../../../resource/v2/pks-msa/pks-msa.resource';
+import { DateTime } from 'luxon';
 
 export class PksMsaV2Service {
   async create(data: CreateMsaV2Dto, transaction: Transaction): Promise<V2PksMsa> {
@@ -14,7 +15,7 @@ export class PksMsaV2Service {
         filePks: data.file_pks,
         fileBast: data.file_bast,
         dateStarted: data.date_started,
-        dateEnded: data.date_ended,
+        dateEnded: DateTime.fromISO(data.date_ended + 'T23:59:59.999+00:00').toFormat('yyyy-MM-dd HH:mm:ss'),
         peopleQuota: data.people_quota,
         budgetQuota: data.budget_quota,
       },
