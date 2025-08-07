@@ -49,12 +49,9 @@ export class MsaDetailV2Controller {
       });
 
       const totalBudgetByNewRole = mapRolesByNewRoleId.reduce((acc, cur) => acc + (cur.rate || 0), 0);
-      console.log('Total Budget By New Role:', totalBudgetByNewRole);
       const totalBudgetMonthly = totalBudget + totalBudgetByNewRole;
 
       const totalBudgetByContract = totalBudgetMonthly * totalOfMonthsContract;
-      console.log('Total Budget By Contract:', totalBudgetByContract);
-      console.log('Budget Quota:', budgetQuota);
       if (totalBudgetByContract > budgetQuota) {
         throw new BadRequestException(
           `Total budget for the contract exceeds the budget quota. Total: ${rupiahFormatter(
