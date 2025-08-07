@@ -43,6 +43,7 @@ export class IncidentService {
         category: data.category,
         rootCause: data.root_cause,
         note: data.note,
+        deployDate: data.deploy_date,
       },
       {
         transaction,
@@ -148,6 +149,7 @@ export class IncidentService {
         category: data.category,
         rootCause: data.root_cause,
         note: data.note,
+        deployDate: data.deploy_date,
       },
       { transaction }
     );
