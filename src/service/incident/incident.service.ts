@@ -201,10 +201,7 @@ export class IncidentService {
       includeConditions: [
         {
           model: Link,
-          as: 'links',
-          attributes: {
-            exclude: ['createdAt', 'updatedAt', 'linkableId', 'linkableType', 'deletedAt'],
-          },
+          as: 'incidentLinks',
         },
         {
           model: Status,
