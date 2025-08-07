@@ -63,4 +63,8 @@ export class CreateIncidentDto {
   @IsArray()
   @IsString({ each: true })
   link?: string[];
+
+  @IsOptional()
+  @IsDateString()
+  deploy_date?: string;
 }

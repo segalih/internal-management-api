@@ -21,6 +21,7 @@ export interface IncidentAttributes extends BaseModelAttributes {
   rootCause?: string;
   note?: string;
   flag?: boolean;
+  deployDate?: string;
 
   application?: Application;
   personInCharge?: PersonInCharge;
@@ -48,6 +49,7 @@ class Incident extends BaseModel<IncidentAttributes, IncidentCreationAttributes>
   public note!: string;
   public flag!: boolean;
   public updateDate!: string;
+  public deployDate?: string;
 
   public application?: Application;
   public personInCharge?: PersonInCharge;
@@ -130,6 +132,15 @@ Incident.init(
       type: DataTypes.BOOLEAN,
       field: 'flag',
       defaultValue: true,
+    },
+    deployDate: {
+      type: DataTypes.STRING,
+      field: 'deploy_date',
+      allowNull: true,
+      get() {
+        const value = this.getDataValue('deployDate');
+        return value ? new Date(value).toISOString() : null;
+      },
     },
   },
   {
