@@ -15,6 +15,10 @@ export interface V2PksMsaAttributes extends BaseModelAttributes {
 
   msaDetails?: V2MsaAttributes[] | undefined | undefined[];
   roles?: V2MsaHasRoles[] | V2MsaHasRolesAttributes[];
+  msas?: V2Msa[] | V2MsaAttributes[];
+
+  budgetUsed?: number;
+  remainingBudget?: number;
 }
 
 export interface V2PksMsaCreationAttributes extends Omit<V2PksMsaAttributes, 'id'> {}
@@ -30,6 +34,7 @@ export class V2PksMsa extends BaseModel<V2PksMsaAttributes, V2PksMsaCreationAttr
 
   pksMsa?: V2Msa[];
   roles?: V2MsaHasRoles[];
+  msas?: V2Msa[];
 }
 
 V2PksMsa.init(
@@ -53,11 +58,19 @@ V2PksMsa.init(
       field: 'date_started',
       type: DataTypes.DATE,
       allowNull: false,
+      get() {
+        const date = this.getDataValue('dateStarted');
+        return date ? new Date(date).toISOString() : null;
+      },
     },
     dateEnded: {
       field: 'date_ended',
       type: DataTypes.DATE,
       allowNull: false,
+      get() {
+        const date = this.getDataValue('dateEnded');
+        return date ? new Date(date).toISOString() : null;
+      },
     },
     peopleQuota: {
       field: 'people_quota',
@@ -68,6 +81,10 @@ V2PksMsa.init(
       field: 'budget_quota',
       type: DataTypes.DECIMAL(14, 2),
       allowNull: false,
+      get() {
+        const budgetQuota = this.getDataValue('budgetQuota');
+        return budgetQuota ? parseFloat(budgetQuota.toString()) : null;
+      },
     },
   },
   {

@@ -4,6 +4,7 @@ import { validationMiddleware } from '../../../middleware/validation.middleware'
 import { MsaDetailV2Controller } from '../../../controllers/v2/msa/msaDetailV2.controller';
 import { CreateMsaV2Dto } from '../../../common/dto/v2/msaV2/createMsaV2Dto';
 import CreateMsaDetaiV2lDto from '../../../common/dto/v2/msaV2/CreateMsaDetailV2Dto';
+import { CreateBulkMsaV2Dto } from '../../../common/dto/v2/msaV2/CreateBulkMsaV2Dto';
 
 export default class MsaV2Route {
   router: Router;
@@ -22,9 +23,9 @@ export default class MsaV2Route {
       .route('/')
       .post(validationMiddleware(CreateMsaV2Dto), (req, res) => this.MsaV2Controller.create(req, res))
       .get((req, res) => this.MsaV2Controller.index(req, res));
-    // this.router
-    //   .route('/:id/detail')
-    //   .post(validationMiddleware(CreateMsaDetaiV2lDto), (req, res) => this.msaDetailV2Controller.create(req, res));
+    this.router
+      .route('/:id/details')
+      .post(validationMiddleware(CreateBulkMsaV2Dto), (req, res) => this.msaDetailV2Controller.create(req, res));
     // this.router
     //   .route('/:id/detail/:msaDetailId')
     //   .put(validationMiddleware(CreateMsaDetaiV2lDto), (req, res) => this.msaDetailV2Controller.update(req, res))
