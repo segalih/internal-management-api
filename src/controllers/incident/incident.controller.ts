@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
 import { DateTime } from 'luxon';
-import Database from '../../../src/config/db';
+import Database from '../../config/db';
 import { CreateIncidentDto } from '../../common/dto/incident/CreateIncidentDto';
 import { IncidentAttributes } from '../../database/models/incident.model';
 import { BadRequestException } from '../../helper/Error/BadRequestException/BadRequestException';
