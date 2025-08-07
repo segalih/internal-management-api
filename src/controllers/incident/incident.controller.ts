@@ -161,7 +161,7 @@ export class IncidentController {
       const incidents = await this.incidentService.getAll({
         page: page ? parseInt(page as string) : 1,
         perPage: per_page ? parseInt(per_page as string) : 10,
-        searchConditions: searchConditions,
+        searchConditions,
       });
       res.status(HttpStatusCode.Ok).json({
         statusCode: HttpStatusCode.Ok,
