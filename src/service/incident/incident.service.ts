@@ -71,11 +71,6 @@ export class IncidentService {
         {
           model: Link,
           as: 'incidentLinks',
-          where: {
-            linkableType: 'incident',
-            linkableId: id,
-            deletedAt: null,
-          },
         },
         {
           model: Status,
