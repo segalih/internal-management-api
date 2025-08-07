@@ -34,8 +34,8 @@ export class MsaDetailV2Controller {
 
       const totalOfMonthsContract = getDiffMonths(dateStarted, dateEnded);
 
-      const curentBudgetList = pks.msas?.map((item) => item.role?.rate || 0) || [];
-      const totalBudget = curentBudgetList.reduce((acc, cur) => acc + (cur || 0), 0);
+      const currentBudgetList = pks.msas?.map((item) => item.role?.rate || 0) || [];
+      const totalBudget = currentBudgetList.reduce((acc, cur) => acc + (cur || 0), 0);
 
       const mapRolesByNewRoleId = msa.map((item) => {
         const role = pks.roles?.find((role) => role.id === item.role_id);
