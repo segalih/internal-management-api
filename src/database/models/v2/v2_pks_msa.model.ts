@@ -16,6 +16,9 @@ export interface V2PksMsaAttributes extends BaseModelAttributes {
   msaDetails?: V2MsaAttributes[] | undefined | undefined[];
   roles?: V2MsaHasRoles[] | V2MsaHasRolesAttributes[];
   msas?: V2Msa[] | V2MsaAttributes[];
+
+  budgetUsed?: number;
+  remainingBudget?: number;
 }
 
 export interface V2PksMsaCreationAttributes extends Omit<V2PksMsaAttributes, 'id'> {}
@@ -78,6 +81,10 @@ V2PksMsa.init(
       field: 'budget_quota',
       type: DataTypes.DECIMAL(14, 2),
       allowNull: false,
+      get() {
+        const budgetQuota = this.getDataValue('budgetQuota');
+        return budgetQuota ? parseFloat(budgetQuota.toString()) : null;
+      },
     },
   },
   {
