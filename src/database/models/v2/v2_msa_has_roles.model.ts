@@ -39,6 +39,10 @@ V2MsaHasRoles.init(
     rate: {
       type: DataTypes.DECIMAL(14, 2),
       allowNull: false,
+      get() {
+        const rate = this.getDataValue('rate');
+        return rate ? parseFloat(rate.toString()) : null;
+      },
     },
   },
   {
