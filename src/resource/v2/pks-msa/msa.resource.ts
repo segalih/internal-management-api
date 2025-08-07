@@ -10,6 +10,6 @@ export const msaV2resource = (msa: V2Msa): V2MsaAttributes => {
     project: msa.project,
     groupPosition: msa.groupPosition,
     pksMsaId: msa.pksMsaId,
-    role: roleV2resource(msa.role),
+    role: roleV2resource(msa.role!),
   };
 };
