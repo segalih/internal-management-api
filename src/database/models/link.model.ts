@@ -46,7 +46,7 @@ Link.belongsTo(Incident, {
   foreignKey: 'linkableId',
   constraints: false,
   scope: {
-    linkableType: 'incident',
+    linkable_type: 'incident',
   },
 });
 
@@ -54,7 +54,7 @@ Link.belongsTo(Msa, {
   foreignKey: 'linkableId',
   constraints: false,
   scope: {
-    linkableType: 'msa',
+    linkable_type: 'msa',
   },
 });
 
@@ -62,7 +62,7 @@ Link.belongsTo(License, {
   foreignKey: 'linkableId',
   constraints: false,
   scope: {
-    linkableType: 'license',
+    linkable_type: 'license',
   },
 });
 
@@ -70,7 +70,7 @@ Incident.hasMany(Link, {
   foreignKey: 'linkableId',
   constraints: false,
   scope: {
-    linkableType: 'incident',
+    linkable_type: 'incident',
   },
   as: 'incidentLinks',
 });
@@ -79,7 +79,7 @@ Msa.hasMany(Link, {
   foreignKey: 'linkableId',
   constraints: false,
   scope: {
-    linkableType: 'msa',
+    linkable_type: 'msa',
   },
   as: 'msaLinks',
 });
@@ -88,7 +88,7 @@ License.hasMany(Link, {
   foreignKey: 'linkableId',
   constraints: false,
   scope: {
-    linkableType: 'license',
+    linkable_type: 'license',
   },
   as: 'licenseLinks',
 });

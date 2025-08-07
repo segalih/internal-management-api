@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
 import { DateTime } from 'luxon';
-import Database from '../../../src/config/db';
+import Database from '../../config/db';
 import { CreateIncidentDto } from '../../common/dto/incident/CreateIncidentDto';
 import { IncidentAttributes } from '../../database/models/incident.model';
 import { BadRequestException } from '../../helper/Error/BadRequestException/BadRequestException';
@@ -9,6 +9,8 @@ import { ProcessError } from '../../helper/Error/errorHandler';
 import { isStringNumber } from '../../helper/function/common';
 import { ResponseApi, ResponseApiWithPagination } from '../../helper/interface/response.interface';
 import { IncidentService } from '../../service/incident/incident.service';
+import { SearchCondition } from '../../database/models/base.model';
+import { Op } from 'sequelize';
 
 export class IncidentController {
   private incidentService: IncidentService;
@@ -90,9 +92,76 @@ export class IncidentController {
     try {
       const { page = 1, per_page = 10 } = req.query;
 
+      const {
+        entry_date_from,
+        entry_date_to,
+        application_id,
+        person_in_charge_id,
+        status_id,
+        ticket_number,
+        title,
+        issue_code,
+      } = req.query;
+
+      const searchConditions: SearchCondition[] = [
+        {
+          keySearch: 'entryDate',
+          operator: Op.gte,
+          keyValue: entry_date_from ? DateTime.fromISO(entry_date_from as string).toISO() : '',
+          keyColumn: 'entryDate',
+        },
+        {
+          keySearch: 'entryDate',
+          operator: Op.lte,
+          keyValue: entry_date_to
+            ? DateTime.fromISO(entry_date_to as string)
+                .plus({ days: 1 })
+                .toISO()
+            : '',
+          keyColumn: 'entryDate',
+        },
+        {
+          keySearch: 'applicationId',
+          operator: Op.eq,
+          keyValue: application_id ?? '',
+          keyColumn: 'applicationId',
+        },
+        {
+          keySearch: 'personInChargeId',
+          operator: Op.eq,
+          keyValue: person_in_charge_id ?? '',
+          keyColumn: 'personInChargeId',
+        },
+        {
+          keySearch: 'statusId',
+          operator: Op.eq,
+          keyValue: status_id ?? '',
+          keyColumn: 'statusId',
+        },
+        {
+          keySearch: 'ticketNumber',
+          operator: Op.like,
+          keyValue: ticket_number ? `%${ticket_number as string}%` : '',
+          keyColumn: 'ticketNumber',
+        },
+        {
+          keySearch: 'title',
+          operator: Op.like,
+          keyValue: title ? `%${title as string}%` : '',
+          keyColumn: 'title',
+        },
+        {
+          keySearch: 'issueCode',
+          operator: Op.like,
+          keyValue: issue_code ? `%${issue_code as string}%` : '',
+          keyColumn: 'issueCode',
+        },
+      ];
+
       const incidents = await this.incidentService.getAll({
         page: page ? parseInt(page as string) : 1,
         perPage: per_page ? parseInt(per_page as string) : 10,
+        searchConditions,
       });
       res.status(HttpStatusCode.Ok).json({
         statusCode: HttpStatusCode.Ok,

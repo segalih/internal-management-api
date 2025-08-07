@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { ResponseApi, ResponseApiWithPagination } from '../../../helper/interface/response.interface';
 import { PksMsaV2Service } from '../../../service/v2/msa/PksMsaV2.service';
 import { MsaV2Service } from '../../../service/v2/msa/msaDetailV2.service';
-import Database from '../../../../src/config/db';
+import Database from '../../../config/db';
 import { BadRequestException } from '../../../helper/Error/BadRequestException/BadRequestException';
 import { HttpStatusCode } from 'axios';
 import { V2PksMsaAttributes } from '../../../database/models/v2/v2_pks_msa.model';
