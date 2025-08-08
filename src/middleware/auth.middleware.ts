@@ -1,8 +1,9 @@
+import { ProcessError } from '@helper/Error/errorHandler';
+import { UnauthorizedException } from '@helper/Error/UnauthorizedException/UnauthorizedException';
+import { IUser } from '@helper/interface/user/user.interface';
+import JWTService from '@service/jwt/jwt.service';
 import { NextFunction, Request, Response } from 'express';
-import { UnauthorizedException } from '../helper/Error/UnauthorizedException/UnauthorizedException';
-import { ProcessError } from '../helper/Error/errorHandler';
-import { IUser } from '../helper/interface/user/user.interface';
-import JWTService from '../service/jwt/jwt.service';
+import logger from '@helper/logger';
 
 interface ISpecifiedRoute {
   route: RegExp;
@@ -29,6 +30,7 @@ export default class AuthMiddleware {
       req.user = decoded as IUser;
       next();
     } catch (error) {
+      logger.error('JWT Middleware Error:', error);
       ProcessError(error, res);
     }
   }

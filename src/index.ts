@@ -4,7 +4,7 @@ import expressServer from './server';
 import dotenv from 'dotenv';
 import { AddressInfo } from 'net';
 import { Request, Response } from 'express';
-import logger from './logger';
+import logger from '@helper/logger';
 
 dotenv.config();
 

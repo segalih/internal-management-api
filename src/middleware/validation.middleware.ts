@@ -2,8 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import { validate, ValidationError } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { HttpStatusCode } from 'axios';
-import { ResponseApi } from '../helper/interface/response.interface';
-import { messages } from '../config/message';
+import { ResponseApi } from '@helper/interface/response.interface';
+import { messages } from '@config/message';
+
 
 export function validationMiddleware<T extends object>(type: new () => T) {
   return async (req: Request, res: Response, next: NextFunction) => {

@@ -2,9 +2,10 @@ import { Request, Response, NextFunction } from 'express';
 import multer from 'multer';
 import fs from 'fs';
 import { HttpStatusCode } from 'axios';
-import { ResponseApi } from '../helper/interface/response.interface';
-import { messages } from '../config/message';
 import path from 'path';
+import { ResponseApi } from '@helper/interface/response.interface';
+import { messages } from '@config/message';
+import logger from '@helper/logger';
 
 const uploadFolderPath = './uploads/tmp';
 
@@ -47,6 +48,7 @@ export function createFlexibleUploadMiddleware(fields: string[]) {
   return function (req: Request, res: Response, next: NextFunction) {
     baseUpload.fields(multerFields)(req, res, function (error: any) {
       if (error) {
+        logger.error('File upload error:', error);
         const errorResponse: ResponseApi<null> = {
           statusCode: HttpStatusCode.BadRequest,
           message: messages.FAILED_UPLOAD,

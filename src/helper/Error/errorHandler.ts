@@ -5,7 +5,9 @@ import { ForbiddenException } from './Forbidden/ForbiddenException';
 import { UnauthorizedException } from './UnauthorizedException/UnauthorizedException';
 import { UnprocessableEntityException } from './UnprocessableEntity/UnprocessableEntityException';
 import { NotFoundException } from './NotFound/NotFoundException';
-import logger from '../../logger';
+import logger from '@helper/logger';
+
+
 
 export function ProcessError(err: any, res: Response) {
   console.log(err);

@@ -4,8 +4,9 @@ import Users from '@database/models/user.model';
 import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
 
 import { CreateUserDto } from '@common/dto/user/CreateUser.dto';
-import JWTService from '../jwt/jwt.service';
+
 import { BadRequestException } from '@helper/Error/BadRequestException/BadRequestException';
+import JWTService from '@service/jwt/jwt.service';
 
 export default class UserService {
   private jwtService: JWTService;

@@ -1,7 +1,7 @@
 import Document, { DocumentCreationAttributes } from '@database/models/document.model';
 import fs from 'fs';
+import logger from '@helper/logger';
 import path from 'path';
-import logger from '../../logger';
 export class DocumentService {
   constructor() {}
 

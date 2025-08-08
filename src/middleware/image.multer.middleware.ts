@@ -1,10 +1,9 @@
+import { messages } from '@config/message';
+import { ResponseApi } from '@helper/interface/response.interface';
 import { HttpStatusCode } from 'axios';
 import { NextFunction, Request, Response } from 'express';
-import multer from 'multer';
-import { extname } from 'path';
 import fs from 'fs';
-import { ResponseApi } from '../helper/interface/response.interface';
-import { messages } from '../config/message';
+import multer from 'multer';
 
 const uploadFolderPath = './uploads/';
 
@@ -36,23 +35,23 @@ const upload = multer({
   },
 });
 
-  export function createMulterMiddleware(fieldName: string) {
-    return function (req: Request, res: Response, next: NextFunction) {
-      upload.single(fieldName)(req, res, function (error: any) {
-        if (error) {
-          const errorResponse: ResponseApi<null> = {
-            statusCode: HttpStatusCode.BadRequest,
-            message: messages.FAILED_UPLOAD,
-            data: null,
-            errors: error.message ?? 'An error occurred during file upload',
-          };
-          return res.status(HttpStatusCode.BadRequest).json(errorResponse);
-        }
+export function createMulterMiddleware(fieldName: string) {
+  return function (req: Request, res: Response, next: NextFunction) {
+    upload.single(fieldName)(req, res, function (error: any) {
+      if (error) {
+        const errorResponse: ResponseApi<null> = {
+          statusCode: HttpStatusCode.BadRequest,
+          message: messages.FAILED_UPLOAD,
+          data: null,
+          errors: error.message ?? 'An error occurred during file upload',
+        };
+        return res.status(HttpStatusCode.BadRequest).json(errorResponse);
+      }
 
-        next();
-      });
-    };
-  }
+      next();
+    });
+  };
+}
 
-  export const pksMsaMulterMiddleware = createMulterMiddleware('file_pks');
-  export const bastMulterMiddleware = createMulterMiddleware('file_bast');
+export const pksMsaMulterMiddleware = createMulterMiddleware('file_pks');
+export const bastMulterMiddleware = createMulterMiddleware('file_bast');

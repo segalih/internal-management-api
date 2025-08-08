@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { ResponseApi } from '../helper/interface/response.interface';
 import { HttpStatusCode } from 'axios';
-import { messages } from '../config/message';
 import jwt from 'jsonwebtoken';
-import configConstants from '../config/constants';
+import { ResponseApi } from '@helper/interface/response.interface';
+import configConstants from '@config/constants';
+import { messages } from '@config/message';
 
 export function jwtMiddleware() {
   return async (req: Request, res: Response<ResponseApi<null>>, next: NextFunction) => {

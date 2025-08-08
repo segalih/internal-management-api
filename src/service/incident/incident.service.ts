@@ -6,11 +6,11 @@ import Link from '@database/models/link.model';
 import PersonInCharge from '@database/models/person_in_charge.model';
 import Status from '@database/models/status.model';
 import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
+import { ApplicationMasterService } from '@service/master/applicationMaster.service';
+import { PersonInChargeService } from '@service/master/personInCharge.service';
+import { StatusMasterService } from '@service/master/statusMaster.service';
 import { DateTime } from 'luxon';
 import { Transaction } from 'sequelize';
-import { ApplicationMasterService } from '../master/applicationMaster.service';
-import { PersonInChargeService } from '../master/personInCharge.service';
-import { StatusMasterService } from '../master/statusMaster.service';
 
 export class IncidentService {
   private statusService: StatusMasterService;

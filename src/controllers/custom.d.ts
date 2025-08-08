@@ -1,4 +1,4 @@
-import { IUser } from '../helper/interface/user/user.interface';
+import { IUser } from '@helper/interface/user/user.interface';
 
 declare namespace Express {
   interface Request {
