@@ -1,14 +1,14 @@
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
-import { MsaDetailAttributes } from '../../database/models/msa_detail.model';
-import { ProcessError } from '../../helper/Error/errorHandler';
-import { UnprocessableEntityException } from '../../helper/Error/UnprocessableEntity/UnprocessableEntityException';
-import { isStringNumber, rupiahFormatter } from '../../helper/function/common';
-import { ResponseApi } from '../../helper/interface/response.interface';
-import MsaDetailService from '../../service/msa/msaDetail.service';
-import MsaService from '../../service/msa/msa.service';
-import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
-import { BadRequestException } from '../../helper/Error/BadRequestException/BadRequestException';
+import { MsaDetailAttributes } from '@database/models/msa_detail.model';
+import { ProcessError } from '@helper/Error/errorHandler';
+import { UnprocessableEntityException } from '@helper/Error/UnprocessableEntity/UnprocessableEntityException';
+import { isStringNumber, rupiahFormatter } from '@helper/function/common';
+import { ResponseApi } from '@helper/interface/response.interface';
+import MsaDetailService from '@service/msa/msaDetail.service';
+import MsaService from '@service/msa/msa.service';
+import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
+import { BadRequestException } from '@helper/Error/BadRequestException/BadRequestException';
 import { DateTime } from 'luxon';
 
 export class MsaDetailController {

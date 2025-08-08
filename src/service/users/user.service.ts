@@ -1,11 +1,11 @@
 import bcrypt from 'bcryptjs';
-import { LoginDto } from '../../common/dto/auth/login.dto';
-import Users from '../../database/models/user.model';
-import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
+import { LoginDto } from '@common/dto/auth/login.dto';
+import Users from '@database/models/user.model';
+import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
 
-import { CreateUserDto } from '../../common/dto/user/CreateUser.dto';
+import { CreateUserDto } from '@common/dto/user/CreateUser.dto';
 import JWTService from '../jwt/jwt.service';
-import { BadRequestException } from '../../helper/Error/BadRequestException/BadRequestException';
+import { BadRequestException } from '@helper/Error/BadRequestException/BadRequestException';
 
 export default class UserService {
   private jwtService: JWTService;

@@ -1,9 +1,9 @@
 // src/services/msa/type/interface.ts
 
-import CreateMsaDto from '../../common/dto/msa/CreateMsaDto';
-import { PaginationResult, SearchCondition, sortOptions } from '../../database/models/base.model';
-import { MsaAttributes } from '../../database/models/msa.model';
-import Msa from '../../database/models/msa.model';
+import CreateMsaDto from '@common/dto/msa/CreateMsaDto';
+import { PaginationResult, SearchCondition, sortOptions } from '@database/models/base.model';
+import { MsaAttributes } from '@database/models/msa.model';
+import Msa from '@database/models/msa.model';
 
 export interface IMsaService {
   create(data: CreateMsaDto): Promise<Msa>;

@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import CreateMsaDetailDto from '../../common/dto/msa/CreateMsaDetailDto';
-import CreateMsaDto from '../../common/dto/msa/CreateMsaDto';
-import { MsaController } from '../../controllers/msa/msa.controller';
-import { MsaDetailController } from '../../controllers/msa/msaDetail.controller';
-import { uploadForMSA } from '../../middleware/multer.middleware';
-import { parseFormDataArray } from '../../middleware/parseFormDataArray';
-import { validationMiddleware } from '../../middleware/validation.middleware';
+import CreateMsaDetailDto from '@common/dto/msa/CreateMsaDetailDto';
+import CreateMsaDto from '@common/dto/msa/CreateMsaDto';
+import { MsaController } from '@controllers/msa/msa.controller';
+import { MsaDetailController } from '@controllers/msa/msaDetail.controller';
+import { uploadForMSA } from '@middleware/multer.middleware';
+import { parseFormDataArray } from '@middleware/parseFormDataArray';
+import { validationMiddleware } from '@middleware/validation.middleware';
 
 export default class MsaRoute {
   router: Router;

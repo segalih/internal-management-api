@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
-import { CreateLisenceDto } from '../../common/dto/lisence/CreateLisenceDto';
-import { PaginationResult, SearchCondition } from '../../database/models/base.model';
-import License, { LicenseAttributes } from '../../database/models/license.model';
-import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
+import { CreateLisenceDto } from '@common/dto/lisence/CreateLisenceDto';
+import { PaginationResult, SearchCondition } from '@database/models/base.model';
+import License, { LicenseAttributes } from '@database/models/license.model';
+import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
 
 export default class LicenseService {
   constructor() {}

@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { LicenseController } from '../../controllers/license/license.controller';
-import { validationMiddleware } from '../../middleware/validation.middleware';
-import { CreateLisenceDto } from '../../common/dto/lisence/CreateLisenceDto';
-import { uploadForLicense } from '../../middleware/multer.middleware';
+import { LicenseController } from '@controllers/license/license.controller';
+import { validationMiddleware } from '@middleware/validation.middleware';
+import { CreateLisenceDto } from '@common/dto/lisence/CreateLisenceDto';
+import { uploadForLicense } from '@middleware/multer.middleware';
 
 export default class LicenseRoute {
   router: Router;

@@ -1,5 +1,5 @@
-import Status from '../../database/models/status.model';
-import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
+import Status from '@database/models/status.model';
+import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
 
 export class StatusMasterService {
   constructor() {}

@@ -1,5 +1,5 @@
-import PersonInCharge from '../../database/models/person_in_charge.model';
-import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
+import PersonInCharge from '@database/models/person_in_charge.model';
+import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
 
 export class PersonInChargeService {
   constructor() {}

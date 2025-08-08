@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { MasterController } from '../../controllers/master/master.controller';
+import { MasterController } from '@controllers/master/master.controller';
 
 export class MasterRouter {
   router: Router;

@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
-import { LoginDto } from '../../common/dto/auth/login.dto';
-import { UserController } from '../../controllers/user/user.controller';
-import { validationMiddleware } from '../../middleware/validation.middleware';
+import { LoginDto } from '@common/dto/auth/login.dto';
+import { UserController } from '@controllers/user/user.controller';
+import { validationMiddleware } from '@middleware/validation.middleware';
 
 export default class AuthRoute {
   router: Router;

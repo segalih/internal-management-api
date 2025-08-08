@@ -1,8 +1,7 @@
-import Document, { DocumentCreationAttributes } from '../../database/models/document.model';
+import Document, { DocumentCreationAttributes } from '@database/models/document.model';
 import fs from 'fs';
 import path from 'path';
 import logger from '../../logger';
-import { Request } from 'express';
 export class DocumentService {
   constructor() {}
 

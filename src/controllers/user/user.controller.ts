@@ -1,10 +1,10 @@
 /// <reference path="../custom.d.ts" />
 import { Request, Response } from 'express';
-import { UserAttributes } from '../../database/models/user.model';
-import { ProcessError } from '../../helper/Error/errorHandler';
-import UserService from '../../service/users/user.service';
+import { UserAttributes } from '@database/models/user.model';
+import { ProcessError } from '@helper/Error/errorHandler';
+import UserService from '@service/users/user.service';
 import { IResponse } from '../interface';
-import { messages } from '../../config/message';
+import { messages } from '@config/message';
 import { HttpStatusCode } from 'axios';
 
 export class UserController {

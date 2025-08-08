@@ -103,6 +103,7 @@
     "@helper": "dist/helper",
     "@service": "dist/service",
     "@resource": "dist/resource",
-    "@middleware": "dist/middleware"
+    "@middleware": "dist/middleware",
+    "@logger": "dist/logger"
   }
 }

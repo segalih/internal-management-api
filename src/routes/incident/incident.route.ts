@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { IncidentController } from '../../controllers/incident/incident.controller';
-import { validationMiddleware } from '../../middleware/validation.middleware';
-import { CreateIncidentDto } from '../../common/dto/incident/CreateIncidentDto';
+import { IncidentController } from '@controllers/incident/incident.controller';
+import { validationMiddleware } from '@middleware/validation.middleware';
+import { CreateIncidentDto } from '@common/dto/incident/CreateIncidentDto';
 
 export class IncidentRouter {
   router: Router;

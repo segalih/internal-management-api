@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken';
-import configConstants from '../../config/constants';
-import { ForbiddenException } from '../../helper/Error/Forbidden/ForbiddenException';
+import configConstants from '@config/constants';
+import { ForbiddenException } from '@helper/Error/Forbidden/ForbiddenException';
 
 export default class JWTService {
   async generateToken(userPayload: any) {

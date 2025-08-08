@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from './base.model';
 import Msa from './msa.model';
-import { decrypt, encrypt } from '../../helper/function/crypto';
+import { decrypt, encrypt } from '@helper/function/crypto';
 
 export interface MsaDetailAttributes extends BaseModelAttributes {
   msaId: number;

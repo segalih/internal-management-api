@@ -4,14 +4,14 @@ import { Request, Response } from 'express';
 import fs from 'fs';
 import { DateTime } from 'luxon';
 import { Op } from 'sequelize';
-import { CreateLisenceDto } from '../../common/dto/lisence/CreateLisenceDto';
-import { LicenseAttributes, LISENCE_CONSTANTS } from '../../database/models/license.model';
-import { BadRequestException } from '../../helper/Error/BadRequestException/BadRequestException';
-import { ProcessError } from '../../helper/Error/errorHandler';
-import { isStringNumber } from '../../helper/function/common';
-import { ResponseApi, ResponseApiWithPagination } from '../../helper/interface/response.interface';
-import { DocumentService } from '../../service/document/document.service';
-import LicenseService from '../../service/license/license.service';
+import { CreateLisenceDto } from '@common/dto/lisence/CreateLisenceDto';
+import { LicenseAttributes, LISENCE_CONSTANTS } from '@database/models/license.model';
+import { BadRequestException } from '@helper/Error/BadRequestException/BadRequestException';
+import { ProcessError } from '@helper/Error/errorHandler';
+import { isStringNumber } from '@helper/function/common';
+import { ResponseApi, ResponseApiWithPagination } from '@helper/interface/response.interface';
+import { DocumentService } from '@service/document/document.service';
+import LicenseService from '@service/license/license.service';
 
 export class LicenseController {
   private licenseService: LicenseService;

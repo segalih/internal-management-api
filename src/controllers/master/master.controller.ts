@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
-import { ResponseApi } from '../../helper/interface/response.interface';
-import PersonInCharge from '../../database/models/person_in_charge.model';
-import { PersonInChargeService } from '../../service/master/personInCharge.service';
-import { ProcessError } from '../../helper/Error/errorHandler';
+import { ResponseApi } from '@helper/interface/response.interface';
+import PersonInCharge from '@database/models/person_in_charge.model';
+import { PersonInChargeService } from '@service/master/personInCharge.service';
+import { ProcessError } from '@helper/Error/errorHandler';
 import { HttpStatusCode } from 'axios';
-import { StatusMasterService } from '../../service/master/statusMaster.service';
-import { ApplicationMasterService } from '../../service/master/applicationMaster.service';
-import Status from '../../database/models/status.model';
-import Application from '../../database/models/application.model';
+import { StatusMasterService } from '@service/master/statusMaster.service';
+import { ApplicationMasterService } from '@service/master/applicationMaster.service';
+import Status from '@database/models/status.model';
+import Application from '@database/models/application.model';
 
 export class MasterController {
   private personInChargeService: PersonInChargeService;

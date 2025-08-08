@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { DocumentController } from '../../controllers/document/document.controller';
+import { DocumentController } from '@controllers/document/document.controller';
 
 export default class DocumentRouter {
   router: Router;

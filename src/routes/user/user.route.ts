@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
-import { UserController } from '../../controllers/user/user.controller';
-import { validationMiddleware } from '../../middleware/validation.middleware';
-import { CreateUserDto } from '../../common/dto/user/CreateUser.dto';
+import { UserController } from '@controllers/user/user.controller';
+import { validationMiddleware } from '@middleware/validation.middleware';
+import { CreateUserDto } from '@common/dto/user/CreateUser.dto';
 
 export default class userRouter {
   router: Router;

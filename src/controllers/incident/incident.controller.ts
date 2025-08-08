@@ -1,15 +1,15 @@
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
 import { DateTime } from 'luxon';
-import Database from '../../config/db';
-import { CreateIncidentDto } from '../../common/dto/incident/CreateIncidentDto';
-import { IncidentAttributes } from '../../database/models/incident.model';
-import { BadRequestException } from '../../helper/Error/BadRequestException/BadRequestException';
-import { ProcessError } from '../../helper/Error/errorHandler';
-import { isStringNumber } from '../../helper/function/common';
-import { ResponseApi, ResponseApiWithPagination } from '../../helper/interface/response.interface';
-import { IncidentService } from '../../service/incident/incident.service';
-import { SearchCondition } from '../../database/models/base.model';
+import Database from '@config/db';
+import { CreateIncidentDto } from '@common/dto/incident/CreateIncidentDto';
+import { IncidentAttributes } from '@database/models/incident.model';
+import { BadRequestException } from '@helper/Error/BadRequestException/BadRequestException';
+import { ProcessError } from '@helper/Error/errorHandler';
+import { isStringNumber } from '@helper/function/common';
+import { ResponseApi, ResponseApiWithPagination } from '@helper/interface/response.interface';
+import { IncidentService } from '@service/incident/incident.service';
+import { SearchCondition } from '@database/models/base.model';
 import { Op } from 'sequelize';
 
 export class IncidentController {

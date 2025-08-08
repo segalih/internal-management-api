@@ -1,6 +1,6 @@
-import CreateMsaDetailDto from '../../common/dto/msa/CreateMsaDetailDto';
-import Msa from '../../database/models/msa.model';
-import MsaDetail, { MsaDetailAttributes } from '../../database/models/msa_detail.model';
+import CreateMsaDetailDto from '@common/dto/msa/CreateMsaDetailDto';
+import Msa from '@database/models/msa.model';
+import MsaDetail, { MsaDetailAttributes } from '@database/models/msa_detail.model';
 
 export interface IMsaDetailService {
   create(data: CreateMsaDetailDto, msaId: string): Promise<MsaDetail>;

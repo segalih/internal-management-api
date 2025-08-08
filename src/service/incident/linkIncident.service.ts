@@ -1,4 +1,4 @@
-import IncidentLink from '../../database/models/incident_link.model';
+import IncidentLink from '@database/models/incident_link.model';
 
 export class IncidentLinkService {
   async deleteByIncidentId(id: number): Promise<void> {

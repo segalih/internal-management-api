@@ -1,11 +1,9 @@
 import { Request, Response } from 'express';
-import { ProcessError } from '../../helper/Error/errorHandler';
-import { DocumentService } from '../../service/document/document.service';
-import { isStringNumber } from '../../helper/function/common';
-import { BadRequestException } from '../../helper/Error/BadRequestException/BadRequestException';
-import { NotFoundException } from '../../helper/Error/NotFound/NotFoundException';
 import fs from 'fs';
 import path from 'path';
+import { ProcessError } from '@helper/Error/errorHandler';
+import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
+import { DocumentService } from '@service/document/document.service';
 export class DocumentController {
   private documentService: DocumentService;
   constructor() {
