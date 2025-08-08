@@ -1,8 +1,8 @@
 import { Transaction } from 'sequelize';
-import CreateMsaDetailV2Dto from '../../../common/dto/v2/msaV2/CreateMsaDetailV2Dto';
-import V2Msa from '../../../database/models/v2/v2_msa.model';
-import V2MsaHasRoles from '../../../database/models/v2/v2_msa_has_roles.model';
-import { UnprocessableEntityException } from '../../../helper/Error/UnprocessableEntity/UnprocessableEntityException';
+import CreateMsaDetailV2Dto from '@common/dto/v2/msaV2/CreateMsaDetailV2Dto';
+import V2Msa from '@database/models/v2/v2_msa.model';
+import V2MsaHasRoles from '@database/models/v2/v2_msa_has_roles.model';
+import { UnprocessableEntityException } from '@helper/Error/UnprocessableEntity/UnprocessableEntityException';
 
 export class MsaV2Service {
   async create(pksMsaId: number, data: CreateMsaDetailV2Dto, transaction?: Transaction): Promise<V2Msa> {

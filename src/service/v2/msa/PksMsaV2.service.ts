@@ -1,10 +1,10 @@
 import { Transaction } from 'sequelize';
-import { CreateMsaV2Dto } from '../../../common/dto/v2/msaV2/createMsaV2Dto';
-import { PaginationResult, SearchCondition, sortOptions } from '../../../database/models/base.model';
-import V2Msa from '../../../database/models/v2/v2_msa.model';
-import V2MsaHasRoles from '../../../database/models/v2/v2_msa_has_roles.model';
-import V2PksMsa, { V2PksMsaAttributes } from '../../../database/models/v2/v2_pks_msa.model';
-import { pksMsaV2resource } from '../../../resource/v2/pks-msa/pks-msa.resource';
+import { CreateMsaV2Dto } from '@common/dto/v2/msaV2/createMsaV2Dto';
+import { PaginationResult, SearchCondition, sortOptions } from '@database/models/base.model';
+import V2Msa from '@database/models/v2/v2_msa.model';
+import V2MsaHasRoles from '@database/models/v2/v2_msa_has_roles.model';
+import V2PksMsa, { V2PksMsaAttributes } from '@database/models/v2/v2_pks_msa.model';
+import { pksMsaV2resource } from '@resource/v2/pks-msa/pks-msa.resource';
 import { DateTime } from 'luxon';
 
 export class PksMsaV2Service {

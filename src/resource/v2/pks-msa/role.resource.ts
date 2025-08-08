@@ -1,5 +1,5 @@
-import V2MsaHasRoles, { V2MsaHasRolesAttributes } from '../../../database/models/v2/v2_msa_has_roles.model';
-import { V2PksMsaAttributes } from '../../../database/models/v2/v2_pks_msa.model';
+import V2MsaHasRoles, { V2MsaHasRolesAttributes } from '@database/models/v2/v2_msa_has_roles.model';
+import { V2PksMsaAttributes } from '@database/models/v2/v2_pks_msa.model';
 import { msaV2resource } from './msa.resource';
 
 export const roleV2resource = (role: V2MsaHasRoles): V2MsaHasRolesAttributes => {

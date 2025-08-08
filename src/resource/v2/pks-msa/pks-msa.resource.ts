@@ -1,5 +1,5 @@
-import V2PksMsa, { V2PksMsaAttributes } from '../../../database/models/v2/v2_pks_msa.model';
-import { getDiffMonths } from '../../../helper/function/common';
+import V2PksMsa, { V2PksMsaAttributes } from '@database/models/v2/v2_pks_msa.model';
+import { getDiffMonths } from '@helper/function/common';
 import { msaV2resource } from './msa.resource';
 import { roleV2resource } from './role.resource';
 
