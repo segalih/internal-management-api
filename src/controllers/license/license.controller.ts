@@ -27,30 +27,30 @@ export class LicenseController {
       const files = req.files as { [fieldname: string]: Express.Multer.File[] };
       const payload = req.body as CreateLisenceDto;
 
-      const filePKS = files['file_pks']?.[0];
-      const fileBAST = files['file_bast']?.[0];
+      // const filePKS = files['file_pks']?.[0];
+      // const fileBAST = files['file_bast']?.[0];
 
-      if (!filePKS || !fileBAST) {
-        throw new BadRequestException('Both file_pks and file_bast are required');
-      }
+      // if (!filePKS || !fileBAST) {
+      //   throw new BadRequestException('Both file_pks and file_bast are required');
+      // }
       const license = await this.licenseService.create(payload);
 
-      const pksFile = await this.documentService.saveDocument({
-        file_type: 'file_pks_lisence',
-        filename: filePKS.filename,
-        path: LISENCE_CONSTANTS.BASE_PATH + license.id + '/' + filePKS.filename,
-      });
+      // const pksFile = await this.documentService.saveDocument({
+      //   file_type: 'file_pks_lisence',
+      //   filename: filePKS.filename,
+      //   path: LISENCE_CONSTANTS.BASE_PATH + license.id + '/' + filePKS.filename,
+      // });
 
-      const bastFile = await this.documentService.saveDocument({
-        file_type: 'file_bast_lisence',
-        filename: fileBAST.filename,
-        path: LISENCE_CONSTANTS.BASE_PATH + license.id + '/' + fileBAST.filename,
-      });
+      // const bastFile = await this.documentService.saveDocument({
+      //   file_type: 'file_bast_lisence',
+      //   filename: fileBAST.filename,
+      //   path: LISENCE_CONSTANTS.BASE_PATH + license.id + '/' + fileBAST.filename,
+      // });
 
-      await license.update({
-        pksFileId: pksFile.id,
-        bastFileId: bastFile.id,
-      });
+      // await license.update({
+      //   pksFileId: pksFile.id,
+      //   bastFileId: bastFile.id,
+      // });
       res.status(HttpStatusCode.Created).json({
         message: 'License created successfully',
         statusCode: HttpStatusCode.Created,

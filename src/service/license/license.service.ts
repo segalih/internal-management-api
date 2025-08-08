@@ -22,6 +22,8 @@ export default class LicenseService {
       dueDateLicense: data.due_date_license,
       healthCheckRoutine: data.health_check_routine,
       healthCheckActual: data.health_check_actual,
+      filePks: data.file_pks,
+      fileBast: data.file_bast,
     });
     if (!license) {
       throw new NotFoundException('License not created');
@@ -56,6 +58,7 @@ export default class LicenseService {
       healthCheckActual: data.health_check_actual,
       pksFileId: filePksId ? filePksId : license.pksFileId,
       bastFileId: fileBastId ? fileBastId : license.bastFileId,
+
     });
     return license;
   }

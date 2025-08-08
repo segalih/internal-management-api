@@ -13,6 +13,8 @@ export interface LicenseAttributes extends BaseModelAttributes {
   dueDateLicense: string;
   healthCheckRoutine: string;
   healthCheckActual: string;
+  filePks: string;
+  fileBast: string;
 
   pksFileUrl?: string;
   bastFileUrl?: string;
@@ -31,6 +33,8 @@ class License extends BaseModel<LicenseAttributes, LicenseCreationAttributes> im
   public dueDateLicense!: string;
   public healthCheckRoutine!: string;
   public healthCheckActual!: string;
+  public filePks!: string;
+  public fileBast!: string;
 }
 
 License.init(
@@ -83,6 +87,14 @@ License.init(
         const value = this.getDataValue('healthCheckActual');
         return value ? new Date(value).toISOString() : null;
       },
+    },
+    filePks: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    fileBast: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
   },
   {
