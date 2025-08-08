@@ -137,6 +137,7 @@ export class MsaV2Controller {
         sortOptions,
       });
 
+
       res.status(HttpStatusCode.Ok).json({
         statusCode: HttpStatusCode.Ok,
         message: 'MSA list retrieved successfully',
