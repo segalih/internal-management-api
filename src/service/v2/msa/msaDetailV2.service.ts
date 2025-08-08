@@ -43,4 +43,11 @@ export class MsaV2Service {
 
     return msa;
   }
+
+  async deleteByMsaId(pksMsaId: number, transaction?: Transaction): Promise<void> {
+    const msa = await V2Msa.destroy({
+      where: { pksMsaId },
+      transaction,
+    });
+  }
 }
