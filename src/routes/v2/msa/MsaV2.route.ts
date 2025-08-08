@@ -1,10 +1,9 @@
+import { CreateBulkMsaV2Dto } from '@common/dto/v2/msaV2/CreateBulkMsaV2Dto';
+import { CreateMsaV2Dto } from '@common/dto/v2/msaV2/createMsaV2Dto';
+import { MsaDetailV2Controller } from '@controllers/v2/msa/msaDetailV2.controller';
+import { MsaV2Controller } from '@controllers/v2/msa/msav2.controller';
+import { validationMiddleware } from '@middleware/validation.middleware';
 import { Router } from 'express';
-import { MsaV2Controller } from '../../../controllers/v2/msa/msav2.controller';
-import { validationMiddleware } from '../../../middleware/validation.middleware';
-import { MsaDetailV2Controller } from '../../../controllers/v2/msa/msaDetailV2.controller';
-import { CreateMsaV2Dto } from '../../../common/dto/v2/msaV2/createMsaV2Dto';
-import CreateMsaDetaiV2lDto from '../../../common/dto/v2/msaV2/CreateMsaDetailV2Dto';
-import { CreateBulkMsaV2Dto } from '../../../common/dto/v2/msaV2/CreateBulkMsaV2Dto';
 
 export default class MsaV2Route {
   router: Router;

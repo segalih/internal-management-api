@@ -10,7 +10,7 @@ export class DocumentService {
     try {
       const document = await Document.create(data);
 
-      const rootPath = path.resolve(__dirname, '../../../');
+      const rootPath = path.resolve(__dirname, '@');
 
       const oldPath = path.join(rootPath, 'uploads/tmp', data.filename);
 

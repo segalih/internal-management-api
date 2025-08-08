@@ -8,14 +8,12 @@ import configConstants from '../config/constants';
 export function jwtMiddleware() {
   return async (req: Request, res: Response<ResponseApi<null>>, next: NextFunction) => {
     try {
-
       const pathUrl = req.originalUrl;
 
       const whiteListPattern = [`/api/msa/file/\\d+`];
       if (whiteListPattern.some((pattern) => new RegExp(pattern).test(pathUrl))) {
         return next();
       }
-    
 
       if (!req.headers['authorization']) {
         throw new Error();
@@ -28,6 +26,7 @@ export function jwtMiddleware() {
         throw new Error();
       }
       jwt.verify(token, configConstants.JWT_SECRET_ACCESS_TOKEN);
+      // @ts-ignore
       req.user = jwt.decode(token) as any;
       next();
     } catch (error) {
