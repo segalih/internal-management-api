@@ -4,7 +4,7 @@ import { msaV2resource } from './msa.resource';
 import { roleV2resource } from './role.resource';
 
 export const pksMsaV2resource = (pksMsa: V2PksMsa): V2PksMsaAttributes => {
-  const msaDetails = pksMsa.pksMsa ?? [];
+  const msaDetails = pksMsa.msas ?? [];
   const roles = pksMsa.roles ?? [];
   const currentBudgetList = pksMsa.msas?.map((item) => item.role?.rate || 0) || [];
   const totalBudget = currentBudgetList.reduce((acc, cur) => acc + (cur || 0), 0);
