@@ -80,8 +80,8 @@ export default class LicenseService {
   }
 
   licenseResponse(license: License): LicenseAttributes {
-    const pksFileBase64 = Buffer.from(license.pksFileId?.toString() || '').toString('base64');
-    const bastFileBase64 = Buffer.from(license.bastFileId?.toString() || '').toString('base64');
+    // const pksFileBase64 = Buffer.from(license.pksFileId?.toString() || '').toString('base64');
+    // const bastFileBase64 = Buffer.from(license.bastFileId?.toString() || '').toString('base64');
     const dueDate = DateTime.fromISO(license.dueDateLicense.toString());
     const dayTodaytoDueDate = dueDate.diffNow('days').days;
     let colorStatus = 'green';
@@ -92,10 +92,10 @@ export default class LicenseService {
     }
     return {
       ...license.toJSON(),
-      pksFileUrl: `/api/document/${pksFileBase64}`,
-      bastFileUrl: `/api/document/${bastFileBase64}`,
-      pks_file_id: undefined,
-      bast_file_id: undefined,
+      // pksFileUrl: `/api/document/${pksFileBase64}`,
+      // bastFileUrl: `/api/document/${bastFileBase64}`,
+      // pks_file_id: undefined,
+      // bast_file_id: undefined,
       status: colorStatus,
     };
   }
