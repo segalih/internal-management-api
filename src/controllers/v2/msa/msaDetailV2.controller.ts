@@ -29,7 +29,10 @@ export class MsaDetailV2Controller {
 
       const { msa }: CreateBulkMsaV2Dto = req.body;
 
-      const pks = await this.pksMsaService.getById(parseInt(id));
+      await this.msaService.deleteByMsaId(parseInt(id), transaction);
+
+      const pks = await this.pksMsaService.getById(parseInt(id), transaction);
+
       const { budgetQuota, dateStarted, dateEnded } = pks;
 
       const totalOfMonthsContract = getDiffMonths(dateStarted, dateEnded);
@@ -44,6 +47,14 @@ export class MsaDetailV2Controller {
         }
         return role;
       });
+
+      const totalPeople = msa.length;
+
+      if (totalPeople > pks.peopleQuota) {
+        throw new BadRequestException(
+          `Total people quota for the contract exceeds the budget quota. Total: ${totalPeople}, Quota: ${pks.peopleQuota}`
+        );
+      }
 
       const totalBudgetByNewRole = mapRolesByNewRoleId.reduce((acc, cur) => acc + (cur.rate || 0), 0);
       const totalBudgetMonthly = totalBudget + totalBudgetByNewRole;

@@ -25,4 +25,12 @@ export class CreateLisenceDto {
 
   @IsDateString()
   health_check_actual!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  file_pks!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  file_bast!: string;
 }
