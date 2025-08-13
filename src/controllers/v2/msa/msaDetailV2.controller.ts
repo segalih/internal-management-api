@@ -1,4 +1,5 @@
 import { CreateBulkMsaV2Dto } from '@common/dto/v2/msaV2/CreateBulkMsaV2Dto';
+import CreateMsaDetailV2Dto from '@common/dto/v2/msaV2/CreateMsaDetailV2Dto';
 import Database from '@config/db';
 import { BadRequestException } from '@helper/Error/BadRequestException/BadRequestException';
 import { ProcessError } from '@helper/Error/errorHandler';
@@ -40,7 +41,6 @@ export class MsaDetailV2Controller {
 
       validateMsaJoinDates(msa, dateStarted, dateEnded);
       validatePeopleQuota(msa.length, peopleQuota);
-
       const mappedRoles = mapRolesToMsa(msa, roles);
       validateBudgetQuota(msa, mappedRoles, dateEnded, budgetQuota);
 
