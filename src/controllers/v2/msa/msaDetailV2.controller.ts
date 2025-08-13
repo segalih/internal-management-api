@@ -74,8 +74,6 @@ export class MsaDetailV2Controller {
 
       const totalBudgetMsas = totalBudgetEachPerson.reduce((acc, cur) => acc + (cur || 0), 0);
 
-      console.log('totalBudgetEachPerson', totalBudgetEachPerson);
-      console.log(totalBudgetMsas, budgetQuota);
       if (totalBudgetMsas > budgetQuota) {
         throw new BadRequestException(
           `Total budget for the contract exceeds the budget quota. Total: ${rupiahFormatter(
