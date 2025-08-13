@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 import { getDiffMonths, rupiahFormatter } from '../common';
 import CreateMsaDetailV2Dto from '@common/dto/v2/msaV2/CreateMsaDetailV2Dto';
 import V2MsaHasRoles from '@database/models/v2/v2_msa_has_roles.model';
+import V2Msa from '@database/models/v2/v2_msa.model';
 
 export function validateMsaJoinDates(msa: CreateMsaDetailV2Dto[], dateStarted: string, dateEnded: string) {
   const start = DateTime.fromISO(dateStarted);
@@ -24,11 +25,12 @@ export function validatePeopleQuota(total: number, quota: number) {
   }
 }
 
-export function mapRolesToMsa(msa: CreateMsaDetailV2Dto[], roles: V2MsaHasRoles[]) {
+export function mapRolesToMsa(msa: CreateMsaDetailV2Dto[] | V2Msa[], roles: V2MsaHasRoles[]) {
   return msa.map((item) => {
-    const role = roles?.find((r) => r.id === item.role_id);
+    const _roleId = item instanceof CreateMsaDetailV2Dto ? item.role_id : item.roleId;
+    const role = roles?.find((r) => r.id === _roleId);
     if (!role) {
-      throw new BadRequestException(`Role with ID ${item.role_id} not found in PKS MSA`);
+      throw new BadRequestException(`Role with ID ${_roleId} not found in PKS MSA`);
     }
     return role;
   });
