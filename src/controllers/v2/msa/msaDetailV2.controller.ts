@@ -9,6 +9,7 @@ import { getDiffMonths, isStringNumber, rupiahFormatter } from '@helper/function
 import { ResponseApi } from '@helper/interface/response.interface';
 import { PksMsaV2Service } from '@service/v2/msa/PksMsaV2.service';
 import { MsaV2Service } from '@service/v2/msa/msaDetailV2.service';
+import { DateTime } from 'luxon';
 export class MsaDetailV2Controller {
   private pksMsaService: PksMsaV2Service;
   private msaService: MsaV2Service;
@@ -18,7 +19,10 @@ export class MsaDetailV2Controller {
     this.msaService = new MsaV2Service();
   }
 
-  async create(req: Request, res: Response<ResponseApi<V2PksMsaAttributes>>): Promise<void> {
+  async create(
+    req: Request<any, any, CreateBulkMsaV2Dto>,
+    res: Response<ResponseApi<CreateBulkMsaV2Dto>>
+  ): Promise<void> {
     const transaction = await Database.database.transaction();
 
     try {
@@ -27,7 +31,7 @@ export class MsaDetailV2Controller {
         throw new BadRequestException('Invalid PKS MSA ID format');
       }
 
-      const { msa }: CreateBulkMsaV2Dto = req.body;
+      const { msa } = req.body;
 
       await this.msaService.deleteByMsaId(parseInt(id), transaction);
 
@@ -35,17 +39,17 @@ export class MsaDetailV2Controller {
 
       const { budgetQuota, dateStarted, dateEnded } = pks;
 
-      const totalOfMonthsContract = getDiffMonths(dateStarted, dateEnded);
+      const _dateStarted = DateTime.fromISO(dateStarted);
+      const _dateEnded = DateTime.fromISO(dateEnded);
 
-      const currentBudgetList = pks.msas?.map((item) => item.role?.rate || 0) || [];
-      const totalBudget = currentBudgetList.reduce((acc, cur) => acc + (cur || 0), 0);
-
-      const mapRolesByNewRoleId = msa.map((item) => {
-        const role = pks.roles?.find((role) => role.id === item.role_id);
-        if (!role) {
-          throw new BadRequestException(`Role with ID ${item.role_id} not found in PKS MSA`);
+      msa.forEach((item, index) => {
+        const joinDate = DateTime.fromISO(item.join_date as string);
+        if (joinDate < _dateStarted && joinDate > _dateEnded) {
+          throw new BadRequestException(
+            `Join date for msa ${index + 1} must be after date started and before date ended`,
+            {}
+          );
         }
-        return role;
       });
 
       const totalPeople = msa.length;
@@ -55,15 +59,27 @@ export class MsaDetailV2Controller {
           `Total people quota for the contract exceeds the budget quota. Total: ${totalPeople}, Quota: ${pks.peopleQuota}`
         );
       }
+      const mapRolesByNewRoleId = msa.map((item) => {
+        const role = pks.roles?.find((role) => role.id === item.role_id);
+        if (!role) {
+          throw new BadRequestException(`Role with ID ${item.role_id} not found in PKS MSA`);
+        }
+        return role;
+      });
 
-      const totalBudgetByNewRole = mapRolesByNewRoleId.reduce((acc, cur) => acc + (cur.rate || 0), 0);
-      const totalBudgetMonthly = totalBudget + totalBudgetByNewRole;
+      const periodMsaUntilPksEnd = req.body.msa?.map((item) => getDiffMonths(item.join_date!, pks.dateEnded)) || [];
+      const totalBudgetEachPerson = mapRolesByNewRoleId.map((role, index) => {
+        return role.rate * periodMsaUntilPksEnd[index];
+      });
 
-      const totalBudgetByContract = totalBudgetMonthly * totalOfMonthsContract;
-      if (totalBudgetByContract > budgetQuota) {
+      const totalBudgetMsas = totalBudgetEachPerson.reduce((acc, cur) => acc + (cur || 0), 0);
+
+      console.log('totalBudgetEachPerson', totalBudgetEachPerson);
+      console.log(totalBudgetMsas, budgetQuota);
+      if (totalBudgetMsas > budgetQuota) {
         throw new BadRequestException(
           `Total budget for the contract exceeds the budget quota. Total: ${rupiahFormatter(
-            totalBudgetByContract
+            totalBudgetMsas
           )}, Quota: ${rupiahFormatter(budgetQuota)}`
         );
       }
@@ -71,7 +87,11 @@ export class MsaDetailV2Controller {
       await Promise.all(msa.map((_msa) => this.msaService.create(parseInt(id), _msa, transaction)));
 
       await transaction.commit();
-      res.status(HttpStatusCode.Created).json(req.body);
+      res.status(HttpStatusCode.Created).json({
+        statusCode: HttpStatusCode.Created,
+        message: 'Success',
+        data: req.body,
+      });
     } catch (error) {
       await transaction.rollback();
       ProcessError(error, res);
