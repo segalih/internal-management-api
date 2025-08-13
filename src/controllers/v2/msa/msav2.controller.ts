@@ -1,28 +1,33 @@
-import { Request, Response } from 'express';
+import { CreateMsaV2Dto } from '@common/dto/v2/msaV2/createMsaV2Dto';
+import Database from '@config/db';
+import { SearchCondition } from '@database/models/base.model';
+import { V2PksMsaAttributes } from '@database/models/v2/v2_pks_msa.model';
+import { BadRequestException } from '@helper/Error/BadRequestException/BadRequestException';
+import { ProcessError } from '@helper/Error/errorHandler';
+import { isStringNumber } from '@helper/function/common';
 import { ResponseApi, ResponseApiWithPagination } from '@helper/interface/response.interface';
 import { PksMsaV2Service } from '@service/v2/msa/PksMsaV2.service';
-import { MsaV2Service } from '@service/v2/msa/msaDetailV2.service';
-import Database from '@config/db';
-import { BadRequestException } from '@helper/Error/BadRequestException/BadRequestException';
 import { HttpStatusCode } from 'axios';
-import { V2PksMsaAttributes } from '@database/models/v2/v2_pks_msa.model';
-import { ProcessError } from '@helper/Error/errorHandler';
-import { Op } from 'sequelize';
+import { Request, Response } from 'express';
 import { DateTime } from 'luxon';
-import { SearchCondition } from '@database/models/base.model';
-import { isStringNumber } from '@helper/function/common';
+import { Op } from 'sequelize';
 
 export class MsaV2Controller {
   private pksMsaService: PksMsaV2Service;
-  private msaService: MsaV2Service;
 
   constructor() {
     this.pksMsaService = new PksMsaV2Service();
-    this.msaService = new MsaV2Service();
   }
-  async create(req: Request, res: Response<ResponseApi<V2PksMsaAttributes>>) {
+  async create(req: Request<any, any, CreateMsaV2Dto>, res: Response<ResponseApi<V2PksMsaAttributes>>) {
     const transaction = await Database.database.transaction();
     try {
+      const _dateStarted = DateTime.fromISO(req.body.date_started);
+      const _dateEnded = DateTime.fromISO(req.body.date_ended);
+
+      if (_dateStarted > _dateEnded) {
+        throw new BadRequestException('Date started must be before date ended');
+      }
+
       const pksMsa = await this.pksMsaService.create(req.body, transaction);
       if (!pksMsa) {
         throw new BadRequestException('Failed to create MSA');
@@ -136,7 +141,6 @@ export class MsaV2Controller {
         searchConditions,
         sortOptions,
       });
-
 
       res.status(HttpStatusCode.Ok).json({
         statusCode: HttpStatusCode.Ok,

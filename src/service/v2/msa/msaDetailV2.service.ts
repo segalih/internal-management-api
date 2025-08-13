@@ -13,6 +13,8 @@ export class MsaV2Service {
         project: data.project,
         roleId: data.role_id,
         groupPosition: data.group_position,
+        joinDate: data.join_date,
+        leaveDate: data.leave_date,
       },
       {
         transaction,

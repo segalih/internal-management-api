@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsPositive, IsString, Matches } from 'class-validator';
+import { IsDateString, IsNumber, IsOptional, IsPositive, IsString, Matches } from 'class-validator';
 
 export default class CreateMsaDetailV2Dto {
   @IsNumber()
@@ -16,4 +16,11 @@ export default class CreateMsaDetailV2Dto {
 
   @IsString()
   group_position!: string;
+
+  @IsDateString()
+  join_date?: string;
+
+  @IsDateString()
+  @IsOptional()
+  leave_date?: string;
 }

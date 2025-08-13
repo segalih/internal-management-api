@@ -15,6 +15,7 @@ export interface LicenseAttributes extends BaseModelAttributes {
   healthCheckActual: string;
   filePks: string;
   fileBast: string;
+  isNotified: boolean;
 
   pksFileUrl?: string;
   bastFileUrl?: string;
@@ -35,6 +36,7 @@ class License extends BaseModel<LicenseAttributes, LicenseCreationAttributes> im
   public healthCheckActual!: string;
   public filePks!: string;
   public fileBast!: string;
+  public isNotified!: boolean;
 }
 
 License.init(
@@ -94,6 +96,10 @@ License.init(
     },
     fileBast: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    isNotified: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
     },
   },
