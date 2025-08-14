@@ -24,6 +24,7 @@ export default class LicenseService {
       healthCheckActual: data.health_check_actual,
       filePks: data.file_pks,
       fileBast: data.file_bast,
+      isNotified: data.is_notified ? data.is_notified : true,
     });
     if (!license) {
       throw new NotFoundException('License not created');

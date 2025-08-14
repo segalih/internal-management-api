@@ -1,4 +1,4 @@
-import { IsDate, IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsDate, IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateLisenceDto {
   @IsString()
@@ -33,4 +33,8 @@ export class CreateLisenceDto {
   @IsString()
   @IsNotEmpty()
   file_bast!: string;
+
+  @IsBoolean()
+  @IsOptional()
+  is_notified!: boolean;
 }
