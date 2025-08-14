@@ -39,7 +39,7 @@ class Database {
       host: this.host,
       dialect: this.dialect,
       port: this.port,
-      logging: false,
+      logging: console.log,
       pool: {
         max: this.maxPool,
         min: this.minPool,

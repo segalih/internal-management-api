@@ -26,6 +26,8 @@ export default class LicenseService {
         filePks: data.file_pks,
         fileBast: data.file_bast,
         isNotified: data.is_notified ? data.is_notified : true,
+        pksFileId: null,
+        bastFileId: null,
       },
       {
         fields: [
@@ -40,6 +42,7 @@ export default class LicenseService {
         ],
       }
     );
+    license.save();
     if (!license) {
       throw new NotFoundException('License not created');
     }
@@ -71,11 +74,9 @@ export default class LicenseService {
       dueDateLicense: data.due_date_license,
       healthCheckRoutine: data.health_check_routine,
       healthCheckActual: data.health_check_actual,
-      pksFileId: filePksId ? filePksId : license.pksFileId,
-      bastFileId: fileBastId ? fileBastId : license.bastFileId,
-
-    }
-  );
+      pksFileUrl: data.file_pks,
+      bastFileUrl: data.file_bast,
+    });
     return license;
   }
 

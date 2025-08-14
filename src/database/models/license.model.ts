@@ -7,8 +7,8 @@ export const LISENCE_CONSTANTS = {
 };
 export interface LicenseAttributes extends BaseModelAttributes {
   pks: string;
-  pksFileId?: number;
-  bastFileId?: number;
+  pksFileId?: number | null;
+  bastFileId?: number | null;
   application: string;
   dueDateLicense: string;
   healthCheckRoutine: string;

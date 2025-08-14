@@ -10,7 +10,7 @@ module.exports = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: process.env.DB_DIALECT || 'mysql',
-    logging: (...msg) => console.log('SQL Query:', msg[0]),
+    logging: console.log,
     dialectOptions: {
       bigNumberStrings: true,
     },
@@ -34,6 +34,7 @@ module.exports = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: process.env.DB_DIALECT || 'mysql',
+    logging: console.log,
     dialectOptions: {
       bigNumberStrings: true,
     },
