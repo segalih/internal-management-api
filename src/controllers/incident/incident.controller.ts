@@ -107,14 +107,14 @@ export class IncidentController {
         {
           keySearch: 'entryDate',
           operator: Op.gte,
-          keyValue: entry_date_from ? DateTime.fromISO(entry_date_from as string).toISO() : '',
+          keyValue: entry_date_from ? DateTime.fromISO(entry_date_from as string, { zone: 'UTC' }).toISO() : '',
           keyColumn: 'entryDate',
         },
         {
           keySearch: 'entryDate',
           operator: Op.lte,
           keyValue: entry_date_to
-            ? DateTime.fromISO(entry_date_to as string)
+            ? DateTime.fromISO(entry_date_to as string, { zone: 'UTC' })
                 .plus({ days: 1 })
                 .toISO()
             : '',

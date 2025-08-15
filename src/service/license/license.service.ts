@@ -20,9 +20,9 @@ export default class LicenseService {
       {
         pks: data.pks,
         application: data.application,
-        dueDateLicense: DateTime.fromISO(`${data.due_date_license}`).toJSDate(),
-        healthCheckRoutine: DateTime.fromISO(`${data.health_check_routine}`).toJSDate(),
-        healthCheckActual: DateTime.fromISO(`${data.health_check_actual}`).toJSDate(),
+        dueDateLicense: DateTime.fromISO(`${data.due_date_license}`, { zone: 'UTC' }).toJSDate(),
+        healthCheckRoutine: DateTime.fromISO(`${data.health_check_routine}`, { zone: 'UTC' }).toJSDate(),
+        healthCheckActual: DateTime.fromISO(`${data.health_check_actual}`, { zone: 'UTC' }).toJSDate(),
         filePks: data.file_pks,
         fileBast: data.file_bast,
         isNotified: data.is_notified ? data.is_notified : true,
@@ -71,9 +71,9 @@ export default class LicenseService {
     await license.update({
       pks: data.pks,
       application: data.application,
-      dueDateLicense: DateTime.fromISO(`${data.due_date_license}`).toJSDate(),
-      healthCheckRoutine: DateTime.fromISO(`${data.health_check_routine}`).toJSDate(),
-      healthCheckActual: DateTime.fromISO(`${data.health_check_actual}`).toJSDate(),
+      dueDateLicense: DateTime.fromISO(`${data.due_date_license}`, { zone: 'UTC' }).toJSDate(),
+      healthCheckRoutine: DateTime.fromISO(`${data.health_check_routine}`, { zone: 'UTC' }).toJSDate(),
+      healthCheckActual: DateTime.fromISO(`${data.health_check_actual}`, { zone: 'UTC' }).toJSDate(),
       pksFileUrl: data.file_pks,
       bastFileUrl: data.file_bast,
     });
@@ -99,7 +99,7 @@ export default class LicenseService {
   licenseResponse(license: License): LicenseAttributes {
     // const pksFileBase64 = Buffer.from(license.pksFileId?.toString() || '').toString('base64');
     // const bastFileBase64 = Buffer.from(license.bastFileId?.toString() || '').toString('base64');
-    const dueDate = DateTime.fromISO(license.dueDateLicense.toString());
+    const dueDate = DateTime.fromISO(license.dueDateLicense.toString(), { zone: 'UTC' });
     const dayTodaytoDueDate = dueDate.diffNow('days').days;
     let colorStatus = 'green';
     if (dayTodaytoDueDate < 30) {

@@ -21,8 +21,8 @@ export class MsaV2Controller {
   async create(req: Request<any, any, CreateMsaV2Dto>, res: Response<ResponseApi<V2PksMsaAttributes>>) {
     const transaction = await Database.database.transaction();
     try {
-      const _dateStarted = DateTime.fromISO(req.body.date_started);
-      const _dateEnded = DateTime.fromISO(req.body.date_ended);
+      const _dateStarted = DateTime.fromISO(req.body.date_started, { zone: 'UTC' });
+      const _dateEnded = DateTime.fromISO(req.body.date_ended, { zone: 'UTC' });
 
       if (_dateStarted > _dateEnded) {
         throw new BadRequestException('Date started must be before date ended');
@@ -81,11 +81,7 @@ export class MsaV2Controller {
         {
           keySearch: 'dateStarted',
           operator: Op.lte,
-          keyValue: date_started_to
-            ? DateTime.fromISO(date_started_to as string)
-                .plus({ days: 1 })
-                .toISO()
-            : '',
+          keyValue: date_started_to ? DateTime.fromISO(date_started_to as string, { zone: 'UTC' }).toISO() : '',
           keyColumn: 'dateStarted',
         },
         {
@@ -97,11 +93,7 @@ export class MsaV2Controller {
         {
           keySearch: 'dateEnded',
           operator: Op.lte,
-          keyValue: date_ended_to
-            ? DateTime.fromISO(date_ended_to as string)
-                .plus({ days: 1 })
-                .toISO()
-            : '',
+          keyValue: date_ended_to ? DateTime.fromISO(date_ended_to as string, { zone: 'UTC' }).toISO() : '',
           keyColumn: 'dateEnded',
         },
         {

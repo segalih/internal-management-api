@@ -15,7 +15,9 @@ export class PksMsaV2Service {
         filePks: data.file_pks,
         fileBast: data.file_bast,
         dateStarted: data.date_started,
-        dateEnded: DateTime.fromISO(data.date_ended + 'T23:59:59.999+00:00').toFormat('yyyy-MM-dd HH:mm:ss'),
+        dateEnded: DateTime.fromISO(data.date_ended + 'T23:59:59.999+00:00', { zone: 'UTC' }).toFormat(
+          'yyyy-MM-dd HH:mm:ss'
+        ),
         peopleQuota: data.people_quota,
         budgetQuota: data.budget_quota,
       },

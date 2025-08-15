@@ -17,8 +17,8 @@ export default class MsaService implements IMsaService {
   async create(data: CreateMsaDto): Promise<Msa> {
     const msa = await Msa.create({
       pks: data.pks,
-      dateStarted: DateTime.fromISO(data.date_started).toJSDate(),
-      dateEnded: DateTime.fromISO(data.date_ended).toJSDate(),
+      dateStarted: DateTime.fromISO(data.date_started, { zone: 'UTC' }).toJSDate(),
+      dateEnded: DateTime.fromISO(data.date_ended, { zone: 'UTC' }).toJSDate(),
       peopleQuota: parseInt(data.people_quota, 10),
       budgetQuota: parseFloat(data.budget_quota.toString()),
     });
@@ -43,8 +43,8 @@ export default class MsaService implements IMsaService {
 
     await msa.update({
       pks: data.pks,
-      dateStarted: DateTime.fromISO(data.date_started).toJSDate(),
-      dateEnded: DateTime.fromISO(data.date_ended).toJSDate(),
+      dateStarted: DateTime.fromISO(data.date_started, { zone: 'UTC' }).toJSDate(),
+      dateEnded: DateTime.fromISO(data.date_ended, { zone: 'UTC' }).toJSDate(),
       peopleQuota: parseInt(data.people_quota, 10),
       budgetQuota: parseFloat(data.budget_quota.toString()),
       pksFileId: filePksId ? filePksId : msa.pksFileId,

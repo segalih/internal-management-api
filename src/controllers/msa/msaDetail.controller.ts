@@ -38,8 +38,8 @@ export class MsaDetailController {
         throw new BadRequestException(`Total people (${totalPeople}) exceeds the quota (${msa.peopleQuota})`);
       }
 
-      const dateStarted = DateTime.fromISO(msa.dateStarted.toString());
-      const dateEnded = DateTime.fromISO(msa.dateEnded.toString());
+      const dateStarted = DateTime.fromISO(msa.dateStarted.toString(), { zone: 'UTC' });
+      const dateEnded = DateTime.fromISO(msa.dateEnded.toString(), { zone: 'UTC' });
 
       const diffDate = dateEnded.diff(dateStarted, 'months');
 
@@ -82,8 +82,8 @@ export class MsaDetailController {
         throw new NotFoundException('MSA not found', { msaId });
       }
 
-      const dateStarted = DateTime.fromISO(msa.dateStarted.toString());
-      const dateEnded = DateTime.fromISO(msa.dateEnded.toString());
+      const dateStarted = DateTime.fromISO(msa.dateStarted.toString(), { zone: 'UTC' });
+      const dateEnded = DateTime.fromISO(msa.dateEnded.toString(), { zone: 'UTC' });
 
       const diffDate = dateEnded.diff(dateStarted, 'months');
 
