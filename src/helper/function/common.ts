@@ -17,5 +17,7 @@ export function rupiahFormatter(value: number): string {
 }
 
 export const getDiffMonths = (dateStarted: string, dateEnded: string): number => {
-  return Math.ceil(DateTime.fromISO(dateEnded).diff(DateTime.fromISO(dateStarted), 'months').months);
+  return Math.ceil(
+    DateTime.fromISO(dateEnded, { zone: 'UTC' }).diff(DateTime.fromISO(dateStarted, { zone: 'UTC' }), 'months').months
+  );
 };

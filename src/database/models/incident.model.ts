@@ -7,7 +7,7 @@ import Status from './status.model';
 
 export interface IncidentAttributes extends BaseModelAttributes {
   ticketNumber: string;
-  entryDate: string;
+  entryDate: Date;
   applicationId?: number;
   personInChargeId?: number;
   issueCode: string;
@@ -21,7 +21,7 @@ export interface IncidentAttributes extends BaseModelAttributes {
   rootCause?: string;
   note?: string;
   flag?: boolean;
-  deployDate?: string;
+  deployDate?: Date;
 
   application?: Application;
   personInCharge?: PersonInCharge;
@@ -34,7 +34,7 @@ export interface IncidentCreationAttributes extends Omit<IncidentAttributes, 'id
 
 class Incident extends BaseModel<IncidentAttributes, IncidentCreationAttributes> implements IncidentAttributes {
   public ticketNumber!: string;
-  public entryDate!: string;
+  public entryDate!: Date;
   public applicationId?: number;
   public personInChargeId?: number;
   public issueCode!: string;
@@ -49,7 +49,7 @@ class Incident extends BaseModel<IncidentAttributes, IncidentCreationAttributes>
   public note!: string;
   public flag!: boolean;
   public updateDate!: string;
-  public deployDate?: string;
+  public deployDate?: Date;
 
   public application?: Application;
   public personInCharge?: PersonInCharge;
@@ -70,10 +70,6 @@ Incident.init(
       type: DataTypes.DATE,
       field: 'entry_date',
       allowNull: false,
-      get() {
-        const value = this.getDataValue('entryDate');
-        return value ? new Date(value).toISOString() : null;
-      },
     },
     applicationId: {
       type: DataTypes.INTEGER,
@@ -134,13 +130,9 @@ Incident.init(
       defaultValue: true,
     },
     deployDate: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATE,
       field: 'deploy_date',
       allowNull: true,
-      get() {
-        const value = this.getDataValue('deployDate');
-        return value ? new Date(value).toISOString() : null;
-      },
     },
   },
   {
@@ -151,32 +143,29 @@ Incident.init(
 
 // Associations
 Incident.belongsTo(Application, {
-  foreignKey: 'application_id',
   as: 'application',
 });
 
 Incident.belongsTo(PersonInCharge, {
-  foreignKey: 'person_in_charge_id',
   as: 'personInCharge',
 });
 
 Incident.belongsTo(Status, {
-  foreignKey: 'status_id',
   as: 'status',
 });
 
 Application.hasMany(Incident, {
-  foreignKey: 'application_id',
+  foreignKey: 'applicationId',
   as: 'applicationIncidents',
 });
 
 PersonInCharge.hasMany(Incident, {
-  foreignKey: 'person_in_charge_id',
+  foreignKey: 'personInChargeId',
   as: 'personInChargeIncidents',
 });
 
 Status.hasMany(Incident, {
-  foreignKey: 'status_id',
+  foreignKey: 'statusId',
   as: 'statusIncidents',
 });
 

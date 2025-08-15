@@ -6,6 +6,7 @@ import MsaDetail from '@database/models/msa_detail.model';
 import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
 import MsaDetailService from './msaDetail.service';
 import { IMsaService } from './msa.type';
+import { DateTime } from 'luxon';
 
 export default class MsaService implements IMsaService {
   private msaDetailService: MsaDetailService;
@@ -16,8 +17,8 @@ export default class MsaService implements IMsaService {
   async create(data: CreateMsaDto): Promise<Msa> {
     const msa = await Msa.create({
       pks: data.pks,
-      dateStarted: data.date_started,
-      dateEnded: data.date_ended,
+      dateStarted: DateTime.fromISO(data.date_started, { zone: 'UTC' }).toJSDate(),
+      dateEnded: DateTime.fromISO(data.date_ended, { zone: 'UTC' }).toJSDate(),
       peopleQuota: parseInt(data.people_quota, 10),
       budgetQuota: parseFloat(data.budget_quota.toString()),
     });
@@ -42,8 +43,8 @@ export default class MsaService implements IMsaService {
 
     await msa.update({
       pks: data.pks,
-      dateStarted: data.date_started,
-      dateEnded: data.date_ended,
+      dateStarted: DateTime.fromISO(data.date_started, { zone: 'UTC' }).toJSDate(),
+      dateEnded: DateTime.fromISO(data.date_ended, { zone: 'UTC' }).toJSDate(),
       peopleQuota: parseInt(data.people_quota, 10),
       budgetQuota: parseFloat(data.budget_quota.toString()),
       pksFileId: filePksId ? filePksId : msa.pksFileId,

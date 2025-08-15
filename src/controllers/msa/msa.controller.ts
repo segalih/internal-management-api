@@ -44,8 +44,8 @@ export class MsaController {
         throw new BadRequestException(`Total people (${totalPeople}) exceeds the quota (${req.body.people_quota})`);
       }
 
-      const dateStarted = DateTime.fromISO(payload.date_started);
-      const dateEnded = DateTime.fromISO(payload.date_ended);
+      const dateStarted = DateTime.fromISO(payload.date_started, { zone: 'UTC' });
+      const dateEnded = DateTime.fromISO(payload.date_ended, { zone: 'UTC' });
 
       const diffDate = dateEnded.diff(dateStarted, 'months');
       const totalBudgetAllContract = Math.ceil(diffDate.months) * totalBudgetUsed;
@@ -122,8 +122,8 @@ export class MsaController {
         throw new BadRequestException(`Total people (${totalPeople}) exceeds the quota (${req.body.people_quota})`);
       }
 
-      const dateStarted = DateTime.fromISO(payload.date_started);
-      const dateEnded = DateTime.fromISO(payload.date_ended);
+      const dateStarted = DateTime.fromISO(payload.date_started, { zone: 'UTC' });
+      const dateEnded = DateTime.fromISO(payload.date_ended, { zone: 'UTC' });
 
       const diffDate = dateEnded.diff(dateStarted, 'months');
       const totalBudgetAllContract = Math.ceil(diffDate.months) * totalBudgetUsed;
@@ -197,7 +197,7 @@ export class MsaController {
         {
           keySearch: 'dateStarted',
           operator: Op.lte,
-          keyValue: date_started_to ? DateTime.fromISO(date_started_to as string).toISO() : '',
+          keyValue: date_started_to ? DateTime.fromISO(date_started_to as string, { zone: 'UTC' }).toISO() : '',
           keyColumn: 'dateStarted',
         },
         {
@@ -210,9 +210,8 @@ export class MsaController {
           keySearch: 'dateEnded',
           operator: Op.lte,
           keyValue: date_ended_to
-            ? DateTime.fromISO(date_ended_to as string)
-                .plus({ days: 1 })
-                .toISO()
+            ? DateTime.fromISO(date_ended_to as string, { zone: 'UTC' })
+              .toISO()
             : '',
           keyColumn: 'dateEnded',
         },

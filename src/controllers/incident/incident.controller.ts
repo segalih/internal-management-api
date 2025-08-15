@@ -29,7 +29,7 @@ export class IncidentController {
         { ...req.body, ticket_number: ticketNumber, entry_date: dateNow } as CreateIncidentDto,
         transaction
       );
-
+      console.log('SUKSES CREATE');
       const result = await this.incidentService.getById(incident.id, transaction);
 
       await transaction.commit();
@@ -107,24 +107,24 @@ export class IncidentController {
         {
           keySearch: 'entryDate',
           operator: Op.gte,
-          keyValue: entry_date_from ? DateTime.fromISO(entry_date_from as string).toISO() : '',
+          keyValue: entry_date_from ? DateTime.fromISO(entry_date_from as string, { zone: 'UTC' }).toISO() : '',
           keyColumn: 'entryDate',
         },
         {
           keySearch: 'entryDate',
           operator: Op.lte,
           keyValue: entry_date_to
-            ? DateTime.fromISO(entry_date_to as string)
+            ? DateTime.fromISO(entry_date_to as string, { zone: 'UTC' })
                 .plus({ days: 1 })
                 .toISO()
             : '',
           keyColumn: 'entryDate',
         },
         {
-          keySearch: 'applicationId',
+          keySearch: 'application_id',
           operator: Op.eq,
           keyValue: application_id ?? '',
-          keyColumn: 'applicationId',
+          keyColumn: 'application_id',
         },
         {
           keySearch: 'personInChargeId',

@@ -196,7 +196,7 @@ export const baseModelInit = {
 
 export const baseModelConfig = {
   sequelize: databaseInstance,
-  modelName: 'BaseModel',
+  // modelName: 'BaseModel',
   timestamps: true,
   paranoid: true,
   underscored: true,

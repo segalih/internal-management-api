@@ -27,9 +27,9 @@ export class LicenseCheckerJob {
     const factSets: FactSet[] = licensesUnder90Days.map((license) => {
       const _license = license;
       const dueDate = _license.dueDateLicense;
-      const dayRemaining = Math.ceil(DateTime.fromISO(dueDate.toString()).diffNow('days').days);
+      const dayRemaining = Math.ceil(DateTime.fromISO(dueDate.toString(), { zone: 'UTC' }).diffNow('days').days);
       const wordingRemaining = dayRemaining >= 0 ? `${dayRemaining} hari lagi` : `${-dayRemaining} hari yang lalu`;
-      const alertWording = `due date: ${DateTime.fromISO(dueDate.toString())
+      const alertWording = `due date: ${DateTime.fromISO(dueDate.toString(), { zone: 'UTC' })
         .setLocale('id')
         .toFormat('DDDD')}, ${wordingRemaining}`;
       return {

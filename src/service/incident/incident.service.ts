@@ -26,11 +26,11 @@ export class IncidentService {
     await this.applicationService.getById(data.application_id);
     await this.personInChargeService.getById(data.person_in_charge_id);
     await this.statusService.getById(data.status_id);
-
+    console.log(data);
     const incident = await Incident.create(
       {
         ticketNumber: data.ticket_number,
-        entryDate: data.entry_date,
+        entryDate: DateTime.fromISO(data.entry_date, { zone: 'UTC' }).toJSDate(),
         applicationId: data.application_id,
         personInChargeId: data.person_in_charge_id,
         issueCode: data.issue_code,
@@ -43,7 +43,7 @@ export class IncidentService {
         category: data.category,
         rootCause: data.root_cause,
         note: data.note,
-        deployDate: data.deploy_date,
+        deployDate: data.deploy_date ? DateTime.fromISO(data.deploy_date, { zone: 'UTC' }).toJSDate() : undefined,
       },
       {
         transaction,
@@ -136,7 +136,7 @@ export class IncidentService {
     await incident.update(
       {
         ticketNumber: data.ticket_number,
-        entryDate: data.entry_date,
+        entryDate: DateTime.fromISO(data.entry_date, { zone: 'UTC' }).toJSDate(),
         applicationId: data.application_id,
         personInChargeId: data.person_in_charge_id,
         issueCode: data.issue_code,
@@ -149,7 +149,8 @@ export class IncidentService {
         category: data.category,
         rootCause: data.root_cause,
         note: data.note,
-        deployDate: data.deploy_date,
+        deployDate: data.deploy_date ? DateTime.fromISO(data.deploy_date, { zone: 'UTC' }).toJSDate() : undefined,
+
       },
       { transaction }
     );

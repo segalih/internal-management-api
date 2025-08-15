@@ -6,11 +6,11 @@ import V2MsaHasRoles from '@database/models/v2/v2_msa_has_roles.model';
 import V2Msa from '@database/models/v2/v2_msa.model';
 
 export function validateMsaJoinDates(msa: CreateMsaDetailV2Dto[], dateStarted: string, dateEnded: string) {
-  const start = DateTime.fromISO(dateStarted);
-  const end = DateTime.fromISO(dateEnded);
+  const start = DateTime.fromISO(dateStarted, { zone: 'UTC' });
+  const end = DateTime.fromISO(dateEnded, { zone: 'UTC' });
 
   msa.forEach((item, index) => {
-    const joinDate = DateTime.fromISO(item.join_date as string).plus({ days: 1 });
+    const joinDate = DateTime.fromISO(item.join_date as string, { zone: 'UTC' }).plus({ days: 1 });
 
     if (joinDate < start || joinDate > end) {
       throw new BadRequestException(`Join date for msa ${index + 1} must be after date started and before date ended`);
