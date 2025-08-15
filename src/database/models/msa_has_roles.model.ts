@@ -44,7 +44,13 @@ MsaHasRole.init(
   }
 );
 
-MsaHasRole.belongsTo(Msa, { foreignKey: 'msaId', as: 'msaHaRole' });
-Msa.hasMany(MsaHasRole, { foreignKey: 'msaId', as: 'msaRoles' });
+MsaHasRole.belongsTo(Msa, {
+  // foreignKey: 'msaId',
+  as: 'msaHaRole',
+});
+Msa.hasMany(MsaHasRole, {
+  //  foreignKey: 'msaId',
+  as: 'msaRoles',
+});
 
 export default MsaHasRole;

@@ -29,7 +29,7 @@ export class IncidentController {
         { ...req.body, ticket_number: ticketNumber, entry_date: dateNow } as CreateIncidentDto,
         transaction
       );
-
+      console.log('SUKSES CREATE');
       const result = await this.incidentService.getById(incident.id, transaction);
 
       await transaction.commit();
@@ -121,10 +121,10 @@ export class IncidentController {
           keyColumn: 'entryDate',
         },
         {
-          keySearch: 'applicationId',
+          keySearch: 'application_id',
           operator: Op.eq,
           keyValue: application_id ?? '',
-          keyColumn: 'applicationId',
+          keyColumn: 'application_id',
         },
         {
           keySearch: 'personInChargeId',

@@ -98,12 +98,12 @@ License.init(
 );
 
 License.belongsTo(Document, {
-  foreignKey: 'pks_file_id',
+  // foreignKey: 'pks_file_id',
   as: 'pksFile',
 });
 
 License.belongsTo(Document, {
-  foreignKey: 'bast_file_id',
+  // foreignKey: 'bast_file_id',
   as: 'bastFile',
 });
 

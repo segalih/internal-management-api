@@ -9,8 +9,8 @@ export const MSA_CONSTANTS = {
 
 export interface MsaAttributes extends BaseModelAttributes {
   pks: string;
-  dateStarted: string;
-  dateEnded: string;
+  dateStarted: Date;
+  dateEnded: Date;
   peopleQuota: number;
   budgetQuota: number;
   pksFileId?: number;
@@ -24,8 +24,8 @@ export interface MsaCreationAttributes extends Omit<MsaAttributes, 'id'> {}
 
 class Msa extends BaseModel<MsaAttributes, MsaCreationAttributes> implements MsaAttributes {
   public pks!: string;
-  public dateStarted!: string;
-  public dateEnded!: string;
+  public dateStarted!: Date;
+  public dateEnded!: Date;
   public budgetQuota!: number;
   public peopleQuota!: number;
   public pksFileId?: number | undefined;
@@ -46,18 +46,10 @@ Msa.init(
     dateStarted: {
       type: DataTypes.DATE,
       allowNull: false,
-      get() {
-        const date = this.getDataValue('dateStarted');
-        return date ? new Date(date).toISOString() : null;
-      },
     },
     dateEnded: {
       type: DataTypes.DATE,
       allowNull: false,
-      get() {
-        const date = this.getDataValue('dateEnded');
-        return date ? new Date(date).toISOString() : null;
-      },
     },
     peopleQuota: {
       type: DataTypes.INTEGER,
@@ -83,22 +75,22 @@ Msa.init(
 );
 
 Document.hasOne(Msa, {
-  foreignKey: 'pks_file_id',
+  // foreignKey: 'pks_file_id',
   as: 'pksUsedIn',
 });
 
 Document.hasOne(Msa, {
-  foreignKey: 'bast_file_id',
+  // foreignKey: 'bast_file_id',
   as: 'bastUsedIn',
 });
 
 Msa.belongsTo(Document, {
-  foreignKey: 'pks_file_id',
+  // foreignKey: 'pks_file_id',
   as: 'pksFile',
 });
 
 Msa.belongsTo(Document, {
-  foreignKey: 'bast_file_id',
+  // foreignKey: 'bast_file_id',
   as: 'bastFile',
 });
 
