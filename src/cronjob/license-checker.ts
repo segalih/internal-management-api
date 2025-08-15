@@ -25,11 +25,11 @@ export class LicenseCheckerJob {
     });
 
     const factSets: FactSet[] = licensesUnder90Days.map((license) => {
-      const _license = license.toJSON();
+      const _license = license;
       const dueDate = _license.dueDateLicense;
-      const dayRemaining = Math.ceil(DateTime.fromISO(dueDate).diffNow('days').days);
+      const dayRemaining = Math.ceil(DateTime.fromISO(dueDate.toString()).diffNow('days').days);
       const wordingRemaining = dayRemaining >= 0 ? `${dayRemaining} hari lagi` : `${-dayRemaining} hari yang lalu`;
-      const alertWording = `due date: ${DateTime.fromISO(dueDate)
+      const alertWording = `due date: ${DateTime.fromISO(dueDate.toString())
         .setLocale('id')
         .toFormat('DDDD')}, ${wordingRemaining}`;
       return {
@@ -86,8 +86,16 @@ export class LicenseCheckerJob {
       ],
     };
     if (configConstants.IS_BSI_NETWORK) {
+      console.log('Sending message...');
       try {
-        await axios.post(configConstants.JOB_LICENSE_CHECKER_WEBHOOK_URL, payload);
+        console.log('Sending message...');
+        const result = await axios.post(
+          'https://prod-63.southeastasia.logic.azure.com:443/workflows/319ad59082014d80b8adf621b19f5615/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=GZufoLjUoXpLYbBukaokr8hrJQA0hY8ral5xUI5CWno',
+          payload
+        );
+        logger.info('Message sent successfully.');
+        console.log('Message sent successfully.');
+        console.log(result.data);
       } catch (error) {
         logger.error('Error sending message:', error);
       }

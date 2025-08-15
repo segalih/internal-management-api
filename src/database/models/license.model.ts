@@ -10,17 +10,17 @@ export interface LicenseAttributes extends BaseModelAttributes {
   pksFileId?: number | null;
   bastFileId?: number | null;
   application: string;
-  dueDateLicense: string;
-  healthCheckRoutine: string;
-  healthCheckActual: string;
+  dueDateLicense: Date;
+  healthCheckRoutine: Date;
+  healthCheckActual: Date;
   filePks: string;
   fileBast: string;
   isNotified: boolean;
 
   pksFileUrl?: string;
   bastFileUrl?: string;
-  pks_file_id?: number;
-  bast_file_id?: number;
+  // pks_file_id?: number;
+  // bast_file_id?: number;
   status?: string;
 }
 
@@ -31,9 +31,9 @@ class License extends BaseModel<LicenseAttributes, LicenseCreationAttributes> im
   public pksFileId?: number;
   public bastFileId?: number;
   public application!: string;
-  public dueDateLicense!: string;
-  public healthCheckRoutine!: string;
-  public healthCheckActual!: string;
+  public dueDateLicense!: Date;
+  public healthCheckRoutine!: Date;
+  public healthCheckActual!: Date;
   public filePks!: string;
   public fileBast!: string;
   public isNotified!: boolean;
@@ -67,28 +67,16 @@ License.init(
       allowNull: false,
     },
     dueDateLicense: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATE,
       allowNull: true,
-      get() {
-        const value = this.getDataValue('dueDateLicense');
-        return value ? new Date(value).toISOString() : null;
-      },
     },
     healthCheckRoutine: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATE,
       allowNull: true,
-      get() {
-        const value = this.getDataValue('healthCheckRoutine');
-        return value ? new Date(value).toISOString() : null;
-      },
     },
     healthCheckActual: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATE,
       allowNull: true,
-      get() {
-        const value = this.getDataValue('healthCheckActual');
-        return value ? new Date(value).toISOString() : null;
-      },
     },
     filePks: {
       type: DataTypes.STRING,

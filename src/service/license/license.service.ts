@@ -20,9 +20,9 @@ export default class LicenseService {
       {
         pks: data.pks,
         application: data.application,
-        dueDateLicense: data.due_date_license,
-        healthCheckRoutine: data.health_check_routine,
-        healthCheckActual: data.health_check_actual,
+        dueDateLicense: DateTime.fromISO(`${data.due_date_license}`).toJSDate(),
+        healthCheckRoutine: DateTime.fromISO(`${data.health_check_routine}`).toJSDate(),
+        healthCheckActual: DateTime.fromISO(`${data.health_check_actual}`).toJSDate(),
         filePks: data.file_pks,
         fileBast: data.file_bast,
         isNotified: data.is_notified ? data.is_notified : true,
@@ -71,9 +71,9 @@ export default class LicenseService {
     await license.update({
       pks: data.pks,
       application: data.application,
-      dueDateLicense: data.due_date_license,
-      healthCheckRoutine: data.health_check_routine,
-      healthCheckActual: data.health_check_actual,
+      dueDateLicense: DateTime.fromISO(`${data.due_date_license}`).toJSDate(),
+      healthCheckRoutine: DateTime.fromISO(`${data.health_check_routine}`).toJSDate(),
+      healthCheckActual: DateTime.fromISO(`${data.health_check_actual}`).toJSDate(),
       pksFileUrl: data.file_pks,
       bastFileUrl: data.file_bast,
     });
