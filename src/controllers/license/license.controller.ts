@@ -99,11 +99,11 @@ export class LicenseController {
     try {
       const id = req.params.id;
 
-      const files = req.files as { [fieldname: string]: Express.Multer.File[] };
       const payload = req.body as CreateLisenceDto;
+      // const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
-      const filePKS = files['file_pks']?.[0];
-      const fileBAST = files['file_bast']?.[0];
+      // const filePKS = files['file_pks']?.[0];
+      // const fileBAST = files['file_bast']?.[0];
 
       if (!isStringNumber(id)) {
         throw new BadRequestException('Invalid Url');
@@ -115,23 +115,23 @@ export class LicenseController {
 
       let filePksId: number | undefined;
       let fileBastId: number | undefined;
-      if (filePKS) {
-        const pksFile = await this.documentService.saveDocument({
-          file_type: 'file_pks_lisence',
-          filename: filePKS.filename,
-          path: LISENCE_CONSTANTS.BASE_PATH + license.id + '/' + filePKS.filename,
-        });
-        filePksId = pksFile.id;
-      }
+      // if (filePKS) {
+      //   const pksFile = await this.documentService.saveDocument({
+      //     file_type: 'file_pks_lisence',
+      //     filename: filePKS.filename,
+      //     path: LISENCE_CONSTANTS.BASE_PATH + license.id + '/' + filePKS.filename,
+      //   });
+      //   filePksId = pksFile.id;
+      // }
 
-      if (fileBAST) {
-        const bastFile = await this.documentService.saveDocument({
-          file_type: 'file_bast_lisence',
-          filename: fileBAST.filename,
-          path: LISENCE_CONSTANTS.BASE_PATH + license.id + '/' + fileBAST.filename,
-        });
-        fileBastId = bastFile.id;
-      }
+      // if (fileBAST) {
+      //   const bastFile = await this.documentService.saveDocument({
+      //     file_type: 'file_bast_lisence',
+      //     filename: fileBAST.filename,
+      //     path: LISENCE_CONSTANTS.BASE_PATH + license.id + '/' + fileBAST.filename,
+      //   });
+      //   fileBastId = bastFile.id;
+      // }
 
       const updatedLicense = await this.licenseService.updateById(licenseId, payload, filePksId, fileBastId);
       res.status(HttpStatusCode.Ok).json({

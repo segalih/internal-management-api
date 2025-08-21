@@ -76,6 +76,8 @@ export default class LicenseService {
       healthCheckActual: DateTime.fromISO(`${data.health_check_actual}`, { zone: 'UTC' }).toJSDate(),
       pksFileUrl: data.file_pks,
       bastFileUrl: data.file_bast,
+      filePks: data.file_pks,
+      fileBast: data.file_bast,
     });
     return license;
   }
