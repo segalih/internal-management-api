@@ -1,4 +1,4 @@
-import { IsDateString, IsNumber, IsOptional, IsPositive, IsString, Matches } from 'class-validator';
+import { IsBoolean, IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export default class CreateMsaDetailV2Dto {
   @IsNumber()
@@ -23,4 +23,8 @@ export default class CreateMsaDetailV2Dto {
   @IsDateString()
   @IsOptional()
   leave_date?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  is_active!: boolean;
 }

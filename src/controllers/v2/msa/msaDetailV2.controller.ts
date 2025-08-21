@@ -1,6 +1,6 @@
 import { CreateBulkMsaV2Dto } from '@common/dto/v2/msaV2/CreateBulkMsaV2Dto';
-import CreateMsaDetailV2Dto from '@common/dto/v2/msaV2/CreateMsaDetailV2Dto';
 import Database from '@config/db';
+import { V2MsaAttributes } from '@database/models/v2/v2_msa.model';
 import { BadRequestException } from '@helper/Error/BadRequestException/BadRequestException';
 import { ProcessError } from '@helper/Error/errorHandler';
 import { isStringNumber } from '@helper/function/common';
@@ -21,7 +21,7 @@ export class MsaDetailV2Controller {
 
   async create(
     req: Request<any, any, CreateBulkMsaV2Dto>,
-    res: Response<ResponseApi<CreateBulkMsaV2Dto>>
+    res: Response<ResponseApi<V2MsaAttributes[]>>
   ): Promise<void> {
     const transaction = await Database.database.transaction();
 
@@ -45,12 +45,13 @@ export class MsaDetailV2Controller {
       validateBudgetQuota(msa, mappedRoles, dateEnded, budgetQuota);
 
       await Promise.all(msa.map((_msa) => this.msaService.create(msaId, _msa, transaction)));
+      const result = await this.msaService.getByPksId(msaId);
 
       await transaction.commit();
       res.status(HttpStatusCode.Created).json({
         statusCode: HttpStatusCode.Created,
         message: 'Success',
-        data: req.body,
+        data: result,
       });
     } catch (error) {
       await transaction.rollback();
