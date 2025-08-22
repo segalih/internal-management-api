@@ -4,6 +4,7 @@ import V2Msa, { V2MsaAttributes } from '@database/models/v2/v2_msa.model';
 import V2MsaHasRoles from '@database/models/v2/v2_msa_has_roles.model';
 import { UnprocessableEntityException } from '@helper/Error/UnprocessableEntity/UnprocessableEntityException';
 import { msaV2resource } from '@resource/v2/pks-msa/msa.resource';
+import { DateTime } from 'luxon';
 
 export class MsaV2Service {
   async create(pksMsaId: number, data: CreateMsaDetailV2Dto, transaction?: Transaction): Promise<V2Msa> {
@@ -14,8 +15,10 @@ export class MsaV2Service {
         project: data.project,
         roleId: data.role_id,
         groupPosition: data.group_position,
-        joinDate: data.join_date,
-        leaveDate: data.leave_date,
+        joinDate: DateTime.fromISO(data.join_date as string, { zone: 'UTC' }).toJSDate()!,
+        leaveDate: data.leave_date
+          ? DateTime.fromISO(data.leave_date + 'T23:59:59.999+00:00', { zone: 'UTC' }).toJSDate()!
+          : undefined,
         isActive: data.leave_date ? false : true,
       },
       {

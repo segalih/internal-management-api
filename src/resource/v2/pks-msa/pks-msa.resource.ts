@@ -8,7 +8,9 @@ export const pksMsaV2resource = (pksMsa: V2PksMsa): V2PksMsaAttributes => {
   const msaDetails = pksMsa.msas ?? [];
   const roles = pksMsa.roles ?? [];
 
-  const monthsPerMsa = msaDetails.map((item) => getDiffMonths(item.joinDate!, item.leaveDate ?? pksMsa.dateEnded));
+  const monthsPerMsa = msaDetails.map((item) =>
+    getDiffMonths(item.joinDate?.toString()!, item.leaveDate?.toString() ?? pksMsa.dateEnded.toString())
+  );
   const mappedRoles = mapRolesToMsa(msaDetails, roles);
   const budgets = mappedRoles.map((role, i) => role.rate * monthsPerMsa[i]);
   const totalBudget = budgets.reduce((acc, cur) => acc + (cur || 0), 0);

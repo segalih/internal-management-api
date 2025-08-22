@@ -39,10 +39,10 @@ export class MsaDetailV2Controller {
       const pks = await this.pksMsaService.getById(msaId, transaction);
       const { budgetQuota, dateStarted, dateEnded, peopleQuota, roles = [] } = pks;
 
-      validateMsaJoinDates(msa, dateStarted, dateEnded);
+      validateMsaJoinDates(msa, dateStarted.toString(), dateEnded.toString());
       validatePeopleQuota(msa.length, peopleQuota);
       const mappedRoles = mapRolesToMsa(msa, roles);
-      validateBudgetQuota(msa, mappedRoles, dateEnded, budgetQuota);
+      validateBudgetQuota(msa, mappedRoles, dateEnded.toString(), budgetQuota);
 
       await Promise.all(msa.map((_msa) => this.msaService.create(msaId, _msa, transaction)));
       const result = await this.msaService.getByPksId(msaId);
