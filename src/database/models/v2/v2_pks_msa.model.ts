@@ -8,8 +8,8 @@ export interface V2PksMsaAttributes extends BaseModelAttributes {
   pks: string;
   filePks?: string;
   fileBast?: string;
-  dateStarted: string;
-  dateEnded: string;
+  dateStarted: Date;
+  dateEnded: Date;
   peopleQuota: number;
   budgetQuota: number;
 
@@ -27,8 +27,8 @@ export class V2PksMsa extends BaseModel<V2PksMsaAttributes, V2PksMsaCreationAttr
   public pks!: string;
   public filePks?: string;
   public fileBast?: string;
-  public dateStarted!: string;
-  public dateEnded!: string;
+  public dateStarted!: Date;
+  public dateEnded!: Date;
   public peopleQuota!: number;
   public budgetQuota!: number;
 
@@ -67,10 +67,6 @@ V2PksMsa.init(
       field: 'date_ended',
       type: DataTypes.DATE,
       allowNull: false,
-      get() {
-        const date = this.getDataValue('dateEnded');
-        return date ? new Date(date).toISOString() : null;
-      },
     },
     peopleQuota: {
       field: 'people_quota',
@@ -81,10 +77,6 @@ V2PksMsa.init(
       field: 'budget_quota',
       type: DataTypes.DECIMAL(14, 2),
       allowNull: false,
-      get() {
-        const budgetQuota = this.getDataValue('budgetQuota');
-        return budgetQuota ? parseFloat(budgetQuota.toString()) : null;
-      },
     },
   },
   {

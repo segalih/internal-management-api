@@ -10,8 +10,9 @@ export interface V2MsaAttributes extends BaseModelAttributes {
   name: string;
   project: string;
   groupPosition: string;
-  joinDate?: string;
-  leaveDate?: string;
+  joinDate?: Date;
+  leaveDate?: Date;
+  isActive: boolean;
 
   role?: V2MsaHasRoles | V2MsaHasRolesAttributes;
 }
@@ -24,8 +25,9 @@ export class V2Msa extends BaseModel<V2MsaAttributes, V2MsaCreationAttributes> i
   public name!: string;
   public project!: string;
   public groupPosition!: string;
-  public joinDate?: string;
-  public leaveDate?: string;
+  public joinDate?: Date;
+  public leaveDate?: Date;
+  public isActive!: boolean;
 
   public role?: V2MsaHasRoles;
 }
@@ -66,19 +68,16 @@ V2Msa.init(
       field: 'join_date',
       type: DataTypes.DATE,
       allowNull: true,
-      get() {
-        const date = this.getDataValue('joinDate');
-        return date ? new Date(date).toISOString() : null;
-      },
     },
     leaveDate: {
       field: 'leave_date',
       type: DataTypes.DATE,
       allowNull: true,
-      get() {
-        const date = this.getDataValue('leaveDate');
-        return date ? new Date(date).toISOString() : null;
-      },
+    },
+    isActive: {
+      field: 'is_active',
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
     },
   },
   {
