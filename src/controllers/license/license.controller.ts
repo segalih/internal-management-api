@@ -12,14 +12,17 @@ import { isStringNumber } from '@helper/function/common';
 import { ResponseApi, ResponseApiWithPagination } from '@helper/interface/response.interface';
 import { DocumentService } from '@service/document/document.service';
 import LicenseService from '@service/license/license.service';
+import { LicenseHealcheckService } from '@service/license/licenseHealtheck.service';
 
 export class LicenseController {
   private licenseService: LicenseService;
   private documentService: DocumentService;
+  private licenseHealthcheckService: LicenseHealcheckService;
 
   constructor() {
     this.licenseService = new LicenseService();
     this.documentService = new DocumentService();
+    this.licenseHealthcheckService = new LicenseHealcheckService();
   }
 
   async create(req: Request, res: Response<ResponseApi<LicenseAttributes>>) {
@@ -34,7 +37,14 @@ export class LicenseController {
       //   throw new BadRequestException('Both file_pks and file_bast are required');
       // }
       const license = await this.licenseService.create(payload);
-
+      if (payload.healthchecks && payload.healthchecks?.length > 0) {
+        await Promise.all(
+          payload.healthchecks.map(async (healthcheck) => {
+            await this.licenseHealthcheckService.create(license.id, healthcheck);
+          })
+        );
+      }
+      const result = await this.licenseService.getById(license.id);
       // const pksFile = await this.documentService.saveDocument({
       //   file_type: 'file_pks_lisence',
       //   filename: filePKS.filename,
@@ -54,7 +64,7 @@ export class LicenseController {
       res.status(HttpStatusCode.Created).json({
         message: 'License created successfully',
         statusCode: HttpStatusCode.Created,
-        data: this.licenseService.licenseResponse(license),
+        data: this.licenseService.licenseResponse(result),
       });
     } catch (err) {
       const files = req.files as { [fieldname: string]: Express.Multer.File[] };
@@ -71,6 +81,7 @@ export class LicenseController {
     try {
       const id = parseInt(req.params.id, 10);
       const license = await this.licenseService.getById(id);
+
       res.status(HttpStatusCode.Ok).json({
         message: 'License retrieved successfully',
         statusCode: HttpStatusCode.Ok,

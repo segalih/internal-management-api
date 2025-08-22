@@ -1,14 +1,17 @@
-import { DateTime } from 'luxon';
 import { CreateLisenceDto } from '@common/dto/lisence/CreateLisenceDto';
 import { PaginationResult, SearchCondition } from '@database/models/base.model';
 import License, { LicenseAttributes } from '@database/models/license.model';
+import LicenseHealthcheck from '@database/models/license_healthcheck.model';
 import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
+import { DateTime } from 'luxon';
 
 export default class LicenseService {
   constructor() {}
 
   async getById(id: number): Promise<License> {
-    const license = await License.findByPk(id, {});
+    const license = await License.findByPk(id, {
+      include: [{ model: LicenseHealthcheck, as: 'healthchecks' }],
+    });
     if (!license) {
       throw new NotFoundException('License not found');
     }
@@ -21,8 +24,8 @@ export default class LicenseService {
         pks: data.pks,
         application: data.application,
         dueDateLicense: DateTime.fromISO(`${data.due_date_license}`, { zone: 'UTC' }).toJSDate(),
-        healthCheckRoutine: DateTime.fromISO(`${data.health_check_routine}`, { zone: 'UTC' }).toJSDate(),
-        healthCheckActual: DateTime.fromISO(`${data.health_check_actual}`, { zone: 'UTC' }).toJSDate(),
+        // healthCheckRoutine: DateTime.fromISO(`${data.health_check_routine}`, { zone: 'UTC' }).toJSDate(),
+        // healthCheckActual: DateTime.fromISO(`${data.health_check_actual}`, { zone: 'UTC' }).toJSDate(),
         filePks: data.file_pks,
         fileBast: data.file_bast,
         isNotified: data.is_notified ? data.is_notified : true,
@@ -30,16 +33,7 @@ export default class LicenseService {
         bastFileId: null,
       },
       {
-        fields: [
-          'pks',
-          'application',
-          'dueDateLicense',
-          'healthCheckRoutine',
-          'healthCheckActual',
-          'filePks',
-          'fileBast',
-          'isNotified',
-        ],
+        fields: ['pks', 'application', 'dueDateLicense', 'filePks', 'fileBast', 'isNotified'],
       }
     );
     license.save();
@@ -72,8 +66,8 @@ export default class LicenseService {
       pks: data.pks,
       application: data.application,
       dueDateLicense: DateTime.fromISO(`${data.due_date_license}`, { zone: 'UTC' }).toJSDate(),
-      healthCheckRoutine: DateTime.fromISO(`${data.health_check_routine}`, { zone: 'UTC' }).toJSDate(),
-      healthCheckActual: DateTime.fromISO(`${data.health_check_actual}`, { zone: 'UTC' }).toJSDate(),
+      // healthCheckRoutine: DateTime.fromISO(`${data.health_check_routine}`, { zone: 'UTC' }).toJSDate(),
+      // healthCheckActual: DateTime.fromISO(`${data.health_check_actual}`, { zone: 'UTC' }).toJSDate(),
       pksFileUrl: data.file_pks,
       bastFileUrl: data.file_bast,
       filePks: data.file_pks,
@@ -93,6 +87,12 @@ export default class LicenseService {
       page: input.page,
       searchConditions: input.searchConditions || [],
       sortOptions: input.sortOptions,
+      includeConditions: [
+        {
+          model: LicenseHealthcheck,
+          as: 'healthchecks',
+        },
+      ],
     });
 
     return results;
@@ -116,6 +116,7 @@ export default class LicenseService {
       // pks_file_id: undefined,
       // bast_file_id: undefined,
       status: colorStatus,
+      healthchecks: license.healthchecks,
     };
   }
 }

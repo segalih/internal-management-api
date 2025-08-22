@@ -1,3 +1,4 @@
+import { BadRequestException } from '@helper/Error/BadRequestException/BadRequestException';
 import _ from 'lodash';
 import { DateTime } from 'luxon';
 
@@ -22,4 +23,13 @@ export const getDiffMonths = (dateStarted: string, dateEnded: string): number =>
     'months'
   );
   return Math.ceil(diff.months);
+};
+
+export const stringToDate = (date: string): Date => DateTime.fromISO(date, { zone: 'UTC' }).toJSDate();
+export const dateToIsoString = (date: Date): string => {
+  const result = DateTime.fromJSDate(date).toISO();
+  if (!result) {
+    throw new BadRequestException('Invalid date format');
+  }
+  return result;
 };
