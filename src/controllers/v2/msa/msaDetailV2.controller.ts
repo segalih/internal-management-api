@@ -10,6 +10,7 @@ import { PksMsaV2Service } from '@service/v2/msa/PksMsaV2.service';
 import { MsaV2Service } from '@service/v2/msa/msaDetailV2.service';
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
+import { DateTime } from 'luxon';
 export class MsaDetailV2Controller {
   private pksMsaService: PksMsaV2Service;
   private msaService: MsaV2Service;
@@ -39,10 +40,10 @@ export class MsaDetailV2Controller {
       const pks = await this.pksMsaService.getById(msaId, transaction);
       const { budgetQuota, dateStarted, dateEnded, peopleQuota, roles = [] } = pks;
 
-      validateMsaJoinDates(msa, dateStarted.toString(), dateEnded.toString());
+      validateMsaJoinDates(msa, DateTime.fromJSDate(dateStarted).toISO()!, DateTime.fromJSDate(dateEnded).toISO()!);
       validatePeopleQuota(msa.length, peopleQuota);
       const mappedRoles = mapRolesToMsa(msa, roles);
-      validateBudgetQuota(msa, mappedRoles, dateEnded.toString(), budgetQuota);
+      validateBudgetQuota(msa, mappedRoles, DateTime.fromJSDate(dateEnded).toISO()!, budgetQuota);
 
       await Promise.all(msa.map((_msa) => this.msaService.create(msaId, _msa, transaction)));
       const result = await this.msaService.getByPksId(msaId);

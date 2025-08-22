@@ -3,16 +3,22 @@ import { getDiffMonths } from '@helper/function/common';
 import { msaV2resource } from './msa.resource';
 import { roleV2resource } from './role.resource';
 import { mapRolesToMsa } from '@helper/function/v2';
+import { DateTime } from 'luxon';
 
 export const pksMsaV2resource = (pksMsa: V2PksMsa): V2PksMsaAttributes => {
   const msaDetails = pksMsa.msas ?? [];
   const roles = pksMsa.roles ?? [];
 
   const monthsPerMsa = msaDetails.map((item) =>
-    getDiffMonths(item.joinDate?.toString()!, item.leaveDate?.toString() ?? pksMsa.dateEnded.toString())
+    getDiffMonths(
+      DateTime.fromJSDate(item.joinDate!).toISO()!,
+      item.leaveDate ? DateTime.fromJSDate(item.leaveDate).toISO()! : DateTime.fromJSDate(new Date()).toISO()!
+    )
   );
   const mappedRoles = mapRolesToMsa(msaDetails, roles);
-  const budgets = mappedRoles.map((role, i) => role.rate * monthsPerMsa[i]);
+  const budgets = mappedRoles.map((role, i) => {
+    return role.rate * monthsPerMsa[i];
+  });
   const totalBudget = budgets.reduce((acc, cur) => acc + (cur || 0), 0);
 
   const remainingBudget = pksMsa.budgetQuota - totalBudget;
