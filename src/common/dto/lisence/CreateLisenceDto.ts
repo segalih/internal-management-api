@@ -1,4 +1,15 @@
-import { IsBoolean, IsDate, IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsDate,
+  IsDateString,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { CreateHealthcheckDto } from './CreateHealthcheckDto';
+import { Type } from 'class-transformer';
 
 export class CreateLisenceDto {
   @IsString()
@@ -20,12 +31,6 @@ export class CreateLisenceDto {
   @IsDateString()
   due_date_license!: string;
 
-  @IsDateString()
-  health_check_routine!: string;
-
-  @IsDateString()
-  health_check_actual!: string;
-
   @IsString()
   @IsNotEmpty()
   file_pks!: string;
@@ -37,4 +42,9 @@ export class CreateLisenceDto {
   @IsBoolean()
   @IsOptional()
   is_notified!: boolean;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateHealthcheckDto)
+  healthchecks?: CreateHealthcheckDto[];
 }

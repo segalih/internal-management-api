@@ -77,6 +77,10 @@ V2PksMsa.init(
       field: 'budget_quota',
       type: DataTypes.DECIMAL(14, 2),
       allowNull: false,
+      get() {
+        const rate = this.getDataValue('budgetQuota');
+        return rate ? parseFloat(rate.toString()) : null;
+      },
     },
   },
   {

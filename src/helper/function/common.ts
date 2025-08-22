@@ -1,3 +1,4 @@
+import { BadRequestException } from '@helper/Error/BadRequestException/BadRequestException';
 import _ from 'lodash';
 import { DateTime } from 'luxon';
 
@@ -17,7 +18,18 @@ export function rupiahFormatter(value: number): string {
 }
 
 export const getDiffMonths = (dateStarted: string, dateEnded: string): number => {
-  return Math.ceil(
-    DateTime.fromISO(dateEnded, { zone: 'UTC' }).diff(DateTime.fromISO(dateStarted, { zone: 'UTC' }), 'months').months
+  const diff = DateTime.fromISO(dateEnded, { zone: 'UTC' }).diff(
+    DateTime.fromISO(dateStarted, { zone: 'UTC' }),
+    'months'
   );
+  return Math.ceil(diff.months);
+};
+
+export const stringToDate = (date: string): Date => DateTime.fromISO(date, { zone: 'UTC' }).toJSDate();
+export const dateToIsoString = (date: Date): string => {
+  const result = DateTime.fromJSDate(date).toISO();
+  if (!result) {
+    throw new BadRequestException('Invalid date format');
+  }
+  return result;
 };

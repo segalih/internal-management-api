@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from './base.model';
 import Document from './document.model';
+import LicenseHealthcheck from './license_healthcheck.model';
 
 export const LISENCE_CONSTANTS = {
   BASE_PATH: '/uploads/lisence/',
@@ -11,8 +12,8 @@ export interface LicenseAttributes extends BaseModelAttributes {
   bastFileId?: number | null;
   application: string;
   dueDateLicense: Date;
-  healthCheckRoutine: Date;
-  healthCheckActual: Date;
+  // healthCheckRoutine: Date;
+  // healthCheckActual: Date;
   filePks: string;
   fileBast: string;
   isNotified: boolean;
@@ -22,6 +23,7 @@ export interface LicenseAttributes extends BaseModelAttributes {
   // pks_file_id?: number;
   // bast_file_id?: number;
   status?: string;
+  healthchecks?: LicenseHealthcheck[];
 }
 
 export interface LicenseCreationAttributes extends Omit<LicenseAttributes, 'id'> {}
@@ -32,11 +34,12 @@ class License extends BaseModel<LicenseAttributes, LicenseCreationAttributes> im
   public bastFileId?: number;
   public application!: string;
   public dueDateLicense!: Date;
-  public healthCheckRoutine!: Date;
-  public healthCheckActual!: Date;
+  // public healthCheckRoutine!: Date;
+  // public healthCheckActual!: Date;
   public filePks!: string;
   public fileBast!: string;
   public isNotified!: boolean;
+  public healthchecks?: LicenseHealthcheck[];
 }
 
 License.init(
@@ -70,14 +73,14 @@ License.init(
       type: DataTypes.DATE,
       allowNull: true,
     },
-    healthCheckRoutine: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    healthCheckActual: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
+    // healthCheckRoutine: {
+    //   type: DataTypes.DATE,
+    //   allowNull: true,
+    // },
+    // healthCheckActual: {
+    //   type: DataTypes.DATE,
+    //   allowNull: true,
+    // },
     filePks: {
       type: DataTypes.STRING,
       allowNull: false,

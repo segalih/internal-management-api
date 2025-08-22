@@ -26,7 +26,6 @@ export class IncidentService {
     await this.applicationService.getById(data.application_id);
     await this.personInChargeService.getById(data.person_in_charge_id);
     await this.statusService.getById(data.status_id);
-    console.log(data);
     const incident = await Incident.create(
       {
         ticketNumber: data.ticket_number,

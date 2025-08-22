@@ -29,7 +29,6 @@ export class IncidentController {
         { ...req.body, ticket_number: ticketNumber, entry_date: dateNow } as CreateIncidentDto,
         transaction
       );
-      console.log('SUKSES CREATE');
       const result = await this.incidentService.getById(incident.id, transaction);
 
       await transaction.commit();
