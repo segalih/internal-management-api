@@ -23,6 +23,7 @@ class Database {
   minPool: number;
   dialect: Dialect;
   database: sequelize.Sequelize;
+  logging: (...msg: any[]) => void;
   private static instance: Database | null = null; // Singleton instance
 
   private constructor() {
@@ -34,12 +35,13 @@ class Database {
     this.maxPool = configConstants.DB_MAX_POOL;
     this.minPool = configConstants.DB_MIN_POOL;
     this.dialect = config.dialect || 'mysql'; // Default to 'mysql' if not specified
+    this.logging = (...msg) => console.log('SQL Query:', msg[0]);
 
     this.database = new Sequelize(this.db, this.user, this.password, {
       host: this.host,
       dialect: this.dialect,
       port: this.port,
-      logging: console.log,
+      logging: this.logging,
       pool: {
         max: this.maxPool,
         min: this.minPool,
