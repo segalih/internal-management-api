@@ -7,9 +7,7 @@ export function isStringNumber(value: any): boolean {
 }
 
 export function rupiahFormatter(value: number): string {
-  if (value === null || value === undefined) {
-    return '';
-  }
+
   return new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
