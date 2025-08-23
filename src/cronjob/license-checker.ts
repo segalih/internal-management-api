@@ -1,6 +1,6 @@
-import configConstants from '@config/constants';
-import License from '@database/models/license.model';
-import logger from '@helper/logger';
+import configConstants from '../config/constants';
+import License from '../database/models/license.model';
+import logger from '../helper/logger';
 import axios from 'axios';
 import { DateTime } from 'luxon';
 import { Op } from 'sequelize';
@@ -18,7 +18,7 @@ export class LicenseCheckerJob {
     const licensesUnder90Days = await License.findAll({
       where: {
         dueDateLicense: {
-          [Op.lte]: to90Days.toISODate(),
+          [Op.lte]: to90Days.toJSDate(),
         },
         isNotified: true,
       },
@@ -27,9 +27,9 @@ export class LicenseCheckerJob {
     const factSets: FactSet[] = licensesUnder90Days.map((license) => {
       const _license = license;
       const dueDate = _license.dueDateLicense;
-      const dayRemaining = Math.ceil(DateTime.fromISO(dueDate.toString(), { zone: 'UTC' }).diffNow('days').days);
+      const dayRemaining = Math.ceil(DateTime.fromJSDate(dueDate).diffNow('days').days);
       const wordingRemaining = dayRemaining >= 0 ? `${dayRemaining} hari lagi` : `${-dayRemaining} hari yang lalu`;
-      const alertWording = `due date: ${DateTime.fromISO(dueDate.toString(), { zone: 'UTC' })
+      const alertWording = `due date: ${DateTime.fromJSDate(dueDate, { zone: 'UTC' })
         .setLocale('id')
         .toFormat('DDDD')}, ${wordingRemaining}`;
       return {
@@ -86,7 +86,6 @@ export class LicenseCheckerJob {
       ],
     };
     if (configConstants.IS_BSI_NETWORK) {
-      console.log('Sending message...');
       try {
         console.log('Sending message...');
         const result = await axios.post(

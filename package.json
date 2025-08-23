@@ -15,7 +15,8 @@
     "start:prod": "npm run build && node dist/index.js",
     "dev": "npx ts-node -r tsconfig-paths/register src/index.ts",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --forceExit --coverage --verbose",
-    "watch": "npm run build && npx concurrently --kill-others \"tsc -w\" \"nodemon -r tsconfig-paths/register dist/index.js\""
+    "watch": "npm run build && npx concurrently --kill-others \"tsc -w\" \"nodemon -r tsconfig-paths/register dist/index.js\"",
+    "cronjob": "node dist/cronjob/index.js"
   },
   "keywords": [],
   "author": "",

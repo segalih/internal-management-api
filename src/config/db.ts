@@ -3,7 +3,7 @@ import sequelize, { Dialect, Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 import configConstants from './constants';
 import path from 'path';
-import logger from '@helper/logger';
+import logger from '../helper/logger';
 
 dotenv.config({
   path: path.resolve(__dirname, '../../.env'),
