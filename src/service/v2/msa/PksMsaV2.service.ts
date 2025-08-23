@@ -18,6 +18,7 @@ export class PksMsaV2Service {
         dateEnded: DateTime.fromISO(data.date_ended + 'T23:59:59.999+00:00', { zone: 'UTC' }).toJSDate(),
         peopleQuota: data.people_quota,
         budgetQuota: data.budget_quota,
+        thresholdAlert: data.threshold_alert ? data.threshold_alert : 20,
       },
       { transaction }
     );

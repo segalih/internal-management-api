@@ -13,6 +13,7 @@ export const roleV2resource = (role: V2MsaHasRoles): V2MsaHasRolesAttributes => 
       dateStarted: role.pksMsa.dateStarted,
       dateEnded: role.pksMsa.dateEnded,
       peopleQuota: role.pksMsa.peopleQuota,
+      thresholdAlert: role.pksMsa.thresholdAlert,
       budgetQuota: role.pksMsa.budgetQuota,
       msaDetails: role.pksMsa.pksMsa?.map((msa) => msaV2resource(msa)),
     };

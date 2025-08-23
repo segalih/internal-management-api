@@ -27,4 +27,8 @@ export class CreateMsaV2Dto {
 
   @IsArray()
   roles!: CreateRoleDto[];
+
+  @IsOptional()
+  @IsNumber()
+  threshold_alert?: number;
 }
