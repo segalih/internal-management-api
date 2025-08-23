@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prebuild": "rimraf dist || true",
+    "prebuild": "node scripts/clean-dist.js",
     "build": "npm run build-ts",
     "build-ts": "tsc",
     "start": "npm run build && node dist/index.js",
