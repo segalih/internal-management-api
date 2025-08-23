@@ -87,14 +87,10 @@ export class LicenseCheckerJob {
     };
     if (configConstants.IS_BSI_NETWORK) {
       try {
-        console.log('Sending message...');
         const result = await axios.post(
           'https://prod-63.southeastasia.logic.azure.com:443/workflows/319ad59082014d80b8adf621b19f5615/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=GZufoLjUoXpLYbBukaokr8hrJQA0hY8ral5xUI5CWno',
           payload
         );
-        logger.info('Message sent successfully.');
-        console.log('Message sent successfully.');
-        console.log(result.data);
       } catch (error) {
         logger.error('Error sending message:', error);
       }
