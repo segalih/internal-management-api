@@ -25,5 +25,5 @@ module.exports = {
 
   // 🔑 Tambahan untuk migrasi & teardown
   globalSetup: '<rootDir>/jest.global-setup.ts',
-  setupFilesAfterEnv: ['<rootDir>/jest.global-teardown.ts'],
+  globalTeardown: '<rootDir>/jest.global-teardown.ts',
 };
