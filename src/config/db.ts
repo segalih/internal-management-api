@@ -35,7 +35,7 @@ class Database {
     this.maxPool = configConstants.DB_MAX_POOL;
     this.minPool = configConstants.DB_MIN_POOL;
     this.dialect = config.dialect || 'mysql'; // Default to 'mysql' if not specified
-    this.logging = (...msg) => console.log('SQL Query:', msg[0]);
+    this.logging = config.logging || undefined;
 
     this.database = new Sequelize(this.db, this.user, this.password, {
       host: this.host,

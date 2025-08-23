@@ -168,7 +168,7 @@ BaseModel.init(
   },
   {
     sequelize: databaseInstance,
-    modelName: 'BaseModel',
+    // modelName: 'BaseModel',
     timestamps: true,
     paranoid: true,
     underscored: true,
