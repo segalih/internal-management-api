@@ -46,7 +46,7 @@ export class MsaDetailV2Controller {
       validateBudgetQuota(msa, mappedRoles, DateTime.fromJSDate(dateEnded).toISO()!, budgetQuota);
 
       await Promise.all(msa.map((_msa) => this.msaService.create(msaId, _msa, transaction)));
-      const result = await this.msaService.getByPksId(msaId);
+      const result = await this.msaService.getByPksId(msaId, transaction);
 
       await transaction.commit();
       res.status(HttpStatusCode.Created).json({
