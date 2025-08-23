@@ -23,8 +23,8 @@ describe('common functions', () => {
 
   describe('rupiahFormatter', () => {
     it('should format numbers to IDR currency', () => {
-      expect(rupiahFormatter(1000)).toBe('Rp1.000');
-      expect(rupiahFormatter(123456789)).toBe('Rp123.456.789');
+      expect(rupiahFormatter(1000)).toBe('Rp 1.000');
+      expect(rupiahFormatter(123456789)).toBe('Rp 123.456.789');
     });
   });
 

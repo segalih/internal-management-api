@@ -1,12 +1,21 @@
 import LicenseHealthcheck from '@database/models/license_healthcheck.model';
 import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
 import { LicenseHealcheckService } from '../licenseHealtheck.service';
+import License from '@database/models/license.model';
 
 describe('LicenseHealcheckService', () => {
   let service: LicenseHealcheckService;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     service = new LicenseHealcheckService();
+    await License.create({
+      pks: 'PKS-123',
+      application: 'MyApp',
+      dueDateLicense: new Date(),
+      filePks: 'pks.pdf',
+      fileBast: 'bast.pdf',
+      isNotified: true,
+    });
   });
 
   describe('getById', () => {
