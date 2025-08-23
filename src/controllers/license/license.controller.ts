@@ -67,12 +67,12 @@ export class LicenseController {
         data: this.licenseService.licenseResponse(result),
       });
     } catch (err) {
-      const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-      [files['file_pks']?.[0].path ?? '', files['file_bast']?.[0].path ?? ''].forEach((filePath) => {
-        if (filePath && fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
-        }
-      });
+      // const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+      // [files['file_pks']?.[0].path ?? '', files['file_bast']?.[0].path ?? ''].forEach((filePath) => {
+      //   if (filePath && fs.existsSync(filePath)) {
+      //     fs.unlinkSync(filePath);
+      //   }
+      // });
       ProcessError(err, res);
     }
   }
