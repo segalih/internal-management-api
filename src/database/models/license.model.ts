@@ -100,14 +100,14 @@ License.init(
   }
 );
 
-License.belongsTo(Document, {
-  // foreignKey: 'pks_file_id',
-  as: 'pksFile',
-});
+// License.belongsTo(Document, {
+//   // foreignKey: 'pks_file_id',
+//   as: 'pksFile',
+// });
 
-License.belongsTo(Document, {
-  // foreignKey: 'bast_file_id',
-  as: 'bastFile',
-});
+// License.belongsTo(Document, {
+//   // foreignKey: 'bast_file_id',
+//   as: 'bastFile',
+// });
 
 export default License;

@@ -41,11 +41,13 @@ IncidentLink.init(
 
 Incident.hasMany(IncidentLink, {
   foreignKey: 'incident_id',
+  sourceKey: 'id',
   as: 'links',
 });
 
 IncidentLink.belongsTo(Incident, {
   foreignKey: 'incident_id',
+  targetKey: 'id',
   as: 'incidentParent',
 });
 

@@ -143,29 +143,38 @@ Incident.init(
 
 // Associations
 Incident.belongsTo(Application, {
+  foreignKey: 'applicationId',
+  targetKey: 'id',
   as: 'application',
 });
 
 Incident.belongsTo(PersonInCharge, {
+  foreignKey: 'personInChargeId',
+  targetKey: 'id',
   as: 'personInCharge',
 });
 
 Incident.belongsTo(Status, {
+  foreignKey: 'statusId',
+  targetKey: 'id',
   as: 'status',
 });
 
 Application.hasMany(Incident, {
   foreignKey: 'applicationId',
+  sourceKey: 'id',
   as: 'applicationIncidents',
 });
 
 PersonInCharge.hasMany(Incident, {
   foreignKey: 'personInChargeId',
+  sourceKey: 'id',
   as: 'personInChargeIncidents',
 });
 
 Status.hasMany(Incident, {
   foreignKey: 'statusId',
+  sourceKey: 'id',
   as: 'statusIncidents',
 });
 
