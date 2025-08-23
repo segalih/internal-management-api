@@ -45,11 +45,13 @@ MsaHasRole.init(
 );
 
 MsaHasRole.belongsTo(Msa, {
-  // foreignKey: 'msaId',
+  foreignKey: 'msaId',
+  targetKey: 'id',
   as: 'msaHaRole',
 });
 Msa.hasMany(MsaHasRole, {
-  //  foreignKey: 'msaId',
+  foreignKey: 'msaId',
+  sourceKey: 'id',
   as: 'msaRoles',
 });
 

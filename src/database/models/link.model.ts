@@ -44,6 +44,7 @@ Link.init(
 
 Link.belongsTo(Incident, {
   foreignKey: 'linkableId',
+  targetKey: 'id',
   constraints: false,
   scope: {
     linkable_type: 'incident',
@@ -68,6 +69,7 @@ Link.belongsTo(Incident, {
 
 Incident.hasMany(Link, {
   foreignKey: 'linkableId',
+  sourceKey: 'id',
   constraints: false,
   scope: {
     linkable_type: 'incident',

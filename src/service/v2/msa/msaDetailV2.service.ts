@@ -58,9 +58,10 @@ export class MsaV2Service {
     });
   }
 
-  async getByPksId(pksId: number): Promise<V2MsaAttributes[]> {
+  async getByPksId(pksId: number, transaction?: Transaction): Promise<V2MsaAttributes[]> {
     const msa = await V2Msa.findAll({
       where: { pksMsaId: pksId },
+      transaction,
     });
     return msa.map((item) => msaV2resource(item));
   }

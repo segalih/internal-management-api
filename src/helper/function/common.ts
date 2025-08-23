@@ -3,13 +3,13 @@ import _ from 'lodash';
 import { DateTime } from 'luxon';
 
 export function isStringNumber(value: any): boolean {
+  if (typeof value !== 'string') return false;
+  if (value === '') return false;
+
   return _.isString(value) && _.isFinite(_.toNumber(value));
 }
 
 export function rupiahFormatter(value: number): string {
-  if (value === null || value === undefined) {
-    return '';
-  }
   return new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
@@ -27,7 +27,7 @@ export const getDiffMonths = (dateStarted: string, dateEnded: string): number =>
 
 export const stringToDate = (date: string): Date => DateTime.fromISO(date, { zone: 'UTC' }).toJSDate();
 export const dateToIsoString = (date: Date): string => {
-  const result = DateTime.fromJSDate(date).toISO();
+  const result = DateTime.fromJSDate(date, { zone: 'UTC' }).toISO();
   if (!result) {
     throw new BadRequestException('Invalid date format');
   }

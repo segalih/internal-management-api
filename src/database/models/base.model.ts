@@ -1,5 +1,5 @@
 import { DataTypes, FindAttributeOptions, Includeable, Model, Op, Optional, WhereOptions } from 'sequelize';
-import Database from '@config/db';
+import Database from '../../config/db';
 
 const databaseInstance = Database.database;
 
@@ -168,7 +168,7 @@ BaseModel.init(
   },
   {
     sequelize: databaseInstance,
-    modelName: 'BaseModel',
+    // modelName: 'BaseModel',
     timestamps: true,
     paranoid: true,
     underscored: true,

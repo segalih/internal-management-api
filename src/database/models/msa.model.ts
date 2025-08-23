@@ -75,22 +75,26 @@ Msa.init(
 );
 
 Document.hasOne(Msa, {
-  // foreignKey: 'pks_file_id',
+  foreignKey: 'pks_file_id',
+  sourceKey: 'id',
   as: 'pksUsedIn',
 });
 
 Document.hasOne(Msa, {
-  // foreignKey: 'bast_file_id',
+  foreignKey: 'bast_file_id',
+  sourceKey: 'id',
   as: 'bastUsedIn',
 });
 
 Msa.belongsTo(Document, {
-  // foreignKey: 'pks_file_id',
+  foreignKey: 'pks_file_id',
+  targetKey: 'id',
   as: 'pksFile',
 });
 
 Msa.belongsTo(Document, {
-  // foreignKey: 'bast_file_id',
+  foreignKey: 'bast_file_id',
+  targetKey: 'id',
   as: 'bastFile',
 });
 

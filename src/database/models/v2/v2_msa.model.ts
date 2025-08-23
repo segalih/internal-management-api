@@ -87,10 +87,10 @@ V2Msa.init(
 );
 
 // Relasi
-V2Msa.belongsTo(V2MsaHasRoles, { foreignKey: 'roleId', as: 'role' });
+V2Msa.belongsTo(V2MsaHasRoles, { foreignKey: 'roleId', targetKey: 'id', as: 'role' });
 // V2MsaHasRoles.hasMany(V2Msa, { foreignKey: 'roleId', as: '' });
 
-V2Msa.belongsTo(V2PksMsa, { foreignKey: 'pksMsaId', as: 'msaPks' });
-V2PksMsa.hasMany(V2Msa, { foreignKey: 'pksMsaId', as: 'msas' });
+V2Msa.belongsTo(V2PksMsa, { foreignKey: 'pksMsaId', targetKey: 'id', as: 'msaPks' });
+V2PksMsa.hasMany(V2Msa, { foreignKey: 'pksMsaId', sourceKey: 'id', as: 'msas' });
 
 export default V2Msa;

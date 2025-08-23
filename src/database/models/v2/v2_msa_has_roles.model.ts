@@ -52,7 +52,7 @@ V2MsaHasRoles.init(
 );
 
 // Relasi
-V2MsaHasRoles.belongsTo(V2PksMsa, { foreignKey: 'pksMsaId', as: 'pksMsa' });
-V2PksMsa.hasMany(V2MsaHasRoles, { foreignKey: 'pksMsaId', as: 'roles' });
+V2MsaHasRoles.belongsTo(V2PksMsa, { foreignKey: 'pksMsaId', targetKey: 'id', as: 'pksMsa' });
+V2PksMsa.hasMany(V2MsaHasRoles, { foreignKey: 'pksMsaId', sourceKey: 'id', as: 'roles' });
 
 export default V2MsaHasRoles;

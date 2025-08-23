@@ -114,8 +114,7 @@ export class IncidentController {
           operator: Op.lte,
           keyValue: entry_date_to
             ? DateTime.fromISO(entry_date_to as string, { zone: 'UTC' })
-                .plus({ days: 1 })
-                .toISO()
+              .toISO()
             : '',
           keyColumn: 'entryDate',
         },

@@ -9,7 +9,7 @@ export function validateMsaJoinDates(msa: CreateMsaDetailV2Dto[], dateStarted: s
   const start = DateTime.fromISO(dateStarted, { zone: 'UTC' });
   const end = DateTime.fromISO(dateEnded, { zone: 'UTC' });
   msa.forEach((item, index) => {
-    const joinDate = DateTime.fromISO(item.join_date as string, { zone: 'UTC' }).plus({ days: 1 });
+    const joinDate = DateTime.fromISO(item.join_date as string, { zone: 'UTC' });
 
     if (joinDate < start || joinDate > end) {
       throw new BadRequestException(`Join date for msa ${index + 1} must be after date started and before date ended`);

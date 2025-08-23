@@ -1,6 +1,5 @@
 import { DataTypes } from 'sequelize';
 import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from './base.model';
-import Document from './document.model';
 import LicenseHealthcheck from './license_healthcheck.model';
 
 export const LISENCE_CONSTANTS = {
@@ -100,14 +99,14 @@ License.init(
   }
 );
 
-License.belongsTo(Document, {
-  // foreignKey: 'pks_file_id',
-  as: 'pksFile',
-});
+// License.belongsTo(Document, {
+//   // foreignKey: 'pks_file_id',
+//   as: 'pksFile',
+// });
 
-License.belongsTo(Document, {
-  // foreignKey: 'bast_file_id',
-  as: 'bastFile',
-});
+// License.belongsTo(Document, {
+//   // foreignKey: 'bast_file_id',
+//   as: 'bastFile',
+// });
 
 export default License;

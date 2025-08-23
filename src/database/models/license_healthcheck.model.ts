@@ -23,7 +23,7 @@ LicenseHealthcheck.init(
   {
     ...baseModelInit,
     licenseId: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       field: 'license_id',
       allowNull: false,
     },
@@ -45,10 +45,14 @@ LicenseHealthcheck.init(
 );
 
 LicenseHealthcheck.belongsTo(License, {
+  foreignKey: 'licenseId',
+  targetKey: 'id',
   as: 'license',
 });
 
 License.hasMany(LicenseHealthcheck, {
+  foreignKey: 'licenseId',
+  sourceKey: 'id',
   as: 'healthchecks',
 });
 

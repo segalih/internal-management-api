@@ -26,7 +26,7 @@ export default class Server {
     this.printRegisteredRoutes();
     this.initializeClient();
 
-    new CronJob();
+    // new CronJob();
   }
 
   private initializeClient() {

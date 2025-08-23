@@ -11,7 +11,7 @@ export class CronJob {
     this.licenseCheckerJob = new LicenseCheckerJob();
     // Setiap jam 00:00
     cron.schedule('0 0 * * *', () => this.cleanOldLogs());
-    // cron.schedule('* * * * *', async () => await this.licenseCheckerJob.check());
+    cron.schedule('* * * * *', async () => await this.licenseCheckerJob.check());
   }
 
   private cleanOldLogs() {

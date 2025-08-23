@@ -69,11 +69,13 @@ MsaDetail.init(
 );
 
 MsaDetail.belongsTo(Msa, {
-  // foreignKey: 'msaId',
+  foreignKey: 'msaId',
+  targetKey: 'id',
   as: 'msa',
 });
 Msa.hasMany(MsaDetail, {
-  // foreignKey: 'msaId',
+  foreignKey: 'msaId',
+  sourceKey: 'id',
   as: 'details',
 });
 
