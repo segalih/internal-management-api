@@ -11,16 +11,12 @@ export interface LicenseAttributes extends BaseModelAttributes {
   bastFileId?: number | null;
   application: string;
   dueDateLicense: Date;
-  // healthCheckRoutine: Date;
-  // healthCheckActual: Date;
   filePks: string;
   fileBast: string;
   isNotified: boolean;
 
   pksFileUrl?: string;
   bastFileUrl?: string;
-  // pks_file_id?: number;
-  // bast_file_id?: number;
   status?: string;
   healthchecks?: LicenseHealthcheck[];
 }
@@ -33,8 +29,6 @@ class License extends BaseModel<LicenseAttributes, LicenseCreationAttributes> im
   public bastFileId?: number;
   public application!: string;
   public dueDateLicense!: Date;
-  // public healthCheckRoutine!: Date;
-  // public healthCheckActual!: Date;
   public filePks!: string;
   public fileBast!: string;
   public isNotified!: boolean;
@@ -72,14 +66,6 @@ License.init(
       type: DataTypes.DATE,
       allowNull: true,
     },
-    // healthCheckRoutine: {
-    //   type: DataTypes.DATE,
-    //   allowNull: true,
-    // },
-    // healthCheckActual: {
-    //   type: DataTypes.DATE,
-    //   allowNull: true,
-    // },
     filePks: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -99,14 +85,5 @@ License.init(
   }
 );
 
-// License.belongsTo(Document, {
-//   // foreignKey: 'pks_file_id',
-//   as: 'pksFile',
-// });
-
-// License.belongsTo(Document, {
-//   // foreignKey: 'bast_file_id',
-//   as: 'bastFile',
-// });
 
 export default License;
