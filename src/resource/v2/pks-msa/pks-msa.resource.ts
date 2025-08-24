@@ -19,9 +19,9 @@ export const pksMsaV2resource = (pksMsa: V2PksMsa): V2PksMsaAttributes => {
   const budgets = mappedRoles.map((role, i) => {
     return role.rate * monthsPerMsa[i];
   });
-  const totalBudget = budgets.reduce((acc, cur) => acc + (cur || 0), 0);
+  const remainingBudget = budgets.reduce((acc, cur) => acc + (cur || 0), 0);
 
-  const remainingBudget = pksMsa.budgetQuota - totalBudget;
+  const budgetUsed = pksMsa.budgetQuota - remainingBudget;
   const budgedUsedRatio = Math.ceil((remainingBudget / pksMsa.budgetQuota) * 100);
   const isBudgetBelowThreshold = budgedUsedRatio < pksMsa.thresholdAlert ? true : false;
   return {
@@ -35,7 +35,7 @@ export const pksMsaV2resource = (pksMsa: V2PksMsa): V2PksMsaAttributes => {
     budgetQuota: pksMsa.budgetQuota,
     thresholdAlert: pksMsa.thresholdAlert,
     isBudgetBelowThreshold,
-    budgetUsed: totalBudget,
+    budgetUsed,
     remainingBudget,
     roles: roles.map((role) => roleV2resource(role)!),
     msaDetails: msaDetails.map((msa) => msaV2resource(msa)),
