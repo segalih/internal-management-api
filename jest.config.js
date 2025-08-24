@@ -19,7 +19,13 @@ module.exports = {
     '^.+\\.ts$': 'ts-jest',
   },
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.{ts,js}', '!src/**/*.d.ts', '!src/**/index.ts'],
+  collectCoverageFrom: [
+    'src/**/*.{ts,js}',
+    '!src/**/*.d.ts',
+    '!src/**/index.ts',
+    '!src/database/migrations/**',
+    '!src/database/seeders/**',
+  ],
   coverageDirectory: 'coverage',
   verbose: true,
 

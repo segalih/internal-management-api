@@ -22,7 +22,8 @@ export const pksMsaV2resource = (pksMsa: V2PksMsa): V2PksMsaAttributes => {
   const totalBudget = budgets.reduce((acc, cur) => acc + (cur || 0), 0);
 
   const remainingBudget = pksMsa.budgetQuota - totalBudget;
-
+  const budgedUsedRatio = Math.ceil((remainingBudget / pksMsa.budgetQuota) * 100);
+  const isBudgetBelowThreshold = budgedUsedRatio < pksMsa.thresholdAlert ? true : false;
   return {
     id: pksMsa.id,
     pks: pksMsa.pks,
@@ -32,6 +33,8 @@ export const pksMsaV2resource = (pksMsa: V2PksMsa): V2PksMsaAttributes => {
     dateEnded: pksMsa.dateEnded,
     peopleQuota: pksMsa.peopleQuota,
     budgetQuota: pksMsa.budgetQuota,
+    thresholdAlert: pksMsa.thresholdAlert,
+    isBudgetBelowThreshold,
     budgetUsed: totalBudget,
     remainingBudget,
     roles: roles.map((role) => roleV2resource(role)!),

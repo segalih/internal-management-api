@@ -1,6 +1,3 @@
-import { Sequelize } from 'sequelize';
-import License from '@database/models/license.model';
-import LicenseHealthcheck from '@database/models/license_healthcheck.model';
 import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
 import LicenseService from '../license.service';
 

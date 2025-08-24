@@ -12,6 +12,7 @@ export interface V2PksMsaAttributes extends BaseModelAttributes {
   dateEnded: Date;
   peopleQuota: number;
   budgetQuota: number;
+  thresholdAlert: number;
 
   msaDetails?: V2MsaAttributes[] | undefined | undefined[];
   roles?: V2MsaHasRoles[] | V2MsaHasRolesAttributes[];
@@ -19,6 +20,7 @@ export interface V2PksMsaAttributes extends BaseModelAttributes {
 
   budgetUsed?: number;
   remainingBudget?: number;
+  isBudgetBelowThreshold?: boolean;
 }
 
 export interface V2PksMsaCreationAttributes extends Omit<V2PksMsaAttributes, 'id'> {}
@@ -31,6 +33,7 @@ export class V2PksMsa extends BaseModel<V2PksMsaAttributes, V2PksMsaCreationAttr
   public dateEnded!: Date;
   public peopleQuota!: number;
   public budgetQuota!: number;
+  public thresholdAlert!: number;
 
   pksMsa?: V2Msa[];
   roles?: V2MsaHasRoles[];
@@ -81,6 +84,12 @@ V2PksMsa.init(
         const rate = this.getDataValue('budgetQuota');
         return rate ? parseFloat(rate.toString()) : null;
       },
+    },
+    thresholdAlert: {
+      field: 'threshold_alert',
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 20,
     },
   },
   {
