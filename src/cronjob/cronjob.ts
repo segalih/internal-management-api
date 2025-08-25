@@ -7,7 +7,7 @@ import { LicenseCheckerJob } from './license-checker';
 export class CronJob {
   private licenseCheckerJob: LicenseCheckerJob;
   constructor() {
-    console.log('Cron job started');
+    console.info('Cron job started');
     this.licenseCheckerJob = new LicenseCheckerJob();
     // Setiap jam 00:00
     cron.schedule('0 0 * * *', () => this.cleanOldLogs());
@@ -33,7 +33,7 @@ export class CronJob {
 
       if (diffInDays > 7) {
         fs.unlinkSync(filePath);
-        console.log(`Deleted old log file: ${file}`);
+        console.info(`Deleted old log file: ${file}`);
       }
     });
   }

@@ -9,7 +9,7 @@ export default async function globalSetup() {
 
   // Load env file sebelum migrate
   dotenv.config({ path: envPath });
-  console.log(`[globalSetup] Using env file: ${envPath}`);
+  console.info(`[globalSetup] Using env file: ${envPath}`);
 
   // Jalankan migrasi
   await new Promise<void>((resolve, reject) => {
@@ -18,7 +18,7 @@ export default async function globalSetup() {
         console.error('[Migration Error]', stderr);
         return reject(err);
       }
-      console.log('[Migration Success]', stdout);
+      console.info('[Migration Success]', stdout);
       resolve();
     });
   });

@@ -10,7 +10,7 @@ import logger from '@helper/logger';
 
 
 export function ProcessError(err: any, res: Response) {
-  console.log(err);
+  console.error(err);
  logger.error({
    message: err.message ?? 'Unknown error',
    stack: err.stack ?? '',

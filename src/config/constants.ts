@@ -26,7 +26,7 @@ const configConstants = {
   IS_BSI_NETWORK: process.env.IS_BSI_NETWORK === 'true',
 };
 if (configConstants.NODE_ENV === 'development') {
-  console.log('configConstants', configConstants);
+  console.info('configConstants', configConstants);
 }
 
 export default configConstants;

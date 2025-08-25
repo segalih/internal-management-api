@@ -10,4 +10,4 @@ fs.readdirSync(distPath).forEach((file) => {
   }
 });
 
-console.log('Cleaned dist folder (except logs)');
+console.info('Cleaned dist folder (except logs)');

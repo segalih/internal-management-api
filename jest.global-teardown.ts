@@ -8,7 +8,7 @@ export default async function globalTeardown() {
   const envFile = `.env.${process.env.NODE_ENV || 'test'}`;
   const envPath = path.resolve(process.cwd(), envFile);
   dotenv.config({ path: envPath });
-  console.log(`[globalTeardown] Using env file: ${envPath}`);
+  console.info(`[globalTeardown] Using env file: ${envPath}`);
 
   /* 2️⃣  Rollback semua migrasi */
   await new Promise<void>((resolve, reject) => {
@@ -18,7 +18,7 @@ export default async function globalTeardown() {
         console.error('[Rollback Error]', stderr);
         return reject(err);
       }
-      console.log('[Rollback Success]', stdout);
+      console.info('[Rollback Success]', stdout);
       resolve();
     });
   });
