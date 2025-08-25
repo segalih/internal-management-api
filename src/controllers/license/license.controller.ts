@@ -1,18 +1,18 @@
 /// <reference path="../custom.d.ts" />
-import { HttpStatusCode } from 'axios';
-import { Request, Response } from 'express';
-import fs from 'fs';
-import { DateTime } from 'luxon';
-import { Op } from 'sequelize';
 import { CreateLisenceDto } from '@common/dto/lisence/CreateLisenceDto';
-import { LicenseAttributes, LISENCE_CONSTANTS } from '@database/models/license.model';
+import { LicenseAttributes } from '@database/models/license.model';
 import { BadRequestException } from '@helper/Error/BadRequestException/BadRequestException';
 import { ProcessError } from '@helper/Error/errorHandler';
 import { isStringNumber } from '@helper/function/common';
 import { ResponseApi, ResponseApiWithPagination } from '@helper/interface/response.interface';
+import { licenseResource } from '@resource/license/license.resource';
 import { DocumentService } from '@service/document/document.service';
 import LicenseService from '@service/license/license.service';
 import { LicenseHealcheckService } from '@service/license/licenseHealtheck.service';
+import { HttpStatusCode } from 'axios';
+import { Request, Response } from 'express';
+import { DateTime } from 'luxon';
+import { Op } from 'sequelize';
 
 export class LicenseController {
   private licenseService: LicenseService;
@@ -85,7 +85,7 @@ export class LicenseController {
       res.status(HttpStatusCode.Ok).json({
         message: 'License retrieved successfully',
         statusCode: HttpStatusCode.Ok,
-        data: this.licenseService.licenseResponse(license),
+        data: licenseResource(license),
       });
     } catch (err) {
       ProcessError(err, res);
@@ -150,7 +150,7 @@ export class LicenseController {
       res.status(HttpStatusCode.Ok).json({
         message: 'License updated successfully',
         statusCode: HttpStatusCode.Ok,
-        data: this.licenseService.licenseResponse(result),
+        data: licenseResource(result),
       });
     } catch (err) {
       ProcessError(err, res);
@@ -205,7 +205,7 @@ export class LicenseController {
       res.status(HttpStatusCode.Ok).json({
         message: 'OK',
         statusCode: HttpStatusCode.Ok,
-        data: licenses.data.map((license) => this.licenseService.licenseResponse(license)),
+        data: licenses.data.map((license) => licenseResource(license)),
         meta: {
           currentPage: licenses.currentPage,
           pageSize: licenses.pageSize,

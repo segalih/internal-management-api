@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from './base.model';
-import LicenseHealthcheck from './license_healthcheck.model';
+import LicenseHealthcheck, { LicenseHealthcheckAttributes } from './license_healthcheck.model';
 
 export const LISENCE_CONSTANTS = {
   BASE_PATH: '/uploads/lisence/',
@@ -22,7 +22,7 @@ export interface LicenseAttributes extends BaseModelAttributes {
   // pks_file_id?: number;
   // bast_file_id?: number;
   status?: string;
-  healthchecks?: LicenseHealthcheck[];
+  healthchecks?: LicenseHealthcheck[] | LicenseHealthcheckAttributes[];
 }
 
 export interface LicenseCreationAttributes extends Omit<LicenseAttributes, 'id'> {}
@@ -38,7 +38,7 @@ class License extends BaseModel<LicenseAttributes, LicenseCreationAttributes> im
   public filePks!: string;
   public fileBast!: string;
   public isNotified!: boolean;
-  public healthchecks?: LicenseHealthcheck[];
+  public healthchecks?: LicenseHealthcheck[] | LicenseHealthcheckAttributes[];
 }
 
 License.init(
