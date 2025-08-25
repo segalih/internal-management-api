@@ -22,7 +22,7 @@ export const pksMsaV2resource = (pksMsa: V2PksMsa): V2PksMsaAttributes => {
   const budgetUsed = budgets.reduce((acc, cur) => acc + (cur || 0), 0);
 
   const remainingBudget = pksMsa.budgetQuota - budgetUsed;
-  const budgedUsedRatio = Math.ceil((budgetUsed / pksMsa.budgetQuota) * 100);
+  const budgedUsedRatio = Math.ceil((remainingBudget / pksMsa.budgetQuota) * 100);
 
   const isBudgetBelowThreshold = budgedUsedRatio < pksMsa.thresholdAlert ? true : false;
   return {
