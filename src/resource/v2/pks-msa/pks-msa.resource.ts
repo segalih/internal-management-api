@@ -1,5 +1,5 @@
 import V2PksMsa, { V2PksMsaAttributes } from '@database/models/v2/v2_pks_msa.model';
-import { getDiffMonths } from '@helper/function/common';
+import { dateToIsoString, getDiffMonths } from '@helper/function/common';
 import { msaV2resource } from './msa.resource';
 import { roleV2resource } from './role.resource';
 import { mapRolesToMsa } from '@helper/function/v2';
@@ -11,18 +11,19 @@ export const pksMsaV2resource = (pksMsa: V2PksMsa): V2PksMsaAttributes => {
 
   const monthsPerMsa = msaDetails.map((item) =>
     getDiffMonths(
-      DateTime.fromJSDate(item.joinDate!).toISO()!,
-      item.leaveDate ? DateTime.fromJSDate(item.leaveDate).toISO()! : DateTime.fromJSDate(new Date()).toISO()!
+      dateToIsoString(item.joinDate!),
+      item.leaveDate ? dateToIsoString(item.leaveDate) : dateToIsoString(pksMsa.dateEnded)
     )
   );
   const mappedRoles = mapRolesToMsa(msaDetails, roles);
   const budgets = mappedRoles.map((role, i) => {
     return role.rate * monthsPerMsa[i];
   });
-  const remainingBudget = budgets.reduce((acc, cur) => acc + (cur || 0), 0);
+  const budgetUsed = budgets.reduce((acc, cur) => acc + (cur || 0), 0);
 
-  const budgetUsed = pksMsa.budgetQuota - remainingBudget;
-  const budgedUsedRatio = Math.ceil((remainingBudget / pksMsa.budgetQuota) * 100);
+  const remainingBudget = pksMsa.budgetQuota - budgetUsed;
+  const budgedUsedRatio = Math.ceil((budgetUsed / pksMsa.budgetQuota) * 100);
+
   const isBudgetBelowThreshold = budgedUsedRatio < pksMsa.thresholdAlert ? true : false;
   return {
     id: pksMsa.id,

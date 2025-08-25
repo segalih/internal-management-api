@@ -66,12 +66,11 @@ export default class LicenseService {
       pks: data.pks,
       application: data.application,
       dueDateLicense: DateTime.fromISO(`${data.due_date_license}`, { zone: 'UTC' }).toJSDate(),
-      // healthCheckRoutine: DateTime.fromISO(`${data.health_check_routine}`, { zone: 'UTC' }).toJSDate(),
-      // healthCheckActual: DateTime.fromISO(`${data.health_check_actual}`, { zone: 'UTC' }).toJSDate(),
-      pksFileUrl: data.file_pks,
-      bastFileUrl: data.file_bast,
       filePks: data.file_pks,
       fileBast: data.file_bast,
+      isNotified: data.is_notified ? data.is_notified : true,
+      pksFileId: null,
+      bastFileId: null,
     });
     return license;
   }
