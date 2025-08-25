@@ -14,8 +14,9 @@ module.exports = {
      */
 
     await queryInterface.bulkInsert('status_master', [
-      { status_name: 'open', flag: 1 },
-      { status_name: 'closed', flag: 1 },
+      { status_name: 'Open', flag: 1 },
+      { status_name: 'Temporary Action', flag: 1 },
+      { status_name: 'Full Action', flag: 1 },
     ]);
   },
 
