@@ -25,4 +25,8 @@ export class LicenseHealcheckService {
       { transaction }
     );
   }
+
+  async deleteByLicenseId(licenseId: number, transaction?: Transaction): Promise<void> {
+    await LicenseHealthcheck.destroy({ where: { licenseId }, transaction });
+  }
 }

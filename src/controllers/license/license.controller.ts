@@ -99,6 +99,8 @@ export class LicenseController {
 
 
       const updatedLicense = await this.licenseService.updateById(licenseId, payload, filePksId, fileBastId);
+     
+      await this.licenseHealthcheckService.deleteByLicenseId(updatedLicense.id);
       if (payload.healthchecks && payload.healthchecks?.length > 0) {
         await Promise.all(
           payload.healthchecks.map(async (healthcheck) => {
