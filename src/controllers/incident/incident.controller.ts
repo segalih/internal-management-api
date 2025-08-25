@@ -26,7 +26,7 @@ export class IncidentController {
       const ticketNumber = `FCS${dateNow.toFormat('yyyyMMdd')}-${(await this.incidentService.getLastId()) + 1}`;
 
       const incident = await this.incidentService.create(
-        { ...req.body, ticket_number: ticketNumber, entry_date: dateNow } as CreateIncidentDto,
+        { ...req.body, ticket_number: ticketNumber, entry_date: dateNow.toISO() } as CreateIncidentDto,
         transaction
       );
       const result = await this.incidentService.getById(incident.id, transaction);

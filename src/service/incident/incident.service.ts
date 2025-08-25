@@ -6,6 +6,7 @@ import Link from '@database/models/link.model';
 import PersonInCharge from '@database/models/person_in_charge.model';
 import Status from '@database/models/status.model';
 import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
+import { stringToDate } from '@helper/function/common';
 import { ApplicationMasterService } from '@service/master/applicationMaster.service';
 import { PersonInChargeService } from '@service/master/personInCharge.service';
 import { StatusMasterService } from '@service/master/statusMaster.service';
@@ -29,7 +30,7 @@ export class IncidentService {
     const incident = await Incident.create(
       {
         ticketNumber: data.ticket_number,
-        entryDate: DateTime.fromISO(data.entry_date, { zone: 'UTC' }).toJSDate(),
+        entryDate: data.entry_date ? stringToDate(data.entry_date) : new Date(),
         applicationId: data.application_id,
         personInChargeId: data.person_in_charge_id,
         issueCode: data.issue_code,
@@ -42,7 +43,7 @@ export class IncidentService {
         category: data.category,
         rootCause: data.root_cause,
         note: data.note,
-        deployDate: data.deploy_date ? DateTime.fromISO(data.deploy_date, { zone: 'UTC' }).toJSDate() : undefined,
+        deployDate: data.deploy_date ? stringToDate(data.deploy_date) : undefined,
       },
       {
         transaction,
@@ -148,8 +149,7 @@ export class IncidentService {
         category: data.category,
         rootCause: data.root_cause,
         note: data.note,
-        deployDate: data.deploy_date ? DateTime.fromISO(data.deploy_date, { zone: 'UTC' }).toJSDate() : undefined,
-
+        deployDate: data.deploy_date ? stringToDate(data.deploy_date) : undefined,
       },
       { transaction }
     );

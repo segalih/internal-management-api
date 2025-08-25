@@ -15,7 +15,9 @@ export class ApplicationMasterService {
   }
 
   async fetchAll(): Promise<Application[]> {
-    const applications = await Application.findAll();
+    const applications = await Application.findAll({
+      order: [['applicationName', 'ASC']],
+    });
 
     return applications;
   }
