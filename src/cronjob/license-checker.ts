@@ -74,23 +74,20 @@ export class LicenseCheckerJob {
                 color: 'Default',
               },
             ],
-            actions: [
-              {
-                type: 'Action.OpenUrl',
-                title: 'Lihat Detail',
-                url: 'https://example.com',
-              },
-            ],
+            // actions: [
+            //   {
+            //     type: 'Action.OpenUrl',
+            //     title: 'Lihat Detail',
+            //     url: 'https://example.com',
+            //   },
+            // ],
           },
         },
       ],
     };
     if (configConstants.IS_BSI_NETWORK) {
       try {
-        const result = await axios.post(
-          'https://prod-63.southeastasia.logic.azure.com:443/workflows/319ad59082014d80b8adf621b19f5615/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=GZufoLjUoXpLYbBukaokr8hrJQA0hY8ral5xUI5CWno',
-          payload
-        );
+        const result = await axios.post(configConstants.JOB_LICENSE_CHECKER_WEBHOOK_URL, payload);
       } catch (error) {
         logger.error('Error sending message:', error);
       }
