@@ -145,10 +145,12 @@ export class LicenseController {
       // }
 
       const updatedLicense = await this.licenseService.updateById(licenseId, payload, filePksId, fileBastId);
+      const result = await this.licenseService.getById(updatedLicense.id);
+
       res.status(HttpStatusCode.Ok).json({
         message: 'License updated successfully',
         statusCode: HttpStatusCode.Ok,
-        data: this.licenseService.licenseResponse(updatedLicense),
+        data: this.licenseService.licenseResponse(result),
       });
     } catch (err) {
       ProcessError(err, res);
