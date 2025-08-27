@@ -3,6 +3,7 @@ import { DataTypes } from 'sequelize';
 import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from '../base.model';
 import V2MsaHasRoles, { V2MsaHasRolesAttributes } from './v2_msa_has_roles.model';
 import V2PksMsa from './v2_pks_msa.model';
+import V2MsaProject, { V2MsaProjectAttributes } from './v2_msa_projec.model';
 
 export interface V2MsaAttributes extends BaseModelAttributes {
   pksMsaId: number;
@@ -13,6 +14,8 @@ export interface V2MsaAttributes extends BaseModelAttributes {
   joinDate?: Date;
   leaveDate?: Date;
   isActive: boolean;
+
+  projects?: V2MsaProjectAttributes[];
 
   role?: V2MsaHasRoles | V2MsaHasRolesAttributes;
 }
@@ -28,6 +31,8 @@ export class V2Msa extends BaseModel<V2MsaAttributes, V2MsaCreationAttributes> i
   public joinDate?: Date;
   public leaveDate?: Date;
   public isActive!: boolean;
+
+  projects?: V2MsaProject[] | V2MsaProjectAttributes[];
 
   public role?: V2MsaHasRoles;
 }
