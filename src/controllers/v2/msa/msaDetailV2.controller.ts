@@ -6,18 +6,22 @@ import { ProcessError } from '@helper/Error/errorHandler';
 import { isStringNumber } from '@helper/function/common';
 import { mapRolesToMsa, validateBudgetQuota, validateMsaJoinDates, validatePeopleQuota } from '@helper/function/v2';
 import { ResponseApi } from '@helper/interface/response.interface';
+import { msaV2resource } from '@resource/v2/pks-msa/msa.resource';
 import { PksMsaV2Service } from '@service/v2/msa/PksMsaV2.service';
 import { MsaV2Service } from '@service/v2/msa/msaDetailV2.service';
+import { MsaProjectV2Service } from '@service/v2/msa/msaProjectV2.service';
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
 import { DateTime } from 'luxon';
 export class MsaDetailV2Controller {
   private pksMsaService: PksMsaV2Service;
   private msaService: MsaV2Service;
+  private msaProjectService: MsaProjectV2Service;
 
   constructor() {
     this.pksMsaService = new PksMsaV2Service();
     this.msaService = new MsaV2Service();
+    this.msaProjectService = new MsaProjectV2Service();
   }
 
   async create(
@@ -45,14 +49,30 @@ export class MsaDetailV2Controller {
       const mappedRoles = mapRolesToMsa(msa, roles);
       validateBudgetQuota(msa, mappedRoles, DateTime.fromJSDate(dateEnded).toISO()!, budgetQuota);
 
-      await Promise.all(msa.map((_msa) => this.msaService.create(msaId, _msa, transaction)));
-      const result = await this.msaService.getByPksId(msaId, transaction);
+      const msas = await Promise.all(
+        msa.map(async (_msa) => {
+          const _result = await this.msaService.create(msaId, _msa, transaction);
 
+          if (_msa.projects && _msa.projects.length > 0) {
+            // Tunggu semua operasi project selesai
+            await Promise.all(
+              _msa.projects.map((project) => {
+                return this.msaProjectService.create(_result.id, project, transaction);
+              })
+            );
+          }
+
+          return _result; // Kembalikan hasil create MSA
+        })
+      );
+
+      const results = await this.msaService.getByPksId(msaId, transaction);
       await transaction.commit();
+      console.log('---RESULT\n', results);
       res.status(HttpStatusCode.Created).json({
         statusCode: HttpStatusCode.Created,
         message: 'Success',
-        data: result,
+        data: results.map((result) => msaV2resource(result)),
       });
     } catch (error) {
       await transaction.rollback();

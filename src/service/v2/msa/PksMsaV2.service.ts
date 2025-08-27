@@ -6,6 +6,7 @@ import V2MsaHasRoles from '@database/models/v2/v2_msa_has_roles.model';
 import V2PksMsa, { V2PksMsaAttributes } from '@database/models/v2/v2_pks_msa.model';
 import { pksMsaV2resource } from '@resource/v2/pks-msa/pks-msa.resource';
 import { DateTime } from 'luxon';
+import V2MsaProject from '@database/models/v2/v2_msa_projec.model';
 
 export class PksMsaV2Service {
   async create(data: CreateMsaV2Dto, transaction: Transaction): Promise<V2PksMsa> {
@@ -102,6 +103,10 @@ export class PksMsaV2Service {
             {
               model: V2MsaHasRoles,
               as: 'role',
+            },
+            {
+              model: V2MsaProject,
+              as: 'projects',
             },
           ],
         },

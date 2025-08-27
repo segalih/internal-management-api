@@ -5,6 +5,7 @@ import V2MsaHasRoles from '@database/models/v2/v2_msa_has_roles.model';
 import { UnprocessableEntityException } from '@helper/Error/UnprocessableEntity/UnprocessableEntityException';
 import { msaV2resource } from '@resource/v2/pks-msa/msa.resource';
 import { DateTime } from 'luxon';
+import V2MsaProject from '@database/models/v2/v2_msa_projec.model';
 
 export class MsaV2Service {
   async create(pksMsaId: number, data: CreateMsaDetailV2Dto, transaction?: Transaction): Promise<V2Msa> {
@@ -40,6 +41,10 @@ export class MsaV2Service {
           model: V2MsaHasRoles,
           as: 'role',
         },
+        {
+          model: V2MsaProject,
+          as: 'projects',
+        },
       ],
       transaction,
     });
@@ -61,6 +66,16 @@ export class MsaV2Service {
   async getByPksId(pksId: number, transaction?: Transaction): Promise<V2MsaAttributes[]> {
     const msa = await V2Msa.findAll({
       where: { pksMsaId: pksId },
+      include: [
+        {
+          model: V2MsaHasRoles,
+          as: 'role',
+        },
+        {
+          model: V2MsaProject,
+          as: 'projects',
+        },
+      ],
       transaction,
     });
     return msa.map((item) => msaV2resource(item));
