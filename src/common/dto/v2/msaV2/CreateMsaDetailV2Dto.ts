@@ -1,4 +1,6 @@
-import { IsBoolean, IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsBoolean, IsDateString, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { CreateMsaProjectV2Dto } from './CreateMsaProjectV2Dto';
 
 export default class CreateMsaDetailV2Dto {
   @IsNumber()
@@ -27,4 +29,9 @@ export default class CreateMsaDetailV2Dto {
   @IsBoolean()
   @IsOptional()
   is_active!: boolean;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateMsaProjectV2Dto)
+  public projects!: CreateMsaProjectV2Dto[];
 }
