@@ -27,10 +27,6 @@ export function validateMsaJoinDates(msa: CreateMsaDetailV2Dto[], dateStarted: s
         throw new BadRequestException(`Leave date for msa [${index}] must be after join date`);
       }
 
-      if (leaveDate.toJSDate() < joinDate.toJSDate()) {
-        throw new BadRequestException(`Leave date for msa [${index}] must be after join date and before date ended`);
-      }
-
       if (leaveDate.toJSDate() > end.toJSDate()) {
         throw new BadRequestException(`Leave date for msa [${index}] must be before date ended`);
       }
@@ -48,9 +44,7 @@ export function validatePeopleQuota(total: number, quota: number) {
 
 export function mapRolesToMsa(msa: CreateMsaDetailV2Dto[] | V2Msa[], roles: V2MsaHasRoles[]) {
   return msa.map((item) => {
-    // Ambil roleId dengan aman (bisa camelCase atau snake_case)
     const _roleId = 'role_id' in item ? (item as CreateMsaDetailV2Dto).role_id : (item as V2Msa).roleId;
-
     const role = roles.find((r) => r.id === _roleId);
 
     if (!role) {
