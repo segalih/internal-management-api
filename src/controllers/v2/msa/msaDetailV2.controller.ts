@@ -5,6 +5,7 @@ import { BadRequestException } from '@helper/Error/BadRequestException/BadReques
 import { ProcessError } from '@helper/Error/errorHandler';
 import { isStringNumber } from '@helper/function/common';
 import { mapRolesToMsa, validateBudgetQuota, validateMsaJoinDates, validatePeopleQuota } from '@helper/function/v2';
+import { ensureUniqueNIK, ensureUniqueProjects } from '@helper/function/v2/commonv2';
 import { ResponseApi } from '@helper/interface/response.interface';
 import { msaV2resource } from '@resource/v2/pks-msa/msa.resource';
 import { PksMsaV2Service } from '@service/v2/msa/PksMsaV2.service';
@@ -14,16 +15,11 @@ import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
 import _ from 'lodash';
 import { DateTime } from 'luxon';
-export class MsaDetailV2Controller {
-  private pksMsaService: PksMsaV2Service;
-  private msaService: MsaV2Service;
-  private msaProjectService: MsaProjectV2Service;
 
-  constructor() {
-    this.pksMsaService = new PksMsaV2Service();
-    this.msaService = new MsaV2Service();
-    this.msaProjectService = new MsaProjectV2Service();
-  }
+export class MsaDetailV2Controller {
+  private pksMsaService = new PksMsaV2Service();
+  private msaService = new MsaV2Service();
+  private msaProjectService = new MsaProjectV2Service();
 
   async create(
     req: Request<any, any, CreateBulkMsaV2Dto>,
@@ -33,41 +29,34 @@ export class MsaDetailV2Controller {
 
     try {
       const { id } = req.params;
-      if (!isStringNumber(id)) {
-        throw new BadRequestException('Invalid PKS MSA ID format');
-      }
+      if (!isStringNumber(id)) throw new BadRequestException('Invalid PKS MSA ID format');
 
       const { msa } = req.body;
       const msaId = parseInt(id);
 
+      // Reset data lama & ambil pks info
       await this.msaService.deleteByMsaId(msaId, transaction);
       const pks = await this.pksMsaService.getById(msaId, transaction);
-      const { budgetQuota, dateStarted, dateEnded, peopleQuota, roles = [] } = pks;
-      validateMsaJoinDates(msa, DateTime.fromJSDate(dateStarted).toISO()!, DateTime.fromJSDate(dateEnded).toISO()!);
-      validatePeopleQuota(msa.length, peopleQuota);
-      const mappedRoles = mapRolesToMsa(msa, roles);
-      validateBudgetQuota(msa, mappedRoles, DateTime.fromJSDate(dateEnded).toISO()!, budgetQuota);
 
+      const { budgetQuota, dateStarted, dateEnded, peopleQuota, roles = [] } = pks;
+
+      // Validasi umum
+      const startDate = DateTime.fromJSDate(dateStarted).toISO()!;
+      const endDate = DateTime.fromJSDate(dateEnded).toISO()!;
+      validateMsaJoinDates(msa, startDate, endDate);
+      validatePeopleQuota(msa.length, peopleQuota);
+
+      const mappedRoles = mapRolesToMsa(msa, roles);
+      validateBudgetQuota(msa, mappedRoles, endDate, budgetQuota);
+
+      // Simpan data
       const msas = await Promise.all(
         msa.map(async (_msa) => {
-          const msaCheck = await this.msaService.getWhere({ nik: _msa.nik, isActive: true }, transaction);
-          if (msaCheck) {
-            if (msaCheck.pksMsaId !== msaId) {
-              throw new BadRequestException('NIK already exist and active');
-            }
-          }
+          await ensureUniqueNIK(this.msaService, msaId, _msa.nik, transaction);
           const _result = await this.msaService.create(msaId, _msa, transaction);
 
-          if (_msa.projects && _msa.projects.length > 0) {
-            const normalizedNames = _msa.projects.map((p) => p.name.trim().toLowerCase());
-
-            const nameCounts = _.countBy(normalizedNames);
-            const duplicates = Object.keys(nameCounts).filter((name) => nameCounts[name] > 1);
-
-            if (duplicates.length > 0) {
-              throw new BadRequestException(`Duplicate project name(s) found: ${duplicates.join(', ')}`);
-            }
-
+          if (_msa.projects?.length) {
+            ensureUniqueProjects(_msa.projects);
             await Promise.all(
               _msa.projects.map((project) => this.msaProjectService.create(_result.id, project, transaction))
             );
@@ -79,6 +68,7 @@ export class MsaDetailV2Controller {
 
       const results = await this.msaService.getByPksId(msaId, transaction);
       await transaction.commit();
+
       res.status(HttpStatusCode.Created).json({
         statusCode: HttpStatusCode.Created,
         message: 'Success',
@@ -91,6 +81,5 @@ export class MsaDetailV2Controller {
   }
 
   async update(req: Request, res: Response<ResponseApi<void>>): Promise<void> {}
-
   async destroy(req: Request, res: Response<ResponseApi<null>>): Promise<void> {}
 }

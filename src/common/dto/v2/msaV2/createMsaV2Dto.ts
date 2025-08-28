@@ -1,4 +1,4 @@
-import { IsArray, IsDateString, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { ArrayMinSize, IsArray, IsDateString, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 import { CreateRoleDto } from './createRoleDto';
 
 export class CreateMsaV2Dto {
@@ -32,6 +32,9 @@ export class CreateMsaV2Dto {
   budget_quota!: number;
 
   @IsArray()
+  @ArrayMinSize(1, {
+    message: 'roles must contain at least one role',
+  })
   roles!: CreateRoleDto[];
 
   @IsOptional()

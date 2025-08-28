@@ -4,6 +4,9 @@ import { getDiffMonths, rupiahFormatter } from '../common';
 import CreateMsaDetailV2Dto from '@common/dto/v2/msaV2/CreateMsaDetailV2Dto';
 import V2MsaHasRoles from '@database/models/v2/v2_msa_has_roles.model';
 import V2Msa from '@database/models/v2/v2_msa.model';
+import _ from 'lodash';
+import { MsaV2Service } from '@service/v2/msa/msaDetailV2.service';
+import { Transaction } from 'sequelize';
 
 export function validateMsaJoinDates(msa: CreateMsaDetailV2Dto[], dateStarted: string, dateEnded: string) {
   const start = DateTime.fromISO(dateStarted, { zone: 'UTC' });
@@ -69,5 +72,26 @@ export function validateBudgetQuota(
     throw new BadRequestException(
       `Total budget exceeds quota. Total: ${rupiahFormatter(totalBudget)}, Quota: ${rupiahFormatter(budgetQuota)}`
     );
+  }
+}
+
+export async function ensureUniqueNIK(msaService: MsaV2Service, msaId: number, nik: string, transaction?: Transaction) {
+  const msaCheck = await msaService.getWhere({ nik, isActive: true }, transaction);
+  if (msaCheck && msaCheck.pksMsaId !== msaId) {
+    throw new BadRequestException('NIK already exist and active');
+  }
+}
+
+export function ensureUniqueProjects(projects: { name: string }[]) {
+  const normalizedNames = projects.map((p) => p.name.trim().toLowerCase());
+
+  const duplicates = _(normalizedNames)
+    .countBy()
+    .pickBy((count) => count > 1)
+    .keys()
+    .value();
+
+  if (duplicates.length > 0) {
+    throw new BadRequestException(`Duplicate project name(s): ${duplicates.join(', ')}`);
   }
 }
