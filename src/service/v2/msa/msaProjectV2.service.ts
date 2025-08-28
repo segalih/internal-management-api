@@ -9,7 +9,7 @@ export class MsaProjectV2Service {
     return V2MsaProject.create(
       {
         msaId,
-        project: data.project,
+        name: data.name,
         teamLeader: data.team_leader,
       },
       {

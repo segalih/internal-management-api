@@ -25,7 +25,7 @@ module.exports = {
           key: 'id',
         },
       },
-      project: {
+      name: {
         type: Sequelize.STRING,
         allowNull: false,
       },

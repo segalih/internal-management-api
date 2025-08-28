@@ -4,7 +4,7 @@ export const projectResource = (project: V2MsaProject | V2MsaProjectAttributes):
   return {
     id: project.id,
     msaId: project.msaId,
-    project: project.project,
+    name: project.name,
     teamLeader: project.teamLeader,
   };
 };
