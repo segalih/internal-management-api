@@ -38,6 +38,7 @@ return {
   peopleQuota: pksMsa.peopleQuota,
   budgetQuota: pksMsa.budgetQuota,
   thresholdAlert: pksMsa.thresholdAlert,
+  isActive: pksMsa.dateEnded > DateTime.now().toJSDate(),
   isBudgetBelowThreshold,
   budgetUsed,
   remainingBudget,
