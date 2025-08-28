@@ -1,8 +1,6 @@
 import { DataTypes } from 'sequelize';
-import BaseModel, { BaseModelAttributes, baseModelInit, baseModelConfig } from './base.model';
+import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from './base.model';
 import Incident from './incident.model';
-import Msa from './msa.model';
-import License from './license.model';
 
 export interface LinkAttributes extends BaseModelAttributes {
   link: string;

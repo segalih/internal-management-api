@@ -2,12 +2,11 @@ import express from 'express';
 import { jwtMiddleware } from './middleware/jwt.middleware';
 import MainRouter from './routes';
 import AuthRoute from './routes/auth/auth.route';
-import LicenseRoute from './routes/license/license.route';
-import userRouter from './routes/user/user.route';
-import MsaRoute from './routes/msa/msa.route';
 import DocumentRouter from './routes/document/document.route';
-import { MasterRouter } from './routes/master/master.route';
 import { IncidentRouter } from './routes/incident/incident.route';
+import LicenseRoute from './routes/license/license.route';
+import { MasterRouter } from './routes/master/master.route';
+import userRouter from './routes/user/user.route';
 import MsaV2Route from './routes/v2/msa/MsaV2.route';
 
 export class Routes {
@@ -21,7 +20,6 @@ export class Routes {
     this.expressInstance.use('/api/users', new userRouter().router);
     this.expressInstance.use('/api/auth', new AuthRoute().router);
     this.expressInstance.use('/api/licenses', jwtMiddleware(), new LicenseRoute().router);
-    this.expressInstance.use('/api/msa', jwtMiddleware(), new MsaRoute().router);
     this.expressInstance.use('/api/document', new DocumentRouter().router);
     this.expressInstance.use('/api/master', new MasterRouter().router);
     this.expressInstance.use('/api/incidents', jwtMiddleware(), new IncidentRouter().router);

@@ -31,6 +31,7 @@ export class MsaDetailV2Controller {
     const transaction = await Database.database.transaction();
 
     try {
+      console.log('---BODY\n', req.body);
       const { id } = req.params;
       if (!isStringNumber(id)) {
         throw new BadRequestException('Invalid PKS MSA ID format');
@@ -40,8 +41,9 @@ export class MsaDetailV2Controller {
       const msaId = parseInt(id);
 
       await this.msaService.deleteByMsaId(msaId, transaction);
-
+      console.log('---AFTER DELETE\n');
       const pks = await this.pksMsaService.getById(msaId, transaction);
+      console.log('---after get pks\n', pks);
       const { budgetQuota, dateStarted, dateEnded, peopleQuota, roles = [] } = pks;
 
       validateMsaJoinDates(msa, DateTime.fromJSDate(dateStarted).toISO()!, DateTime.fromJSDate(dateEnded).toISO()!);
@@ -51,12 +53,14 @@ export class MsaDetailV2Controller {
 
       const msas = await Promise.all(
         msa.map(async (_msa) => {
+          console.log('---MSA\n', _msa);
           const _result = await this.msaService.create(msaId, _msa, transaction);
 
           if (_msa.projects && _msa.projects.length > 0) {
             // Tunggu semua operasi project selesai
             await Promise.all(
               _msa.projects.map((project) => {
+                console.log('---PROJECT\n', project);
                 return this.msaProjectService.create(_result.id, project, transaction);
               })
             );
