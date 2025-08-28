@@ -58,7 +58,6 @@ export class MsaDetailV2Controller {
           const _result = await this.msaService.create(msaId, _msa, transaction);
 
           if (_msa.projects && _msa.projects.length > 0) {
-            // Tunggu semua operasi project selesai
             await Promise.all(
               _msa.projects.map((project) => {
                 return this.msaProjectService.create(_result.id, project, transaction);
@@ -66,7 +65,7 @@ export class MsaDetailV2Controller {
             );
           }
 
-          return _result; // Kembalikan hasil create MSA
+          return _result; 
         })
       );
 

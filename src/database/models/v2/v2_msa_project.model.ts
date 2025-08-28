@@ -4,7 +4,7 @@ import V2Msa from './v2_msa.model';
 
 export interface V2MsaProjectAttributes extends BaseModelAttributes {
   msaId: number;
-  project: string;
+  name: string;
   teamLeader: string;
 }
 
@@ -15,7 +15,7 @@ export class V2MsaProject
   implements V2MsaProjectAttributes
 {
   public msaId!: number;
-  public project!: string;
+  public name!: string;
   public teamLeader!: string;
 }
 
@@ -26,7 +26,7 @@ V2MsaProject.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    project: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
