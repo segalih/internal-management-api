@@ -1,4 +1,4 @@
-import { IsArray, IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsDateString, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 import { CreateRoleDto } from './createRoleDto';
 
 export class CreateMsaV2Dto {
@@ -20,9 +20,15 @@ export class CreateMsaV2Dto {
   date_ended!: string;
 
   @IsNumber()
+  @Min(1, {
+    message: 'people_quota must be a positive number',
+  })
   people_quota!: number;
 
   @IsNumber()
+  @Min(1, {
+    message: 'budget_quota must be a positive number',
+  })
   budget_quota!: number;
 
   @IsArray()
