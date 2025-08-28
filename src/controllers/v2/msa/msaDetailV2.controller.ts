@@ -54,6 +54,12 @@ export class MsaDetailV2Controller {
       const msas = await Promise.all(
         msa.map(async (_msa) => {
           console.log('---MSA\n', _msa);
+          const msaCheck = await this.msaService.getWhere({ nik: _msa.nik, isActive: true }, transaction);
+          if (msaCheck) {
+            if (msaCheck.pksMsaId !== msaId) {
+              throw new BadRequestException('NIK already exist and active');
+            }
+          }
           const _result = await this.msaService.create(msaId, _msa, transaction);
 
           if (_msa.projects && _msa.projects.length > 0) {

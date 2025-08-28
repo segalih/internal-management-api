@@ -80,4 +80,8 @@ export class MsaV2Service {
     });
     return msa.map((item) => msaV2resource(item));
   }
+
+  async getWhere(data: Partial<V2MsaAttributes>, transaction?: Transaction): Promise<V2Msa | null> {
+    return V2Msa.findOne({ where: data });
+  }
 }
