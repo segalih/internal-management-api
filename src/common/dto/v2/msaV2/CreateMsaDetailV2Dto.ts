@@ -1,5 +1,14 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsBoolean, IsDateString, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsDateString,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Matches,
+  ValidateNested,
+} from 'class-validator';
 import { CreateMsaProjectV2Dto } from './CreateMsaProjectV2Dto';
 
 export default class CreateMsaDetailV2Dto {
@@ -13,8 +22,8 @@ export default class CreateMsaDetailV2Dto {
   @IsString()
   name!: string;
 
-  @IsString()
-  project!: string;
+  @Matches(/^\d{15,16}$/, { message: 'NIK harus terdiri dari 15 atau 16 digit angka' })
+  nik!: string;
 
   @IsString()
   group_position!: string;

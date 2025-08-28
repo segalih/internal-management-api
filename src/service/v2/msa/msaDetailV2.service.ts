@@ -13,8 +13,8 @@ export class MsaV2Service {
       {
         name: data.name,
         pksMsaId: pksMsaId,
-        project: data.project,
         roleId: data.role_id,
+        nik: data.nik,
         groupPosition: data.group_position,
         joinDate: DateTime.fromISO(data.join_date as string, { zone: 'UTC' }).toJSDate()!,
         leaveDate: data.leave_date

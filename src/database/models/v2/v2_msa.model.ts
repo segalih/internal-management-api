@@ -13,6 +13,7 @@ export interface V2MsaAttributes extends BaseModelAttributes {
   joinDate?: Date;
   leaveDate?: Date;
   isActive: boolean;
+  nik: string;
 
   projects?: V2MsaProjectAttributes[];
 
@@ -29,6 +30,7 @@ export class V2Msa extends BaseModel<V2MsaAttributes, V2MsaCreationAttributes> i
   public joinDate?: Date;
   public leaveDate?: Date;
   public isActive!: boolean;
+  public nik!: string;
 
   projects?: V2MsaProject[] | V2MsaProjectAttributes[];
 
@@ -76,6 +78,10 @@ V2Msa.init(
     isActive: {
       field: 'is_active',
       type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+    nik: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
   },
