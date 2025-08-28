@@ -1,6 +1,5 @@
 import { DataTypes } from 'sequelize';
 import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from './base.model';
-import Msa from './msa.model';
 
 export interface DocumentAttributes extends BaseModelAttributes {
   file_type: string;

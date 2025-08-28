@@ -62,10 +62,6 @@ V2PksMsa.init(
       field: 'date_started',
       type: DataTypes.DATE,
       allowNull: false,
-      get() {
-        const date = this.getDataValue('dateStarted');
-        return date ? new Date(date).toISOString() : null;
-      },
     },
     dateEnded: {
       field: 'date_ended',

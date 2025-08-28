@@ -1,5 +1,5 @@
 import { CreateMsaProjectV2Dto } from '@common/dto/v2/msaV2/CreateMsaProjectV2Dto';
-import V2MsaProject from '@database/models/v2/v2_msa_projec.model';
+import V2MsaProject from '@database/models/v2/v2_msa_project.model';
 import { Transaction } from 'sequelize';
 
 export class MsaProjectV2Service {

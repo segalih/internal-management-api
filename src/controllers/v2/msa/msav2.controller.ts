@@ -6,7 +6,7 @@ import { BadRequestException } from '@helper/Error/BadRequestException/BadReques
 import { ProcessError } from '@helper/Error/errorHandler';
 import { isStringNumber } from '@helper/function/common';
 import { ResponseApi, ResponseApiWithPagination } from '@helper/interface/response.interface';
-import { PksMsaV2Service } from '@service/v2/msa/PksMsaV2.service';
+import { OtherSearchConditions, PksMsaV2Service } from '@service/v2/msa/PksMsaV2.service';
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
 import { DateTime } from 'luxon';
@@ -21,6 +21,10 @@ export class MsaV2Controller {
   async create(req: Request<any, any, CreateMsaV2Dto>, res: Response<ResponseApi<V2PksMsaAttributes>>) {
     const transaction = await Database.database.transaction();
     try {
+      if (!req.body.roles || req.body.roles.length === 0) {
+        throw new BadRequestException('At least one role is required');
+      }
+
       const _dateStarted = DateTime.fromISO(req.body.date_started, { zone: 'UTC' });
       const _dateEnded = DateTime.fromISO(req.body.date_ended, { zone: 'UTC' });
 
@@ -63,6 +67,7 @@ export class MsaV2Controller {
         budget_quota,
         budget_quota_from,
         budget_quota_to,
+        name,
       } = req.query;
 
       const searchConditions: SearchCondition[] = [
@@ -122,6 +127,10 @@ export class MsaV2Controller {
         },
       ];
 
+      const otherSearchConditions: OtherSearchConditions = {
+        name: name as string,
+      };
+
       const sortOptions = {
         key: (req.query.sort_by as string) || 'id',
         order: (req.query.sort_order as string) || 'DESC',
@@ -132,6 +141,7 @@ export class MsaV2Controller {
         perPage,
         searchConditions,
         sortOptions,
+        otherSearchConditions,
       });
 
       res.status(HttpStatusCode.Ok).json({

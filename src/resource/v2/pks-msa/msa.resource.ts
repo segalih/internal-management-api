@@ -7,13 +7,13 @@ export const msaV2resource = (msa: V2Msa | V2MsaAttributes): V2MsaAttributes => 
     id: msa.id,
     roleId: msa.roleId,
     name: msa.name,
-    project: msa.project,
     groupPosition: msa.groupPosition,
     pksMsaId: msa.pksMsaId,
-    role: msa.role! && roleV2resource(msa.role!),
+    nik: msa.nik,
     isActive: msa.isActive,
     joinDate: msa.joinDate ? msa.joinDate : undefined,
     leaveDate: msa.leaveDate ? msa.leaveDate : undefined,
+    role: msa.role! && roleV2resource(msa.role!),
     projects: msa.projects && msa.projects.map((project) => projectResource(project)),
   };
 };

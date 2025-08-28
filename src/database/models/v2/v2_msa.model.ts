@@ -3,17 +3,17 @@ import { DataTypes } from 'sequelize';
 import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from '../base.model';
 import V2MsaHasRoles, { V2MsaHasRolesAttributes } from './v2_msa_has_roles.model';
 import V2PksMsa from './v2_pks_msa.model';
-import V2MsaProject, { V2MsaProjectAttributes } from './v2_msa_projec.model';
+import V2MsaProject, { V2MsaProjectAttributes } from './v2_msa_project.model';
 
 export interface V2MsaAttributes extends BaseModelAttributes {
   pksMsaId: number;
   roleId: number;
   name: string;
-  project: string;
   groupPosition: string;
   joinDate?: Date;
   leaveDate?: Date;
   isActive: boolean;
+  nik: string;
 
   projects?: V2MsaProjectAttributes[];
 
@@ -26,11 +26,11 @@ export class V2Msa extends BaseModel<V2MsaAttributes, V2MsaCreationAttributes> i
   public pksMsaId!: number;
   public roleId!: number;
   public name!: string;
-  public project!: string;
   public groupPosition!: string;
   public joinDate?: Date;
   public leaveDate?: Date;
   public isActive!: boolean;
+  public nik!: string;
 
   projects?: V2MsaProject[] | V2MsaProjectAttributes[];
 
@@ -60,10 +60,6 @@ V2Msa.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    project: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     groupPosition: {
       field: 'group_position',
       type: DataTypes.STRING,
@@ -84,6 +80,10 @@ V2Msa.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
+    nik: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
   {
     ...baseModelConfig,
@@ -95,7 +95,7 @@ V2Msa.init(
 V2Msa.belongsTo(V2MsaHasRoles, { foreignKey: 'roleId', targetKey: 'id', as: 'role' });
 // V2MsaHasRoles.hasMany(V2Msa, { foreignKey: 'roleId', as: '' });
 
-V2Msa.belongsTo(V2PksMsa, { foreignKey: 'pksMsaId', targetKey: 'id', as: 'msaPks' });
+V2Msa.belongsTo(V2PksMsa, { foreignKey: 'pksMsaId', targetKey: 'id', as: 'pksMsa' });
 V2PksMsa.hasMany(V2Msa, { foreignKey: 'pksMsaId', sourceKey: 'id', as: 'msas' });
 
 export default V2Msa;
