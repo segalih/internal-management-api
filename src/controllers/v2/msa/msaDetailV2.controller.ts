@@ -42,7 +42,6 @@ export class MsaDetailV2Controller {
       await this.msaService.deleteByMsaId(msaId, transaction);
       const pks = await this.pksMsaService.getById(msaId, transaction);
       const { budgetQuota, dateStarted, dateEnded, peopleQuota, roles = [] } = pks;
-
       validateMsaJoinDates(msa, DateTime.fromJSDate(dateStarted).toISO()!, DateTime.fromJSDate(dateEnded).toISO()!);
       validatePeopleQuota(msa.length, peopleQuota);
       const mappedRoles = mapRolesToMsa(msa, roles);

@@ -8,22 +8,31 @@ import V2Msa from '@database/models/v2/v2_msa.model';
 export function validateMsaJoinDates(msa: CreateMsaDetailV2Dto[], dateStarted: string, dateEnded: string) {
   const start = DateTime.fromISO(dateStarted, { zone: 'UTC' });
   const end = DateTime.fromISO(dateEnded, { zone: 'UTC' });
-  
-  if (start.toJSDate() > end.toJSDate()) {
-    throw new BadRequestException('Date started must be before date ended');
-  }
 
   msa.forEach((item, index) => {
     const joinDate = DateTime.fromISO(item.join_date as string, { zone: 'UTC' });
 
-    if (joinDate.toJSDate() < start.toJSDate() || joinDate.toJSDate() > end.toJSDate()) {
-      throw new BadRequestException(`Join date for msa ${index + 1} must be after date started and before date ended`);
+    if (joinDate.toJSDate() < start.toJSDate()) {
+      throw new BadRequestException(`Join date for msa [${index}] must be after date started and before date ended`);
+    }
+
+    if (joinDate.toJSDate() > end.toJSDate()) {
+      throw new BadRequestException(`Join date for msa [${index}] must be before date ended`);
     }
 
     if (item.leave_date) {
       const leaveDate = DateTime.fromISO(item.leave_date as string, { zone: 'UTC' });
-      if (leaveDate.toJSDate() < joinDate.toJSDate() || leaveDate.toJSDate() > end.toJSDate()) {
-        throw new BadRequestException(`Leave date for msa ${index + 1} must be after join date and before date ended`);
+
+      if (leaveDate.toJSDate() < joinDate.toJSDate()) {
+        throw new BadRequestException(`Leave date for msa [${index}] must be after join date`);
+      }
+
+      if (leaveDate.toJSDate() < joinDate.toJSDate()) {
+        throw new BadRequestException(`Leave date for msa [${index}] must be after join date and before date ended`);
+      }
+
+      if (leaveDate.toJSDate() > end.toJSDate()) {
+        throw new BadRequestException(`Leave date for msa [${index}] must be before date ended`);
       }
     }
   });
