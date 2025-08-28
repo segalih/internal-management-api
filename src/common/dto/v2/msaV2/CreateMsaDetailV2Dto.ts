@@ -7,9 +7,11 @@ import {
   IsOptional,
   IsString,
   Matches,
+  Validate,
   ValidateNested,
 } from 'class-validator';
 import { CreateMsaProjectV2Dto } from './CreateMsaProjectV2Dto';
+import { UniqueProjectNameConstraint } from '@helper/dto/dtoHelper';
 
 export default class CreateMsaDetailV2Dto {
   @IsNumber()
@@ -42,5 +44,6 @@ export default class CreateMsaDetailV2Dto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateMsaProjectV2Dto)
+  @Validate(UniqueProjectNameConstraint, { message: 'Duplicate project name is not allowed' })
   public projects!: CreateMsaProjectV2Dto[];
 }

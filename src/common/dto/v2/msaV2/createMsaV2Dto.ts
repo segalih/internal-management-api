@@ -1,5 +1,6 @@
-import { ArrayMinSize, IsArray, IsDateString, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { ArrayMinSize, IsArray, IsDateString, IsNumber, IsOptional, IsString, Min, Validate } from 'class-validator';
 import { CreateRoleDto } from './createRoleDto';
+import { UniqueRoleConstraint } from '@helper/dto/dtoHelper';
 
 export class CreateMsaV2Dto {
   @IsString()
@@ -35,6 +36,7 @@ export class CreateMsaV2Dto {
   @ArrayMinSize(1, {
     message: 'roles must contain at least one role',
   })
+  @Validate(UniqueRoleConstraint, { message: 'Duplicate role is not allowed' })
   roles!: CreateRoleDto[];
 
   @IsOptional()

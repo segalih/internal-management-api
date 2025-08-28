@@ -21,10 +21,6 @@ export class MsaV2Controller {
   async create(req: Request<any, any, CreateMsaV2Dto>, res: Response<ResponseApi<V2PksMsaAttributes>>) {
     const transaction = await Database.database.transaction();
     try {
-      if (!req.body.roles || req.body.roles.length === 0) {
-        throw new BadRequestException('At least one role is required');
-      }
-
       const _dateStarted = DateTime.fromISO(req.body.date_started, { zone: 'UTC' });
       const _dateEnded = DateTime.fromISO(req.body.date_ended, { zone: 'UTC' });
 
