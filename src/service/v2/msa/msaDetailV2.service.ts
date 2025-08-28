@@ -5,7 +5,7 @@ import V2MsaHasRoles from '@database/models/v2/v2_msa_has_roles.model';
 import { UnprocessableEntityException } from '@helper/Error/UnprocessableEntity/UnprocessableEntityException';
 import { msaV2resource } from '@resource/v2/pks-msa/msa.resource';
 import { DateTime } from 'luxon';
-import V2MsaProject from '@database/models/v2/v2_msa_projec.model';
+import V2MsaProject from '@database/models/v2/v2_msa_project.model';
 
 export class MsaV2Service {
   async create(pksMsaId: number, data: CreateMsaDetailV2Dto, transaction?: Transaction): Promise<V2Msa> {
