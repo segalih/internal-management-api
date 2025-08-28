@@ -12,6 +12,7 @@ import { MsaV2Service } from '@service/v2/msa/msaDetailV2.service';
 import { MsaProjectV2Service } from '@service/v2/msa/msaProjectV2.service';
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
+import _ from 'lodash';
 import { DateTime } from 'luxon';
 export class MsaDetailV2Controller {
   private pksMsaService: PksMsaV2Service;
@@ -58,14 +59,21 @@ export class MsaDetailV2Controller {
           const _result = await this.msaService.create(msaId, _msa, transaction);
 
           if (_msa.projects && _msa.projects.length > 0) {
+            const normalizedNames = _msa.projects.map((p) => p.name.trim().toLowerCase());
+
+            const nameCounts = _.countBy(normalizedNames);
+            const duplicates = Object.keys(nameCounts).filter((name) => nameCounts[name] > 1);
+
+            if (duplicates.length > 0) {
+              throw new BadRequestException(`Duplicate project name(s) found: ${duplicates.join(', ')}`);
+            }
+
             await Promise.all(
-              _msa.projects.map((project) => {
-                return this.msaProjectService.create(_result.id, project, transaction);
-              })
+              _msa.projects.map((project) => this.msaProjectService.create(_result.id, project, transaction))
             );
           }
 
-          return _result; 
+          return _result;
         })
       );
 
