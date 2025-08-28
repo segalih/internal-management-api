@@ -4,7 +4,7 @@ import { SearchCondition } from '@database/models/base.model';
 import { V2PksMsaAttributes } from '@database/models/v2/v2_pks_msa.model';
 import { BadRequestException } from '@helper/Error/BadRequestException/BadRequestException';
 import { ProcessError } from '@helper/Error/errorHandler';
-import { isStringNumber } from '@helper/function/common';
+import { isStringNumber, stringToDate } from '@helper/function/common';
 import { ResponseApi, ResponseApiWithPagination } from '@helper/interface/response.interface';
 import { OtherSearchConditions, PksMsaV2Service } from '@service/v2/msa/PksMsaV2.service';
 import { HttpStatusCode } from 'axios';
@@ -64,6 +64,7 @@ export class MsaV2Controller {
         budget_quota_from,
         budget_quota_to,
         name,
+        is_active,
       } = req.query;
 
       const searchConditions: SearchCondition[] = [
@@ -76,25 +77,25 @@ export class MsaV2Controller {
         {
           keySearch: 'dateStarted',
           operator: Op.gte,
-          keyValue: date_started_from ?? '',
+          keyValue: date_started_from ? stringToDate(date_started_from as string) : '',
           keyColumn: 'dateStarted',
         },
         {
           keySearch: 'dateStarted',
           operator: Op.lte,
-          keyValue: date_started_to ? DateTime.fromISO(date_started_to as string, { zone: 'UTC' }).toISO() : '',
+          keyValue: date_started_to ? DateTime.fromISO(date_started_to as string, { zone: 'UTC' }).toISO() : undefined,
           keyColumn: 'dateStarted',
         },
         {
           keySearch: 'dateEnded',
           operator: Op.gte,
-          keyValue: date_ended_from ? date_ended_from : '',
+          keyValue: date_ended_from ? stringToDate(date_ended_from as string) : '',
           keyColumn: 'dateEnded',
         },
         {
           keySearch: 'dateEnded',
           operator: Op.lte,
-          keyValue: date_ended_to ? DateTime.fromISO(date_ended_to as string, { zone: 'UTC' }).toISO() : '',
+          keyValue: date_ended_to ? stringToDate(date_ended_to as string) : undefined,
           keyColumn: 'dateEnded',
         },
         {
@@ -120,6 +121,12 @@ export class MsaV2Controller {
           operator: Op.gte,
           keyValue: budget_quota_from ?? '',
           keyColumn: 'budgetQuota',
+        },
+        {
+          keySearch: 'dateEnded',
+          operator: Op.lte,
+          keyValue: is_active ? (is_active === 'false' ? DateTime.now().toJSDate() : '') : '',
+          keyColumn: 'dateEnded',
         },
       ];
 
