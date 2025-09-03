@@ -77,7 +77,7 @@ export function validateBudgetQuota(
 
 export async function ensureUniqueNIK(msaService: MsaV2Service, msaId: number, nik: string, transaction?: Transaction) {
   const msaCheck = await msaService.getWhere({ nik, isActive: true }, transaction);
-  if (msaCheck && msaCheck.pksMsaId !== msaId) {
+  if (msaCheck) {
     throw new BadRequestException('NIK already exist and active');
   }
 }
