@@ -14,6 +14,8 @@ export interface V2MsaAttributes extends BaseModelAttributes {
   leaveDate?: Date;
   isActive: boolean;
   nik: string;
+  vendor?: string;
+  department?: string;
 
   projects?: V2MsaProjectAttributes[];
 
@@ -31,6 +33,8 @@ export class V2Msa extends BaseModel<V2MsaAttributes, V2MsaCreationAttributes> i
   public leaveDate?: Date;
   public isActive!: boolean;
   public nik!: string;
+  public vendor?: string;
+  public department?: string;
 
   projects?: V2MsaProject[] | V2MsaProjectAttributes[];
 
@@ -83,6 +87,14 @@ V2Msa.init(
     nik: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    vendor: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    department: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   {

@@ -21,6 +21,8 @@ export class MsaV2Service {
           ? DateTime.fromISO(data.leave_date + 'T23:59:59.999+00:00', { zone: 'UTC' }).toJSDate()!
           : undefined,
         isActive: data.leave_date ? false : true,
+        vendor: data.vendor,
+        department: data.department,
       },
       {
         transaction,

@@ -41,6 +41,12 @@ export default class CreateMsaDetailV2Dto {
   @IsOptional()
   is_active!: boolean;
 
+  @IsString()
+  vendor!: string;
+
+  @IsString()
+  department!: string;
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateMsaProjectV2Dto)
