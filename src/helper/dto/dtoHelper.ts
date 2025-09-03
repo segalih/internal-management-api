@@ -27,3 +27,17 @@ export class UniqueRoleConstraint implements ValidatorConstraintInterface {
     return 'Duplicate role is not allowed';
   }
 }
+
+@ValidatorConstraint({ async: false })
+export class UniqueNikConstraint implements ValidatorConstraintInterface {
+  validate(msa: any[], args: ValidationArguments) {
+    if (!Array.isArray(msa)) return false;
+
+    const names = msa.map((p) => p.nik?.toLowerCase().trim());
+    return names.length === new Set(names).size;
+  }
+
+  defaultMessage(args: ValidationArguments) {
+    return 'Duplicate nik is not allowed';
+  }
+}
