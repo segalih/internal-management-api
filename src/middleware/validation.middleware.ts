@@ -26,6 +26,22 @@ function flattenErrors(errors: ValidationError[], parent?: string): any[] {
   });
 }
 
+function getFirstConstraintMessage(errors: ValidationError[]): string | null {
+  for (const error of errors) {
+    if (error.constraints) {
+      const messages = Object.values(error.constraints);
+      if (messages.length > 0) {
+        return messages[0];
+      }
+    }
+    if (error.children && error.children.length > 0) {
+      const childMessage = getFirstConstraintMessage(error.children);
+      if (childMessage) return childMessage;
+    }
+  }
+  return null;
+}
+
 export function validationMiddleware<T extends object>(type: new () => T) {
   return async (req: Request, res: Response, next: NextFunction) => {
     const dto = plainToInstance(type, req.body);
@@ -36,10 +52,10 @@ export function validationMiddleware<T extends object>(type: new () => T) {
 
     if (errors.length > 0) {
       const flatErrors = flattenErrors(errors);
-
+      const firstMessage = getFirstConstraintMessage(errors);
       const errorResponse: ResponseApi<any> = {
         statusCode: HttpStatusCode.BadRequest,
-        message: messages.VALIDATION_ERROR,
+        message: firstMessage ?? messages.VALIDATION_ERROR,
         data: {},
         errors: flatErrors,
       };
