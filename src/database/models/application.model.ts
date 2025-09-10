@@ -32,7 +32,7 @@ Application.init(
   },
   {
     ...baseModelConfig,
-    tableName: 'application_master',
+    tableName: 'master_applications',
   }
 );
 

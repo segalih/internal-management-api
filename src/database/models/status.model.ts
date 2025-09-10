@@ -29,7 +29,7 @@ Status.init(
   },
   {
     ...baseModelConfig,
-    tableName: 'status_master',
+    tableName: 'master_statuses',
   }
 );
 

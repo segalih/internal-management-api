@@ -3,8 +3,8 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    // APPLICATION_MASTER
-    await queryInterface.createTable('application_master', {
+    // master_applications
+    await queryInterface.createTable('master_applications', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       application_name: { type: Sequelize.STRING },
       flag: { type: Sequelize.BOOLEAN, defaultValue: true },
@@ -13,8 +13,8 @@ module.exports = {
       deleted_at: { type: Sequelize.DATE, allowNull: true },
     });
 
-    // PERSON_IN_CHARGE_MASTER
-    await queryInterface.createTable('person_in_charge_master', {
+    // master_pic
+    await queryInterface.createTable('master_persons_in_charge', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       person_name: { type: Sequelize.STRING },
       flag: { type: Sequelize.BOOLEAN, defaultValue: true },
@@ -23,8 +23,8 @@ module.exports = {
       deleted_at: { type: Sequelize.DATE, allowNull: true },
     });
 
-    // STATUS_MASTER
-    await queryInterface.createTable('status_master', {
+    // master_statuses
+    await queryInterface.createTable('master_statuses', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       status_name: { type: Sequelize.STRING },
       flag: { type: Sequelize.BOOLEAN, defaultValue: true },
@@ -40,13 +40,13 @@ module.exports = {
       entry_date: { type: Sequelize.DATE },
       application_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'application_master', key: 'id' },
+        references: { model: 'master_applications', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
       },
       person_in_charge_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'person_in_charge_master', key: 'id' },
+        references: { model: 'master_persons_in_charge', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
       },
@@ -55,7 +55,7 @@ module.exports = {
       detail: { type: Sequelize.STRING },
       status_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'status_master', key: 'id' },
+        references: { model: 'master_statuses', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
       },
@@ -90,8 +90,8 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('incident_links');
     await queryInterface.dropTable('incidents');
-    await queryInterface.dropTable('status_master');
-    await queryInterface.dropTable('person_in_charge_master');
-    await queryInterface.dropTable('application_master');
+    await queryInterface.dropTable('master_statuses');
+    await queryInterface.dropTable('master_persons_in_charge');
+    await queryInterface.dropTable('master_applications');
   },
 };

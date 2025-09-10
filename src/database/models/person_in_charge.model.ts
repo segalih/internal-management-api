@@ -32,7 +32,7 @@ PersonInCharge.init(
   },
   {
     ...baseModelConfig,
-    tableName: 'person_in_charge_master',
+    tableName: 'master_persons_in_charge',
   }
 );
 
