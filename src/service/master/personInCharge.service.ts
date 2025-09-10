@@ -1,4 +1,4 @@
-import PersonInCharge from '@database/models/person_in_charge.model';
+import PersonInCharge from '@database/models/masters/person_in_charge.model';
 import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
 
 export class PersonInChargeService {

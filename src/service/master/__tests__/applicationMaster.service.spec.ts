@@ -1,4 +1,4 @@
-import Application from '@database/models/application.model';
+import Application from '@database/models/masters/application.model';
 import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
 import { ApplicationMasterService } from '../applicationMaster.service';
 

@@ -1,9 +1,9 @@
 import { DataTypes } from 'sequelize';
-import Application from './application.model';
+import Application from './masters/application.model';
 import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from './base.model';
 import Link from './link.model';
-import PersonInCharge from './person_in_charge.model';
-import Status from './status.model';
+import PersonInCharge from './masters/person_in_charge.model';
+import Status from './masters/status.model';
 
 export interface IncidentAttributes extends BaseModelAttributes {
   ticketNumber: string;

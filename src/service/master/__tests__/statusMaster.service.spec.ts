@@ -1,4 +1,4 @@
-import Status from '@database/models/status.model';
+import Status from '@database/models/masters/status.model';
 import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
 import { StatusMasterService } from '../statusMaster.service';
 

@@ -1,10 +1,10 @@
 import { CreateIncidentDto } from '@common/dto/incident/CreateIncidentDto';
-import Application from '@database/models/application.model';
+import Application from '@database/models/masters/application.model';
 import { PaginationResult, SearchCondition } from '@database/models/base.model';
 import Incident, { IncidentAttributes } from '@database/models/incident.model';
 import Link from '@database/models/link.model';
-import PersonInCharge from '@database/models/person_in_charge.model';
-import Status from '@database/models/status.model';
+import PersonInCharge from '@database/models/masters/person_in_charge.model';
+import Status from '@database/models/masters/status.model';
 import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
 import { stringToDate } from '@helper/function/common';
 import { ApplicationMasterService } from '@service/master/applicationMaster.service';
