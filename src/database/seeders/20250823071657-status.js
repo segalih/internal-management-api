@@ -13,7 +13,7 @@ module.exports = {
      * }], {});
      */
 
-    await queryInterface.bulkInsert('status_master', [
+    await queryInterface.bulkInsert('master_statuses', [
       { status_name: 'Open', flag: 1 },
       { status_name: 'Temporary Action', flag: 1 },
       { status_name: 'Full Action', flag: 1 },
@@ -28,6 +28,6 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
 
-    await queryInterface.bulkDelete('status_master', null, {});
+    await queryInterface.bulkDelete('master_statuses', null, {});
   },
 };

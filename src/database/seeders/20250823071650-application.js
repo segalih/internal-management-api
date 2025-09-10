@@ -12,7 +12,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
-    await queryInterface.bulkInsert('application_master', [
+    await queryInterface.bulkInsert('master_applications', [
       { application_name: 'WISE', flag: 1 },
       { application_name: 'BCS', flag: 1 },
       { application_name: 'APPEL IKURMA', flag: 1 },
@@ -53,6 +53,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete('application_master', null, {});
+    await queryInterface.bulkDelete('master_applications', null, {});
   },
 };
