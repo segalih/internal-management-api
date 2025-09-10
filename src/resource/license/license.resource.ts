@@ -1,9 +1,10 @@
 import License, { LicenseAttributes } from '@database/models/license.model';
 import { healthchecksResource } from './healthchecks.resource';
 import { DateTime } from 'luxon';
+import { dateToIsoString } from '@helper/function/common';
 
 export const licenseResource = (data: License): LicenseAttributes => {
-  const dueDate = DateTime.fromISO(data.dueDateLicense.toString(), { zone: 'UTC' });
+  const dueDate = DateTime.fromISO(dateToIsoString(data.dueDateLicense), { zone: 'UTC' });
   const dayTodaytoDueDate = dueDate.diffNow('days').days;
   let colorStatus = 'green';
   if (dayTodaytoDueDate < 30) {
