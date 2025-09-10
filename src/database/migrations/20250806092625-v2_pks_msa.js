@@ -21,11 +21,11 @@ module.exports = {
         allowNull: false,
       },
       file_pks: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: true,
       },
       file_bast: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: true,
       },
       date_started: {

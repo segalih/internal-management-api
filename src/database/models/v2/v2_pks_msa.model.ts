@@ -51,12 +51,12 @@ V2PksMsa.init(
     },
     filePks: {
       field: 'file_pks',
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true,
     },
     fileBast: {
       field: 'file_bast',
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true,
     },
     dateStarted: {

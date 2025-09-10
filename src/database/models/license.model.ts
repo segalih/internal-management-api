@@ -81,11 +81,11 @@ License.init(
     //   allowNull: true,
     // },
     filePks: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     fileBast: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     isNotified: {

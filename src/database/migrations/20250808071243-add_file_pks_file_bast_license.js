@@ -10,12 +10,12 @@ module.exports = {
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
     await queryInterface.addColumn('licenses', 'file_pks', {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
       allowNull: false,
     });
 
     await queryInterface.addColumn('licenses', 'file_bast', {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
       allowNull: false,
     });
   },
