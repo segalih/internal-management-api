@@ -19,7 +19,7 @@ MasterDepartment.init(
     ...baseModelInit,
     name: {
       type: DataTypes.STRING,
-      field: 'person_name',
+      field: 'name',
       allowNull: false,
     },
   },
