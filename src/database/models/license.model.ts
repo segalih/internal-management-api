@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from './base.model';
 import LicenseHealthcheck, { LicenseHealthcheckAttributes } from './license_healthcheck.model';
+import MasterVendorApplication, { MasterVendorApplicationAttributes } from './masters/master_vendor_application.model';
 
 export const LISENCE_CONSTANTS = {
   BASE_PATH: '/uploads/lisence/',
@@ -17,7 +18,7 @@ export interface LicenseAttributes extends BaseModelAttributes {
   fileBast: string;
   isNotified: boolean;
   dateStarted?: Date;
-  vendor?: string;
+  vendor_id?: number;
   descriptions?: string;
 
   pksFileUrl?: string;
@@ -26,6 +27,7 @@ export interface LicenseAttributes extends BaseModelAttributes {
   // bast_file_id?: number;
   status?: string;
   healthchecks?: LicenseHealthcheck[] | LicenseHealthcheckAttributes[];
+  vendor?: MasterVendorApplication | MasterVendorApplicationAttributes;
 }
 
 export interface LicenseCreationAttributes extends Omit<LicenseAttributes, 'id'> {}
@@ -38,7 +40,7 @@ class License extends BaseModel<LicenseAttributes, LicenseCreationAttributes> im
   public dueDateLicense!: Date;
 
   public dateStarted?: Date;
-  public vendor?: string;
+  public vendor_id?: number;
   public descriptions?: string;
 
   // public healthCheckRoutine!: Date;
@@ -47,6 +49,7 @@ class License extends BaseModel<LicenseAttributes, LicenseCreationAttributes> im
   public fileBast!: string;
   public isNotified!: boolean;
   public healthchecks?: LicenseHealthcheck[] | LicenseHealthcheckAttributes[];
+  public vendor?: MasterVendorApplication | MasterVendorApplicationAttributes;
 }
 
 License.init(
@@ -84,9 +87,13 @@ License.init(
       type: DataTypes.DATE,
       allowNull: true,
     },
-    vendor: {
-      type: DataTypes.STRING,
+    vendor_id: {
+      type: DataTypes.INTEGER,
       allowNull: true,
+      references: {
+        model: 'master_vendor_applications',
+        key: 'id',
+      },
     },
     descriptions: {
       type: DataTypes.TEXT,
@@ -111,14 +118,16 @@ License.init(
   }
 );
 
-// License.belongsTo(Document, {
-//   // foreignKey: 'pks_file_id',
-//   as: 'pksFile',
-// });
+License.belongsTo(MasterVendorApplication, {
+  foreignKey: 'vendor_id',
+  targetKey: 'id',
+  as: 'vendor',
+});
 
-// License.belongsTo(Document, {
-//   // foreignKey: 'bast_file_id',
-//   as: 'bastFile',
-// });
+MasterVendorApplication.hasMany(License, {
+  foreignKey: 'vendor_id',
+  sourceKey: 'id',
+  as: 'licenses3',
+});
 
 export default License;

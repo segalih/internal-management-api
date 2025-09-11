@@ -18,7 +18,7 @@ export const licenseResource = (data: License): LicenseAttributes => {
     application: data.application,
     dateStarted: data.dateStarted,
     dueDateLicense: data.dueDateLicense,
-    vendor: data.vendor,
+    vendor_id: data.vendor_id,
     descriptions: data.descriptions,
     filePks: data.filePks,
     fileBast: data.fileBast,
