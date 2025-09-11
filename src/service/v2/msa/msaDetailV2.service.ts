@@ -6,6 +6,9 @@ import { UnprocessableEntityException } from '@helper/Error/UnprocessableEntity/
 import { msaV2resource } from '@resource/v2/pks-msa/msa.resource';
 import { DateTime } from 'luxon';
 import V2MsaProject from '@database/models/v2/v2_msa_project.model';
+import MasterGroup from '@database/models/masters/master_group.model';
+import MasterDepartment from '@database/models/masters/master_department.model';
+import MasterVendor from '@database/models/masters/master_vendor.model';
 
 export class MsaV2Service {
   async create(pksMsaId: number, data: CreateMsaDetailV2Dto, transaction?: Transaction): Promise<V2Msa> {
@@ -15,14 +18,14 @@ export class MsaV2Service {
         pksMsaId: pksMsaId,
         roleId: data.role_id,
         nik: data.nik,
-        groupPosition: data.group_position,
         joinDate: DateTime.fromISO(data.join_date as string, { zone: 'UTC' }).toJSDate()!,
         leaveDate: data.leave_date
           ? DateTime.fromISO(data.leave_date + 'T23:59:59.999+00:00', { zone: 'UTC' }).toJSDate()!
           : undefined,
         isActive: data.leave_date ? false : true,
-        vendor: data.vendor,
-        department: data.department,
+        groupId: data.group_id,
+        departmentId: data.department_id,
+        vendorId: data.vendor_id,
       },
       {
         transaction,
@@ -47,10 +50,21 @@ export class MsaV2Service {
           model: V2MsaProject,
           as: 'projects',
         },
+        {
+          model: MasterGroup,
+          as: 'msaGroup',
+        },
+        {
+          model: MasterDepartment,
+          as: 'msaDepartment',
+        },
+        {
+          model: MasterVendor,
+          as: 'msaVendor',
+        },
       ],
       transaction,
     });
-
     if (!msa) {
       throw new UnprocessableEntityException('MSA not found', {});
     }
@@ -77,13 +91,25 @@ export class MsaV2Service {
           model: V2MsaProject,
           as: 'projects',
         },
+        {
+          model: MasterGroup,
+          as: 'msaGroup',
+        },
+        {
+          model: MasterDepartment,
+          as: 'msaDepartment',
+        },
+        {
+          model: MasterVendor,
+          as: 'msaVendor',
+        },
       ],
       transaction,
     });
-    return msa.map((item) => msaV2resource(item));
+    return msa;
   }
 
-  async getWhere(data: Partial<V2MsaAttributes>, transaction?: Transaction): Promise<V2Msa | null> {
-    return V2Msa.findOne({ where: data });
+  async getWhere(data: Partial<V2MsaAttributes>, transaction?: Transaction): Promise<V2Msa[] | []> {
+    return V2Msa.findAll({ where: data });
   }
 }

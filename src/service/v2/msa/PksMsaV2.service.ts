@@ -8,6 +8,9 @@ import { pksMsaV2resource } from '@resource/v2/pks-msa/pks-msa.resource';
 import { DateTime } from 'luxon';
 import V2MsaProject from '@database/models/v2/v2_msa_project.model';
 import { Op } from 'sequelize';
+import MasterGroup from '@database/models/masters/master_group.model';
+import MasterDepartment from '@database/models/masters/master_department.model';
+import MasterVendor from '@database/models/masters/master_vendor.model';
 export interface OtherSearchConditions {
   name?: string;
 }
@@ -118,6 +121,18 @@ export class PksMsaV2Service {
             {
               model: V2MsaProject,
               as: 'projects',
+            },
+            {
+              model: MasterGroup,
+              as: 'msaGroup',
+            },
+            {
+              model: MasterDepartment,
+              as: 'msaDepartment',
+            },
+            {
+              model: MasterVendor,
+              as: 'msaVendor',
             },
           ],
         },

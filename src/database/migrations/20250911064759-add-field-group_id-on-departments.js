@@ -9,25 +9,15 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.addColumn('licenses', 'date_started', {
-      type: Sequelize.DATE,
-      allowNull: true,
-    });
-
-    await queryInterface.addColumn('licenses', 'vendor_id', {
+    await queryInterface.addColumn('master_departments', 'group_id', {
       type: Sequelize.INTEGER,
       allowNull: true,
       references: {
         model: {
-          tableName: 'master_vendors',
+          tableName: 'master_groups',
         },
         key: 'id',
       },
-    });
-
-    await queryInterface.addColumn('licenses', 'descriptions', {
-      type: Sequelize.TEXT,
-      allowNull: true,
     });
   },
 
@@ -38,8 +28,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.removeColumn('licenses', 'date_started');
-    await queryInterface.removeColumn('licenses', 'vendor_id');
-    await queryInterface.removeColumn('licenses', 'descriptions');
+    await queryInterface.removeColumn('master_departments', 'group_id');
   },
 };

@@ -2,6 +2,7 @@ import { CreateLisenceDto } from '@common/dto/lisence/CreateLisenceDto';
 import { PaginationResult, SearchCondition } from '@database/models/base.model';
 import License, { LicenseAttributes } from '@database/models/license.model';
 import LicenseHealthcheck from '@database/models/license_healthcheck.model';
+import MasterVendorApplication from '@database/models/masters/master_vendor_application.model';
 import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
 import { stringToDate } from '@helper/function/common';
 import { DateTime } from 'luxon';
@@ -11,7 +12,13 @@ export default class LicenseService {
 
   async getById(id: number): Promise<License> {
     const license = await License.findByPk(id, {
-      include: [{ model: LicenseHealthcheck, as: 'healthchecks' }],
+      include: [
+        { model: LicenseHealthcheck, as: 'healthchecks' },
+        {
+          model: MasterVendorApplication,
+          as: 'vendorApplication',
+        },
+      ],
     });
     if (!license) {
       throw new NotFoundException('License not found');
@@ -25,10 +32,8 @@ export default class LicenseService {
       application: data.application,
       dateStarted: stringToDate(data.date_started as string) ?? null,
       dueDateLicense: DateTime.fromISO(`${data.due_date_license}`, { zone: 'UTC' }).toJSDate(),
-      vendor: data.vendor ?? null,
+      vendor_id: data.vendor_id ?? undefined,
       descriptions: data.descriptions ?? null,
-      // healthCheckRoutine: DateTime.fromISO(`${data.health_check_routine}`, { zone: 'UTC' }).toJSDate(),
-      // healthCheckActual: DateTime.fromISO(`${data.health_check_actual}`, { zone: 'UTC' }).toJSDate(),
       filePks: data.file_pks,
       fileBast: data.file_bast,
       isNotified: data.is_notified ? data.is_notified : true,
@@ -68,7 +73,7 @@ export default class LicenseService {
       dueDateLicense: DateTime.fromISO(`${data.due_date_license}`, { zone: 'UTC' }).toJSDate(),
       filePks: data.file_pks,
       fileBast: data.file_bast,
-      vendor: data.vendor,
+      vendor_id: data.vendor_id,
       descriptions: data.descriptions,
       isNotified: data.is_notified ? data.is_notified : true,
       pksFileId: null,
@@ -92,6 +97,10 @@ export default class LicenseService {
         {
           model: LicenseHealthcheck,
           as: 'healthchecks',
+        },
+        {
+          model: MasterVendorApplication,
+          as: 'vendorApplication',
         },
       ],
     });

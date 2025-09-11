@@ -14,8 +14,10 @@ class MasterDepartmentService {
     return results;
   }
 
-  async fetchAll(): Promise<MasterDepartment[]> {
-    const results = await MasterDepartment.findAll();
+  async fetchAll(groupId?: number): Promise<MasterDepartment[]> {
+    const results = await MasterDepartment.findAll({
+      where: { groupId: groupId ?? '' },
+    });
 
     return results;
   }

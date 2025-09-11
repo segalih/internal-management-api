@@ -43,7 +43,7 @@ export class LicenseController {
       res.status(HttpStatusCode.Created).json({
         message: 'License created successfully',
         statusCode: HttpStatusCode.Created,
-        data: this.licenseService.licenseResponse(result),
+        data: licenseResource(result),
       });
     } catch (err) {
 
@@ -122,7 +122,7 @@ export class LicenseController {
 
   async index(req: Request, res: Response<ResponseApiWithPagination<LicenseAttributes>>) {
     try {
-      let { page, per_page, bast, status } = req.query;
+      let { page, per_page, pks, status } = req.query;
 
       if (!status) {
         status = 'all';
@@ -151,10 +151,10 @@ export class LicenseController {
         page: parseInt((page as string) ?? '1', 10),
         searchConditions: [
           {
-            keyValue: bast ?? '',
-            operator: Op.eq,
-            keyColumn: 'bast',
-            keySearch: 'bast',
+            keyValue: `%${(pks as string) ?? ''}%`,
+            operator: Op.like,
+            keyColumn: 'pks',
+            keySearch: 'pks',
           },
           {
             keyValue: thresholdDate ?? '',

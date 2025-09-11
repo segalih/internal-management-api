@@ -1,32 +1,21 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
+const mergeSeed = require('./utils/mergeSeed');
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-     */
-    await queryInterface.bulkInsert('master_groups', [
-      { name: 'ASP' },
-      { name: 'IDG' },
-      { name: 'IOG' },
-      { name: 'IDG' },
-    ]);
+    const groups = [
+      { id: 1, name: 'ASP' },
+      { id: 2, name: 'IDG' },
+      { id: 3, name: 'IOG22' },
+    ];
+
+    await mergeSeed(queryInterface, 'master_groups', groups, 'id');
   },
 
   async down(queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
-    await queryInterface.bulkDelete('master_groups', null, {});
+    await queryInterface.bulkDelete('MASTER_GROUPS', {
+      ID: { [Sequelize.Op.in]: [1, 2, 3] },
+    });
   },
 };
