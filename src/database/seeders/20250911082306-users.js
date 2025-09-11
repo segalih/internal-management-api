@@ -12,9 +12,6 @@ module.exports = {
         role: 'superadmin',
         email: 'admin@admin.admin',
         password: '$2b$10$qIBspgo80TNIM/oVmsYbSu0hM8Gy2z./bapjHIamsRO6hDObcsyKi',
-        created_at: '2025-09-11T01:24:02.271Z',
-        updated_at: '2025-09-11T01:24:02.271Z',
-        deleted_at: null,
       },
     ];
 
@@ -22,11 +19,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+    await queryInterface.bulkDelete('users', null, {});
   },
 };

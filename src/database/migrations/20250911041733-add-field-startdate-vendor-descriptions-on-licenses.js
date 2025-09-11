@@ -39,7 +39,7 @@ module.exports = {
      * await queryInterface.dropTable('users');
      */
     await queryInterface.removeColumn('licenses', 'date_started');
-    await queryInterface.removeColumn('licenses', 'vendor');
+    await queryInterface.removeColumn('licenses', 'vendor_id');
     await queryInterface.removeColumn('licenses', 'descriptions');
   },
 };
