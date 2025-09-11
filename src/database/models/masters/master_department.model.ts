@@ -1,10 +1,12 @@
 import { DataTypes } from 'sequelize';
 import BaseModel, { BaseModelAttributes, baseModelConfig, baseModelInit } from '../base.model';
-import MasterGroup from './master_group.model';
+import MasterGroup, { MasterGroupAttributes } from './master_group.model';
 
 export interface MasterDepartmentAttributes extends BaseModelAttributes {
   groupId: number;
   name: string;
+
+  group?: MasterGroup | MasterGroupAttributes;
 }
 
 export interface MasterDepartmentCreationAttributes extends Omit<MasterDepartmentAttributes, 'id'> {}
@@ -15,6 +17,8 @@ class MasterDepartment
 {
   public groupId!: number;
   public name!: string;
+
+  public group?: MasterGroup | MasterGroupAttributes;
 }
 
 MasterDepartment.init(
