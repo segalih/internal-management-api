@@ -1,0 +1,31 @@
+name: Deploy Personal WA Bot
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup SSH key
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{secrets.DEPLOY_KEY_ALIM}}
+
+      - name: Deploy to server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{secrets.SERVER_USER}}@${{secrets.SERVER_IP}} << 'EOF'
+            # pm2 stop alim-api
+            cd deploy/internal-management-api
+            git pull origin master
+            npm install
+            npm run build
+            npx sequelize-cli db:migrate
+            # pm2 start alim-api
+          EOF
