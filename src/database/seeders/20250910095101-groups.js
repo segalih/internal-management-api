@@ -1,25 +1,16 @@
 'use strict';
 
+const mergeSeed = require('./utils/mergeSeed');
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     const groups = [
       { id: 1, name: 'ASP' },
       { id: 2, name: 'IDG' },
-      { id: 3, name: 'IOG' },
+      { id: 3, name: 'IOG22' },
     ];
 
-    for (const group of groups) {
-      await queryInterface.sequelize.query(`
-  MERGE INTO "master_groups" t
-  USING (SELECT ${group.id} AS "id", '${group.name}' AS "name" FROM dual) s
-  ON (t."id" = s."id")
-  WHEN MATCHED THEN
-    UPDATE SET t."name" = s."name", t."updated_at" = SYSDATE
-  WHEN NOT MATCHED THEN
-    INSERT ("id", "name", "created_at", "updated_at")
-    VALUES (s."id", s."name", SYSDATE, SYSDATE)
-`);
-    }
+    await mergeSeed(queryInterface, 'master_groups', groups, 'id');
   },
 
   async down(queryInterface, Sequelize) {

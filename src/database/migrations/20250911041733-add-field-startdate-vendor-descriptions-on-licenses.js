@@ -14,9 +14,15 @@ module.exports = {
       allowNull: true,
     });
 
-    await queryInterface.addColumn('licenses', 'vendor', {
-      type: Sequelize.STRING,
+    await queryInterface.addColumn('licenses', 'vendor_id', {
+      type: Sequelize.INTEGER,
       allowNull: true,
+      references: {
+        model: {
+          tableName: 'master_vendors',
+        },
+        key: 'id',
+      },
     });
 
     await queryInterface.addColumn('licenses', 'descriptions', {
