@@ -1,32 +1,30 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-     */
-    await queryInterface.bulkInsert('master_groups', [
-      { name: 'ASP' },
-      { name: 'IDG' },
-      { name: 'IOG' },
-      { name: 'IDG' },
-    ]);
+    const groups = [
+      { id: 1, name: 'ASP' },
+      { id: 2, name: 'IDG' },
+      { id: 3, name: 'IOG' },
+    ];
+
+    for (const group of groups) {
+      await queryInterface.sequelize.query(`
+  MERGE INTO "master_groups" t
+  USING (SELECT ${group.id} AS "id", '${group.name}' AS "name" FROM dual) s
+  ON (t."id" = s."id")
+  WHEN MATCHED THEN
+    UPDATE SET t."name" = s."name", t."updated_at" = SYSDATE
+  WHEN NOT MATCHED THEN
+    INSERT ("id", "name", "created_at", "updated_at")
+    VALUES (s."id", s."name", SYSDATE, SYSDATE)
+`);
+    }
   },
 
   async down(queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
-    await queryInterface.bulkDelete('master_groups', null, {});
+    await queryInterface.bulkDelete('MASTER_GROUPS', {
+      ID: { [Sequelize.Op.in]: [1, 2, 3] },
+    });
   },
 };
