@@ -27,7 +27,6 @@ export class LicenseController {
 
   async create(req: Request, res: Response<ResponseApi<LicenseAttributes>>) {
     try {
-      const files = req.files as { [fieldname: string]: Express.Multer.File[] };
       const payload = req.body as CreateLisenceDto;
 
       const license = await this.licenseService.create(payload);
@@ -39,14 +38,14 @@ export class LicenseController {
         );
       }
       const result = await this.licenseService.getById(license.id);
-    
+      console.log(result);
+
       res.status(HttpStatusCode.Created).json({
         message: 'License created successfully',
         statusCode: HttpStatusCode.Created,
         data: licenseResource(result),
       });
     } catch (err) {
-
       ProcessError(err, res);
     }
   }
