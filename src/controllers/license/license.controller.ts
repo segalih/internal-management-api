@@ -43,7 +43,7 @@ export class LicenseController {
       res.status(HttpStatusCode.Created).json({
         message: 'License created successfully',
         statusCode: HttpStatusCode.Created,
-        data: this.licenseService.licenseResponse(result),
+        data: licenseResource(result),
       });
     } catch (err) {
 

@@ -2,6 +2,7 @@ import { CreateLisenceDto } from '@common/dto/lisence/CreateLisenceDto';
 import { PaginationResult, SearchCondition } from '@database/models/base.model';
 import License, { LicenseAttributes } from '@database/models/license.model';
 import LicenseHealthcheck from '@database/models/license_healthcheck.model';
+import MasterVendorApplication from '@database/models/masters/master_vendor_application.model';
 import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
 import { stringToDate } from '@helper/function/common';
 import { DateTime } from 'luxon';
@@ -11,7 +12,13 @@ export default class LicenseService {
 
   async getById(id: number): Promise<License> {
     const license = await License.findByPk(id, {
-      include: [{ model: LicenseHealthcheck, as: 'healthchecks' }],
+      include: [
+        { model: LicenseHealthcheck, as: 'healthchecks' },
+        {
+          model: MasterVendorApplication,
+          as: 'vendorApplication',
+        },
+      ],
     });
     if (!license) {
       throw new NotFoundException('License not found');
@@ -90,6 +97,10 @@ export default class LicenseService {
         {
           model: LicenseHealthcheck,
           as: 'healthchecks',
+        },
+        {
+          model: MasterVendorApplication,
+          as: 'vendorApplication',
         },
       ],
     });

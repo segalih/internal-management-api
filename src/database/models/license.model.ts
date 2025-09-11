@@ -20,6 +20,7 @@ export interface LicenseAttributes extends BaseModelAttributes {
   dateStarted?: Date;
   vendor_id?: number;
   descriptions?: string;
+  vendorApplication?: MasterVendorApplication | MasterVendorApplicationAttributes;
 
   pksFileUrl?: string;
   bastFileUrl?: string;
@@ -42,6 +43,7 @@ class License extends BaseModel<LicenseAttributes, LicenseCreationAttributes> im
   public dateStarted?: Date;
   public vendor_id?: number;
   public descriptions?: string;
+  public vendorApplication?: MasterVendorApplication | MasterVendorApplicationAttributes;
 
   // public healthCheckRoutine!: Date;
   // public healthCheckActual!: Date;
@@ -121,7 +123,7 @@ License.init(
 License.belongsTo(MasterVendorApplication, {
   foreignKey: 'vendor_id',
   targetKey: 'id',
-  as: 'vendor',
+  as: 'vendorApplication',
 });
 
 MasterVendorApplication.hasMany(License, {
