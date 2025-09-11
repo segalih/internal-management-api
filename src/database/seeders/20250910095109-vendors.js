@@ -12,12 +12,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
-
-    await queryInterface.bulkInsert('master_statuses', [
-      { status_name: 'Open', flag: 1 },
-      { status_name: 'Temporary Action', flag: 1 },
-      { status_name: 'Full Action', flag: 1 },
-    ]);
+    await queryInterface.bulkInsert('master_vendors', [{ name: 'ADIDATA' }, { name: 'MITECH' }, { name: 'AIgen' }]);
   },
 
   async down(queryInterface, Sequelize) {
@@ -27,7 +22,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-
-    await queryInterface.bulkDelete('master_statuses', null, {});
+    await queryInterface.bulkDelete('master_vendors', null, {});
   },
 };

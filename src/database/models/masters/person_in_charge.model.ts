@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import BaseModel, { BaseModelAttributes, baseModelInit, baseModelConfig } from './base.model';
+import BaseModel, { BaseModelAttributes, baseModelInit, baseModelConfig } from '../base.model';
 
 export interface PersonInChargeAttributes extends BaseModelAttributes {
   personName: string;
@@ -32,7 +32,7 @@ PersonInCharge.init(
   },
   {
     ...baseModelConfig,
-    tableName: 'person_in_charge_master',
+    tableName: 'master_persons_in_charge',
   }
 );
 

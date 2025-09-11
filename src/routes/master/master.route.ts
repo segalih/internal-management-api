@@ -12,8 +12,10 @@ export class MasterRouter {
   }
 
   serve() {
+    this.router.route('/').get((req, res) => this.masterController.getAll(req, res));
     this.router.route('/applications').get((req, res) => this.masterController.getAllApplications(req, res));
     this.router.route('/statuses').get((req, res) => this.masterController.getAllStatus(req, res));
     this.router.route('/person-in-charges').get((req, res) => this.masterController.getAllPersonInCharge(req, res));
+
   }
 }

@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import BaseModel, { BaseModelAttributes, baseModelInit, baseModelConfig } from './base.model';
+import BaseModel, { BaseModelAttributes, baseModelInit, baseModelConfig } from '../base.model';
 
 export interface ApplicationAttributes extends BaseModelAttributes {
   applicationName: string;
@@ -32,7 +32,7 @@ Application.init(
   },
   {
     ...baseModelConfig,
-    tableName: 'application_master',
+    tableName: 'master_applications',
   }
 );
 

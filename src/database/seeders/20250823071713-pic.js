@@ -13,7 +13,7 @@ module.exports = {
      * }], {});
      */
 
-    await queryInterface.bulkInsert('person_in_charge_master', [
+    await queryInterface.bulkInsert('master_persons_in_charge', [
       { person_name: 'Cahyo Adhi Hartanto', flag: 1 },
       { person_name: 'Achmad Zain Baichuni', flag: 1 },
       { person_name: 'Rivaldo Erdany Putra', flag: 1 },
@@ -39,6 +39,6 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
 
-    await queryInterface.bulkDelete('person_in_charge_master', null, {});
+    await queryInterface.bulkDelete('master_persons_in_charge', null, {});
   },
 };

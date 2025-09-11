@@ -3,6 +3,7 @@ import { PaginationResult, SearchCondition } from '@database/models/base.model';
 import License, { LicenseAttributes } from '@database/models/license.model';
 import LicenseHealthcheck from '@database/models/license_healthcheck.model';
 import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
+import { stringToDate } from '@helper/function/common';
 import { DateTime } from 'luxon';
 
 export default class LicenseService {
@@ -19,23 +20,21 @@ export default class LicenseService {
   }
 
   async create(data: CreateLisenceDto): Promise<License> {
-    const license = await License.create(
-      {
-        pks: data.pks,
-        application: data.application,
-        dueDateLicense: DateTime.fromISO(`${data.due_date_license}`, { zone: 'UTC' }).toJSDate(),
-        // healthCheckRoutine: DateTime.fromISO(`${data.health_check_routine}`, { zone: 'UTC' }).toJSDate(),
-        // healthCheckActual: DateTime.fromISO(`${data.health_check_actual}`, { zone: 'UTC' }).toJSDate(),
-        filePks: data.file_pks,
-        fileBast: data.file_bast,
-        isNotified: data.is_notified ? data.is_notified : true,
-        pksFileId: null,
-        bastFileId: null,
-      },
-      {
-        fields: ['pks', 'application', 'dueDateLicense', 'filePks', 'fileBast', 'isNotified'],
-      }
-    );
+    const license = await License.create({
+      pks: data.pks,
+      application: data.application,
+      dateStarted: stringToDate(data.date_started as string) ?? null,
+      dueDateLicense: DateTime.fromISO(`${data.due_date_license}`, { zone: 'UTC' }).toJSDate(),
+      vendor: data.vendor ?? null,
+      descriptions: data.descriptions ?? null,
+      // healthCheckRoutine: DateTime.fromISO(`${data.health_check_routine}`, { zone: 'UTC' }).toJSDate(),
+      // healthCheckActual: DateTime.fromISO(`${data.health_check_actual}`, { zone: 'UTC' }).toJSDate(),
+      filePks: data.file_pks,
+      fileBast: data.file_bast,
+      isNotified: data.is_notified ? data.is_notified : true,
+      pksFileId: null,
+      bastFileId: null,
+    });
     license.save();
     if (!license) {
       throw new NotFoundException('License not created');
@@ -65,9 +64,12 @@ export default class LicenseService {
     await license.update({
       pks: data.pks,
       application: data.application,
+      dateStarted: stringToDate(data.date_started as string) ?? null,
       dueDateLicense: DateTime.fromISO(`${data.due_date_license}`, { zone: 'UTC' }).toJSDate(),
       filePks: data.file_pks,
       fileBast: data.file_bast,
+      vendor: data.vendor,
+      descriptions: data.descriptions,
       isNotified: data.is_notified ? data.is_notified : true,
       pksFileId: null,
       bastFileId: null,

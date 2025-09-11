@@ -16,6 +16,9 @@ export interface LicenseAttributes extends BaseModelAttributes {
   filePks: string;
   fileBast: string;
   isNotified: boolean;
+  dateStarted?: Date;
+  vendor?: string;
+  descriptions?: string;
 
   pksFileUrl?: string;
   bastFileUrl?: string;
@@ -33,6 +36,11 @@ class License extends BaseModel<LicenseAttributes, LicenseCreationAttributes> im
   public bastFileId?: number;
   public application!: string;
   public dueDateLicense!: Date;
+
+  public dateStarted?: Date;
+  public vendor?: string;
+  public descriptions?: string;
+
   // public healthCheckRoutine!: Date;
   // public healthCheckActual!: Date;
   public filePks!: string;
@@ -72,14 +80,18 @@ License.init(
       type: DataTypes.DATE,
       allowNull: true,
     },
-    // healthCheckRoutine: {
-    //   type: DataTypes.DATE,
-    //   allowNull: true,
-    // },
-    // healthCheckActual: {
-    //   type: DataTypes.DATE,
-    //   allowNull: true,
-    // },
+    dateStarted: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    vendor: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    descriptions: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     filePks: {
       type: DataTypes.TEXT,
       allowNull: false,

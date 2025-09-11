@@ -29,7 +29,19 @@ export class CreateLisenceDto {
   application!: string;
 
   @IsDateString()
+  @IsOptional()
+  date_started?: string;
+
+  @IsDateString()
   due_date_license!: string;
+
+  @IsString()
+  @IsOptional()
+  vendor!: string;
+
+  @IsString()
+  @IsOptional()
+  descriptions!: string;
 
   @IsString()
   @IsNotEmpty()

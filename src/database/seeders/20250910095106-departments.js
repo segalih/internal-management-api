@@ -12,11 +12,10 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
-
-    await queryInterface.bulkInsert('master_statuses', [
-      { status_name: 'Open', flag: 1 },
-      { status_name: 'Temporary Action', flag: 1 },
-      { status_name: 'Full Action', flag: 1 },
+    await queryInterface.bulkInsert('master_departments', [
+      { name: 'Financing & Collection Services' },
+      { name: 'Release' },
+      { name: 'Core' },
     ]);
   },
 
@@ -27,7 +26,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-
-    await queryInterface.bulkDelete('master_statuses', null, {});
+    await queryInterface.bulkDelete('master_departments', null, {});
   },
 };

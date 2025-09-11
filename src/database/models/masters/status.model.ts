@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import BaseModel, { BaseModelAttributes, baseModelInit, baseModelConfig } from './base.model';
+import BaseModel, { BaseModelAttributes, baseModelInit, baseModelConfig } from '../base.model';
 
 export interface StatusAttributes extends BaseModelAttributes {
   statusName: string;
@@ -29,7 +29,7 @@ Status.init(
   },
   {
     ...baseModelConfig,
-    tableName: 'status_master',
+    tableName: 'master_statuses',
   }
 );
 
