@@ -9,13 +9,13 @@ export interface V2MsaAttributes extends BaseModelAttributes {
   pksMsaId: number;
   roleId: number;
   name: string;
-  groupPosition: string;
   joinDate?: Date;
   leaveDate?: Date;
   isActive: boolean;
   nik: string;
-  vendor?: string;
-  department?: string;
+  groupId?: number;
+  departmentId?: number;
+  vendorId?: number;
 
   projects?: V2MsaProjectAttributes[];
 
@@ -28,13 +28,13 @@ export class V2Msa extends BaseModel<V2MsaAttributes, V2MsaCreationAttributes> i
   public pksMsaId!: number;
   public roleId!: number;
   public name!: string;
-  public groupPosition!: string;
   public joinDate?: Date;
   public leaveDate?: Date;
   public isActive!: boolean;
   public nik!: string;
-  public vendor?: string;
-  public department?: string;
+  public groupId?: number;
+  public departmentId?: number;
+  public vendorId?: number;
 
   projects?: V2MsaProject[] | V2MsaProjectAttributes[];
 
@@ -64,11 +64,6 @@ V2Msa.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    groupPosition: {
-      field: 'group_position',
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     joinDate: {
       field: 'join_date',
       type: DataTypes.DATE,
@@ -88,13 +83,38 @@ V2Msa.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    vendor: {
-      type: DataTypes.STRING,
+    groupId: {
+      field: 'group_id',
+      type: DataTypes.INTEGER,
       allowNull: true,
+      references: {
+        model: {
+          tableName: 'master_groups',
+        },
+        key: 'id',
+      },
     },
-    department: {
-      type: DataTypes.STRING,
+    departmentId: {
+      field: 'department_id',
+      type: DataTypes.INTEGER,
       allowNull: true,
+      references: {
+        model: {
+          tableName: 'master_departments',
+        },
+        key: 'id',
+      },
+    },
+    vendorId: {
+      field: 'vendor_id',
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: {
+          tableName: 'master_vendors',
+        },
+        key: 'id',
+      },
     },
   },
   {
