@@ -6,6 +6,9 @@ import { UnprocessableEntityException } from '@helper/Error/UnprocessableEntity/
 import { msaV2resource } from '@resource/v2/pks-msa/msa.resource';
 import { DateTime } from 'luxon';
 import V2MsaProject from '@database/models/v2/v2_msa_project.model';
+import MasterGroup from '@database/models/masters/master_group.model';
+import MasterDepartment from '@database/models/masters/master_department.model';
+import MasterVendor from '@database/models/masters/master_vendor.model';
 
 export class MsaV2Service {
   async create(pksMsaId: number, data: CreateMsaDetailV2Dto, transaction?: Transaction): Promise<V2Msa> {
@@ -47,10 +50,21 @@ export class MsaV2Service {
           model: V2MsaProject,
           as: 'projects',
         },
+        {
+          model: MasterGroup,
+          as: 'msaGroup',
+        },
+        {
+          model: MasterDepartment,
+          as: 'msaDepartment',
+        },
+        {
+          model: MasterVendor,
+          as: 'msaVendor',
+        },
       ],
       transaction,
     });
-
     if (!msa) {
       throw new UnprocessableEntityException('MSA not found', {});
     }
@@ -77,10 +91,22 @@ export class MsaV2Service {
           model: V2MsaProject,
           as: 'projects',
         },
+        {
+          model: MasterGroup,
+          as: 'msaGroup',
+        },
+        {
+          model: MasterDepartment,
+          as: 'msaDepartment',
+        },
+        {
+          model: MasterVendor,
+          as: 'msaVendor',
+        },
       ],
       transaction,
     });
-    return msa.map((item) => msaV2resource(item));
+    return msa;
   }
 
   async getWhere(data: Partial<V2MsaAttributes>, transaction?: Transaction): Promise<V2Msa[] | []> {
