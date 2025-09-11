@@ -5,7 +5,7 @@ module.exports = {
     const departments = [
       { id: 1, group_id: 1, name: 'Financing & Collection Services' },
       { id: 2, group_id: 1, name: 'Release' },
-      { id: 3, group_id: 1, name: 'Core2' },
+      { id: 3, group_id: 1, name: 'Core' },
     ];
 
     for (const dept of departments) {
