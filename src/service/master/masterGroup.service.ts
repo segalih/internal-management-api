@@ -1,3 +1,4 @@
+import MasterDepartment from '@database/models/masters/master_department.model';
 import MasterGroup from '@database/models/masters/master_group.model';
 import { NotFoundException } from '@helper/Error/NotFound/NotFoundException';
 
@@ -15,7 +16,14 @@ class MasterGroupService {
   }
 
   async fetchAll(): Promise<MasterGroup[]> {
-    const results = await MasterGroup.findAll();
+    const results = await MasterGroup.findAll({
+      include: [
+        {
+          model: MasterDepartment,
+          as: 'departments',
+        },
+      ],
+    });
 
     return results;
   }
