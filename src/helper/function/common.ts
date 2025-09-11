@@ -27,9 +27,10 @@ export const getDiffMonths = (dateStarted: string, dateEnded: string): number =>
 
 export const stringToDate = (date: string): Date => DateTime.fromISO(date, { zone: 'UTC' }).toJSDate();
 export const dateToIsoString = (date: Date): string => {
+  console.log(date);
   const result = DateTime.fromJSDate(date, { zone: 'UTC' }).toISO();
   if (!result) {
-    throw new BadRequestException('Invalid date format');
+    throw new BadRequestException('Invalid date format - dateToIsoString');
   }
   return result;
 };
