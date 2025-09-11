@@ -15,6 +15,7 @@ import MasterGroup from '@database/models/masters/master_group.model';
 import MasterDepartment from '@database/models/masters/master_department.model';
 import MasterVendor from '@database/models/masters/master_vendor.model';
 import { BadRequestException } from '@helper/Error/BadRequestException/BadRequestException';
+import MasterVendorApplicationService from '@service/master/masterVendorApps.service';
 
 export class MasterController {
   private personInChargeService: PersonInChargeService;
@@ -23,6 +24,7 @@ export class MasterController {
   private masterGroupService: MasterGroupService;
   private masterDepartmentService: MasterDepartmentService;
   private masterVendorService: MasterVendorService;
+  private masterVendorApplicationService: MasterVendorApplicationService;
 
   constructor() {
     this.personInChargeService = new PersonInChargeService();
@@ -31,6 +33,7 @@ export class MasterController {
     this.masterGroupService = new MasterGroupService();
     this.masterDepartmentService = new MasterDepartmentService();
     this.masterVendorService = new MasterVendorService();
+    this.masterVendorApplicationService = new MasterVendorApplicationService();
   }
 
   async getAll(req: Request, res: Response<ResponseApi<any[]>>) {
@@ -56,6 +59,10 @@ export class MasterController {
         case 'vendor':
           this.getAllVendor(req, res);
           break;
+        case 'vendor_application':
+          this.getAllVendorApplication(req, res);
+          break;
+
         default:
           throw new BadRequestException('Invalid type');
       }
@@ -133,6 +140,19 @@ export class MasterController {
   async getAllVendor(req: Request, res: Response<ResponseApi<MasterVendor[]>>) {
     try {
       const applications = await this.masterVendorService.fetchAll();
+      res.status(HttpStatusCode.Ok).json({
+        statusCode: HttpStatusCode.Ok,
+        message: 'Application list retrieved successfully',
+        data: applications,
+      });
+    } catch (error) {
+      ProcessError(error, res);
+    }
+  }
+
+  async getAllVendorApplication(req: Request, res: Response<ResponseApi<MasterVendor[]>>) {
+    try {
+      const applications = await this.masterVendorApplicationService.fetchAll();
       res.status(HttpStatusCode.Ok).json({
         statusCode: HttpStatusCode.Ok,
         message: 'Application list retrieved successfully',
