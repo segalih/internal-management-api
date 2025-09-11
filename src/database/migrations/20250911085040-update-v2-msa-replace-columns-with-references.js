@@ -11,7 +11,7 @@ module.exports = {
     // Tambah kolom baru dengan FK
     await queryInterface.addColumn('v2_msa', 'group_id', {
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: {
           tableName: 'master_groups',
@@ -22,7 +22,7 @@ module.exports = {
 
     await queryInterface.addColumn('v2_msa', 'department_id', {
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'master_departments',
       },
@@ -31,7 +31,7 @@ module.exports = {
 
     await queryInterface.addColumn('v2_msa', 'vendor_id', {
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'master_vendors',
       },

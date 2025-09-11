@@ -15,14 +15,14 @@ export class MsaV2Service {
         pksMsaId: pksMsaId,
         roleId: data.role_id,
         nik: data.nik,
-        groupPosition: data.group_position,
         joinDate: DateTime.fromISO(data.join_date as string, { zone: 'UTC' }).toJSDate()!,
         leaveDate: data.leave_date
           ? DateTime.fromISO(data.leave_date + 'T23:59:59.999+00:00', { zone: 'UTC' }).toJSDate()!
           : undefined,
         isActive: data.leave_date ? false : true,
-        vendor: data.vendor,
-        department: data.department,
+        groupId: data.group_id,
+        departmentId: data.department_id,
+        vendorId: data.vendor_id,
       },
       {
         transaction,
@@ -83,7 +83,7 @@ export class MsaV2Service {
     return msa.map((item) => msaV2resource(item));
   }
 
-  async getWhere(data: Partial<V2MsaAttributes>, transaction?: Transaction): Promise<V2Msa | null> {
-    return V2Msa.findOne({ where: data });
+  async getWhere(data: Partial<V2MsaAttributes>, transaction?: Transaction): Promise<V2Msa[] | []> {
+    return V2Msa.findAll({ where: data });
   }
 }
