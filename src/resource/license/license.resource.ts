@@ -5,7 +5,6 @@ import { dateToIsoString } from '@helper/function/common';
 import { masterVendorApplicationResource } from '@resource/master/vendor_application.resource';
 
 export const licenseResource = (data: License): LicenseAttributes => {
-  console.log(typeof data.dueDateLicense);
   const dueDate = DateTime.fromISO(dateToIsoString(data.dueDateLicense), { zone: 'UTC' });
   const dayTodaytoDueDate = dueDate.diffNow('days').days;
   let colorStatus = 'green';

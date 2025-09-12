@@ -71,6 +71,18 @@ export class PksMsaV2Service {
               model: V2MsaProject,
               as: 'projects',
             },
+            {
+              model: MasterGroup,
+              as: 'msaGroup',
+            },
+            {
+              model: MasterDepartment,
+              as: 'msaDepartment',
+            },
+            {
+              model: MasterVendor,
+              as: 'msaVendor',
+            },
           ],
         },
       ],

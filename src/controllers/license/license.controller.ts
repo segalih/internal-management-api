@@ -38,7 +38,6 @@ export class LicenseController {
         );
       }
       const result = await this.licenseService.getById(license.id);
-      console.log(result);
 
       res.status(HttpStatusCode.Created).json({
         message: 'License created successfully',

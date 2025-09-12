@@ -6,6 +6,7 @@ import { BadRequestException } from '@helper/Error/BadRequestException/BadReques
 import { ProcessError } from '@helper/Error/errorHandler';
 import { isStringNumber, stringToDate } from '@helper/function/common';
 import { ResponseApi, ResponseApiWithPagination } from '@helper/interface/response.interface';
+import { pksMsaV2resource } from '@resource/v2/pks-msa/pks-msa.resource';
 import { OtherSearchConditions, PksMsaV2Service } from '@service/v2/msa/PksMsaV2.service';
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
@@ -150,7 +151,9 @@ export class MsaV2Controller {
       res.status(HttpStatusCode.Ok).json({
         statusCode: HttpStatusCode.Ok,
         message: 'MSA list retrieved successfully',
-        data: results.data.map((pksMsa) => this.pksMsaService.pksMsaResponse(pksMsa)),
+        data: results.data.map((pksMsa) => {
+          return pksMsaV2resource(pksMsa);
+        }),
         meta: {
           currentPage: results.currentPage,
           pageSize: results.pageSize,
@@ -190,7 +193,7 @@ export class MsaV2Controller {
       res.status(HttpStatusCode.Ok).json({
         statusCode: HttpStatusCode.Ok,
         message: 'MSA retrieved successfully',
-        data: this.pksMsaService.pksMsaResponse(result),
+        data: pksMsaV2resource(result),
       });
     } catch (err) {
       ProcessError(err, res);
