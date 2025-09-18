@@ -153,4 +153,7 @@ export class PksMsaV2Service {
 
     return results;
   }
+  async getWhere(data: Partial<V2PksMsaAttributes>, transaction?: Transaction): Promise<V2PksMsa[] | []> {
+    return V2PksMsa.findAll({ where: data, transaction });
+  }
 }

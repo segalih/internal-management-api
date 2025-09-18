@@ -24,6 +24,11 @@ export class MsaV2Controller {
     try {
       const _dateStarted = DateTime.fromISO(req.body.date_started, { zone: 'UTC' });
       const _dateEnded = DateTime.fromISO(req.body.date_ended, { zone: 'UTC' });
+      const isExist = await this.pksMsaService.getWhere({ pks: req.body.pks }, transaction);
+
+      if (isExist.length > 0) {
+        throw new BadRequestException('PKS number already exist');
+      }
 
       if (_dateStarted > _dateEnded) {
         throw new BadRequestException('Date started must be before date ended');
