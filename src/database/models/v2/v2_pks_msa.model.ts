@@ -22,6 +22,7 @@ export interface V2PksMsaAttributes extends BaseModelAttributes {
   remainingBudget?: number;
   isBudgetBelowThreshold?: boolean;
   isPksExpiringSoon?: boolean;
+  status?: string;
   isActive?: boolean;
 }
 

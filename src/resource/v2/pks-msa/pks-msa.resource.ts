@@ -26,24 +26,36 @@ export const pksMsaV2resource = (pksMsa: V2PksMsa): V2PksMsaAttributes => {
 
   const isBudgetBelowThreshold = budgedUsedRatio < pksMsa.thresholdAlert ? true : false;
 
-const monthsUntilExpired = getDiffMonths(dateToIsoString(new Date()), dateToIsoString(pksMsa.dateEnded));
-const isPksExpiringSoon = monthsUntilExpired <= 3;
-return {
-  id: pksMsa.id,
-  pks: pksMsa.pks,
-  filePks: pksMsa.filePks,
-  fileBast: pksMsa.fileBast,
-  dateStarted: pksMsa.dateStarted,
-  dateEnded: pksMsa.dateEnded,
-  peopleQuota: pksMsa.peopleQuota,
-  budgetQuota: pksMsa.budgetQuota,
-  thresholdAlert: pksMsa.thresholdAlert,
-  isActive: pksMsa.dateEnded > DateTime.now().toJSDate(),
-  isBudgetBelowThreshold,
-  budgetUsed,
-  remainingBudget,
-  isPksExpiringSoon,
-  roles: roles.map((role) => roleV2resource(role)!),
-  msaDetails: msaDetails.map((msa) => msaV2resource(msa)),
+  const monthsUntilExpired = getDiffMonths(dateToIsoString(new Date()), dateToIsoString(pksMsa.dateEnded));
+  const isPksExpiringSoon = monthsUntilExpired <= 3;
+
+  return {
+    id: pksMsa.id,
+    pks: pksMsa.pks,
+    filePks: pksMsa.filePks,
+    fileBast: pksMsa.fileBast,
+    dateStarted: pksMsa.dateStarted,
+    dateEnded: pksMsa.dateEnded,
+    peopleQuota: pksMsa.peopleQuota,
+    budgetQuota: pksMsa.budgetQuota,
+    thresholdAlert: pksMsa.thresholdAlert,
+    isActive: pksMsa.dateEnded > DateTime.now().toJSDate(),
+    isBudgetBelowThreshold,
+    budgetUsed,
+    remainingBudget,
+    isPksExpiringSoon,
+    status: pksStatus(monthsUntilExpired),
+    roles: roles.map((role) => roleV2resource(role)!),
+    msaDetails: msaDetails.map((msa) => msaV2resource(msa)),
+  };
 };
-};
+
+function pksStatus(monthsUntilExpired: number): string {
+  if (monthsUntilExpired < 0) {
+    return 'expired';
+  } else if (monthsUntilExpired < 3) {
+    return 'expiring_soon';
+  } else {
+    return 'active';
+  }
+}
