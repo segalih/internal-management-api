@@ -51,7 +51,7 @@ export const pksMsaV2resource = (pksMsa: V2PksMsa): V2PksMsaAttributes => {
 };
 
 function pksStatus(monthsUntilExpired: number): string {
-  if (monthsUntilExpired < 0) {
+  if (monthsUntilExpired <= 0) {
     return 'expired';
   } else if (monthsUntilExpired < 3) {
     return 'expiring_soon';
