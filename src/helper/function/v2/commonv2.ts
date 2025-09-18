@@ -27,11 +27,11 @@ export function validateMsaJoinDates(msa: CreateMsaDetailV2Dto[], dateStarted: s
       const leaveDate = DateTime.fromISO(item.leave_date as string, { zone: 'UTC' });
 
       if (leaveDate.toJSDate() < joinDate.toJSDate()) {
-        throw new BadRequestException(`Leave date for msa [${index}] must be after join date`);
+        throw new BadRequestException(`Inactive date for msa [${index}] must be after join date`);
       }
 
       if (leaveDate.toJSDate() > end.toJSDate()) {
-        throw new BadRequestException(`Leave date for msa [${index}] must be before date ended`);
+        throw new BadRequestException(`Inactive date for msa [${index}] must be before date ended`);
       }
     }
   });
